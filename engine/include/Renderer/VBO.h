@@ -13,11 +13,15 @@ namespace GCGameEngine{
         public:
             VBO(SDL_GPUDevice* device);
             ~VBO();
+
+            SDL_GPUBufferBinding* getBufferBinding();
         private:
             Vertex* vertices;
+            SDL_GPUDevice* device;
+
             SDL_GPUBuffer* vertexBuffer;
             SDL_GPUTransferBuffer* transferBuffer;
-            SDL_GPUDevice* device;
+            SDL_GPUBufferBinding* m_bufferBinding;
     };
 }
 

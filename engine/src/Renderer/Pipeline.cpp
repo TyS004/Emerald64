@@ -1,5 +1,6 @@
 #include "Renderer/Pipeline.h"
 #include "Logger/Logger.h"
+#include "Renderer/VBO.h"
 
 static GCGameEngine::Log logger = GCGameEngine::Log();
 
@@ -13,9 +14,45 @@ GCGameEngine::Pipeline::Pipeline(SDL_GPUDevice* device, const char* shaderPath){
     pipelineInfo.vertex_shader = vertShader->getShader();
     pipelineInfo.fragment_shader = fragShader->getShader();
 
+    SDL_GPUVertexBufferDescription vertexBufferDesctiptions[1];
+    vertexBufferDesctiptions[0].slot = 0;
+    vertexBufferDesctiptions[0].input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
+    vertexBufferDesctiptions[0].instance_step_rate = 0;
+    vertexBufferDesctiptions[0].pitch = sizeof(Vertex);
+
+    pipelineInfo.vertex_input_state.num_vertex_buffers = 0;
+    // pipelineInfo.vertex_input_state.vertex_buffer_descriptions = vertexBufferDesctiptions;
+
+    SDL_GPUVertexAttribute vertexAttributes[2];
+    // a_position
+    vertexAttributes[0].buffer_slot = 0; // fetch data from the buffer at slot 0
+    vertexAttributes[0].location = 0; // layout (location = 0) in shader
+    vertexAttributes[0].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3; //vec3
+    vertexAttributes[0].offset = 0; // start from the first byte from current buffer position
+
+    // a_color
+    vertexAttributes[1].buffer_slot = 0; // use buffer at slot 0
+    vertexAttributes[1].location = 1; // layout (location = 1) in shader
+    vertexAttributes[1].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4; // vec4
+    vertexAttributes[1].offset = sizeof(float) * 4; // 4th float from current buffer position
+
+    pipelineInfo.vertex_input_state.num_vertex_attributes = 0;
+    // pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;
+
+    SDL_GPUColorTargetDescription colorTargetDesc = {};
+    colorTargetDesc.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM_SRGB;
+    pipelineInfo.target_info.num_color_targets = 1;
+    pipelineInfo.target_info.color_target_descriptions = &colorTargetDesc;
+
+    pipelineInfo.primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST;
+
     pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
 }
 
 GCGameEngine::Pipeline::~Pipeline(){
     SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
+}
+
+SDL_GPUGraphicsPipeline* GCGameEngine::Pipeline::getPipeline(){
+    return this->pipeline;
 }

@@ -12,10 +12,13 @@ namespace GCGameEngine{
             Pipeline(SDL_GPUDevice* device, const char* shaderPath);
 
             ~Pipeline();
+
+            SDL_GPUGraphicsPipeline* getPipeline();
         private:
             SDL_GPUDevice* device;
             Shader* vertShader;
             Shader* fragShader;
+            
             SDL_GPUGraphicsPipeline* pipeline;
     };
 }

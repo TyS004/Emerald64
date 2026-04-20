@@ -55,6 +55,9 @@ SDL_GPUShader* GCGameEngine::Shader::loadShader(){
         logger.warn("Failed to Create Shader");
         return nullptr;
     }
+    std::string msg = "Successfully Loaded Shader ";
+    msg += fullPath;
+    logger.info(msg.c_str());
     return shader;
 }
 

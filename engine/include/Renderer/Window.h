@@ -14,9 +14,11 @@ namespace GCGameEngine{
 
             SDL_Window* getWindow();
             SDL_GPUDevice* getDevice();
+            SDL_GPUTextureFormat getSwapchainFormat();
         private:
             SDL_Window* window;
             SDL_GPUDevice* device;
+            SDL_GPUTextureFormat swapchainFormat;
     };
 }
 

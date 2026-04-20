@@ -4,7 +4,7 @@
 #include "Renderer/Window.h"
 #include "Renderer/VBO.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/RenderPass.h"
+#include "Renderer/Pipeline.h"
 
 namespace GCGameEngine{
     class Engine{
@@ -14,4 +14,5 @@ namespace GCGameEngine{
         static bool isRunning;
     };
 }
+
 #endif

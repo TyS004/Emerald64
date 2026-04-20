@@ -12,8 +12,10 @@ GCGameEngine::Window::Window(const char* name, int width, int height){
     window = SDL_CreateWindow(name, width, height, 0);
     if(!window) { logger.warn("Window could not be created"); SDL_Quit();}
 
-    device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
+    device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, "metal");
     SDL_ClaimWindowForGPUDevice(device, window);
+
+    swapchainFormat = SDL_GetGPUSwapchainTextureFormat(device, window);
 }
 
 GCGameEngine::Window::~Window(){
@@ -38,4 +40,8 @@ SDL_Window* GCGameEngine::Window::getWindow(){
 
 SDL_GPUDevice* GCGameEngine::Window::getDevice(){
     return device;
+}
+
+SDL_GPUTextureFormat GCGameEngine::Window::getSwapchainFormat(){
+    return swapchainFormat;
 }
