@@ -17,3 +17,9 @@ file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS editor/src/*.cpp)
 add_executable(GCEditor ${EDITOR_SOURCES})
 target_link_libraries(GCEditor PRIVATE GCGameEngine)
 target_precompile_headers(GCEditor REUSE_FROM GCGameEngine)
+
+# ── Sandbox (EXE) ──────────────────────────────
+file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS sandbox/*.cpp)
+add_executable(GCSandbox ${EDITOR_SOURCES})
+target_link_libraries(GCSandbox PRIVATE GCGameEngine)
+target_precompile_headers(GCSandbox REUSE_FROM GCGameEngine)
