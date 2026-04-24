@@ -1,23 +1,23 @@
 #include "Renderer/Renderer.h"
 
-SDL_GPURenderPass* GCGameEngine::Renderer::renderPass = nullptr;
+SDL_GPURenderPass* GCGameEngine::Renderer::render_pass = nullptr;
 
 void GCGameEngine::Renderer::begin(SDL_GPUCommandBuffer* cmdBuffer, SDL_GPUColorTargetInfo* colorTargetInfo){
-    renderPass = SDL_BeginGPURenderPass(cmdBuffer, colorTargetInfo, 1, NULL);
+    render_pass = SDL_BeginGPURenderPass(cmdBuffer, colorTargetInfo, 1, NULL);
 }
 
 void GCGameEngine::Renderer::end(){
-    SDL_EndGPURenderPass(renderPass);
+    SDL_EndGPURenderPass(render_pass);
 }
 
 void GCGameEngine::Renderer::bindPipeline(SDL_GPUGraphicsPipeline* pipeline){
-    SDL_BindGPUGraphicsPipeline(renderPass, pipeline);
+    SDL_BindGPUGraphicsPipeline(render_pass, pipeline);
 }
 
 void GCGameEngine::Renderer::bindVertexBuffers(SDL_GPUBufferBinding* binding){
-    SDL_BindGPUVertexBuffers(renderPass, 0, binding, 1);
+    SDL_BindGPUVertexBuffers(render_pass, 0, binding, 1);
 }
 
 void GCGameEngine::Renderer::draw(){
-    SDL_DrawGPUPrimitives(renderPass, 3, 1, 0, 0);
+    SDL_DrawGPUPrimitives(render_pass, 3, 1, 0, 0);
 }

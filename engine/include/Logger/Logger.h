@@ -9,13 +9,11 @@ namespace GCGameEngine{
         public:
             Log();
 
-            static void info(const char* msg);
-            static void warn(const char* msg);
-            static void error(const char* msg);
-            static void debug(const char* msg);
-            static void trace(const char* msg);
-            
-            static void log(const char* msg);
+            static void info(const std::string& msg);
+            static void warn(const std::string& msg);
+            static void error(const std::string& msg);
+            static void debug(const std::string& msg);
+            static void trace(const std::string& msg);
     };
 }
 

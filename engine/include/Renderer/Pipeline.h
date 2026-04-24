@@ -2,23 +2,23 @@
 #define PIPELINE
 
 #include "SDL3/SDL.h"
-#include "Renderer/Window.h"
+#include "Window/Window.h"
 #include "Renderer/Shader.h"
 
 namespace GCGameEngine{
     class Pipeline{
         public:
             Pipeline() {}
-            Pipeline(SDL_GPUDevice* device, const char* shaderPath);
+            Pipeline(const char* shader_path);
 
             ~Pipeline();
 
             SDL_GPUGraphicsPipeline* getPipeline();
         private:
             SDL_GPUDevice* device;
-            Shader* vertShader;
-            Shader* fragShader;
-            
+            Shader* vert_shader;
+            Shader* frag_shader;
+
             SDL_GPUGraphicsPipeline* pipeline;
     };
 }

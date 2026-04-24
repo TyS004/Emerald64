@@ -4,15 +4,16 @@
 
 static GCGameEngine::Log logger = GCGameEngine::Log();
 
-GCGameEngine::Pipeline::Pipeline(SDL_GPUDevice* device, const char* shaderPath){
-    this->device = device;
+GCGameEngine::Pipeline::Pipeline(const char* shaderPath){
+    this->device = GCGameEngine::Window::getDevice();
+    SDL_Window* window = GCGameEngine::Window::getWindow();
     
-    vertShader = new Shader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
-    fragShader = new Shader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
+    vert_shader = new Shader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
+    frag_shader = new Shader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
 
     SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {};
-    pipelineInfo.vertex_shader = vertShader->getShader();
-    pipelineInfo.fragment_shader = fragShader->getShader();
+    pipelineInfo.vertex_shader = vert_shader->getShader();
+    pipelineInfo.fragment_shader = frag_shader->getShader();
 
     SDL_GPUVertexBufferDescription vertexBufferDesctiptions[1];
     vertexBufferDesctiptions[0].slot = 0;
@@ -20,8 +21,8 @@ GCGameEngine::Pipeline::Pipeline(SDL_GPUDevice* device, const char* shaderPath){
     vertexBufferDesctiptions[0].instance_step_rate = 0;
     vertexBufferDesctiptions[0].pitch = sizeof(Vertex);
 
-    pipelineInfo.vertex_input_state.num_vertex_buffers = 0;
-    // pipelineInfo.vertex_input_state.vertex_buffer_descriptions = vertexBufferDesctiptions;
+    pipelineInfo.vertex_input_state.num_vertex_buffers = 1;
+    pipelineInfo.vertex_input_state.vertex_buffer_descriptions = vertexBufferDesctiptions;
 
     SDL_GPUVertexAttribute vertexAttributes[2];
     // a_position
@@ -36,11 +37,12 @@ GCGameEngine::Pipeline::Pipeline(SDL_GPUDevice* device, const char* shaderPath){
     vertexAttributes[1].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4; // vec4
     vertexAttributes[1].offset = sizeof(float) * 4; // 4th float from current buffer position
 
-    pipelineInfo.vertex_input_state.num_vertex_attributes = 0;
-    // pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;
+    pipelineInfo.vertex_input_state.num_vertex_attributes = 2;
+    pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;
 
+    SDL_GPUTextureFormat fmt = SDL_GetGPUSwapchainTextureFormat(device, window);
     SDL_GPUColorTargetDescription colorTargetDesc = {};
-    colorTargetDesc.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM_SRGB;
+    colorTargetDesc.format = fmt;
     pipelineInfo.target_info.num_color_targets = 1;
     pipelineInfo.target_info.color_target_descriptions = &colorTargetDesc;
 

@@ -2,6 +2,10 @@
 #include <GCGameEngine.h>
 
 int main(){
+    GCGameEngine::Window::Create("Editor", 800, 600);
+
     std::cout << "Starting Editor" << std::endl;
-    return 0;
+    GCGameEngine::Engine::run();
+
+    GCGameEngine::Window::Destory();
 }

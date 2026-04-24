@@ -1,9 +1,12 @@
-#include "Renderer/Window.h"
+#include "Window/Window.h"
 #include "Logger/Logger.h"
 
 GCGameEngine::Log logger;
 
-GCGameEngine::Window::Window(const char* name, int width, int height){
+SDL_Window* GCGameEngine::Window::window = nullptr;
+SDL_GPUDevice* GCGameEngine::Window::device = nullptr;
+
+void GCGameEngine::Window::Create(const char* name, int width, int height){
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
         logger.warn("SDL Could not Initalize");
         return;
@@ -14,24 +17,18 @@ GCGameEngine::Window::Window(const char* name, int width, int height){
 
     device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, "metal");
     SDL_ClaimWindowForGPUDevice(device, window);
-
-    swapchainFormat = SDL_GetGPUSwapchainTextureFormat(device, window);
 }
 
-GCGameEngine::Window::~Window(){
+void GCGameEngine::Window::Destory(){
     SDL_DestroyWindow(window);
     SDL_DestroyGPUDevice(device);
     SDL_Quit();
 }
 
-bool GCGameEngine::Window::update(){
+SDL_Event GCGameEngine::Window::PollEvent(){
     SDL_Event event;
-    while(SDL_PollEvent(&event)){
-        if(event.type == SDL_EVENT_QUIT){
-            return false;
-        }
-    }
-    return true;
+    while(SDL_PollEvent(&event))
+    return event;
 }
 
 SDL_Window* GCGameEngine::Window::getWindow(){
@@ -40,8 +37,4 @@ SDL_Window* GCGameEngine::Window::getWindow(){
 
 SDL_GPUDevice* GCGameEngine::Window::getDevice(){
     return device;
-}
-
-SDL_GPUTextureFormat GCGameEngine::Window::getSwapchainFormat(){
-    return swapchainFormat;
 }

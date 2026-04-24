@@ -11,17 +11,18 @@ namespace GCGameEngine{
 
     class VBO{
         public:
-            VBO(SDL_GPUDevice* device);
+            VBO(SDL_GPUDevice* device, const uint16_t num_vertices);
             ~VBO();
 
             SDL_GPUBufferBinding* getBufferBinding();
         private:
+            uint16_t num_vertices;
             Vertex* vertices;
-            SDL_GPUDevice* device;
 
-            SDL_GPUBuffer* vertexBuffer;
-            SDL_GPUTransferBuffer* transferBuffer;
-            SDL_GPUBufferBinding* m_bufferBinding;
+            SDL_GPUDevice* device;
+            SDL_GPUBuffer* vertex_buffer;
+            SDL_GPUTransferBuffer* transfer_buffer;
+            SDL_GPUBufferBinding* m_buffer_binding;
     };
 }
 
