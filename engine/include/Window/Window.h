@@ -2,6 +2,7 @@
 #define WINDOW
 
 #include <SDL3/SDL.h>
+#include "Input/Input.h"
 
 namespace GCGameEngine{
     class Window

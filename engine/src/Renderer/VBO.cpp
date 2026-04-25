@@ -1,26 +1,35 @@
 #include "Renderer/VBO.h"
+#include "Window/Window.h"
 
-GCGameEngine::VBO::VBO(SDL_GPUDevice* device, const uint16_t num_vertices){
-    this->device = device;
+GCGameEngine::VBO::VBO(const uint16_t num_vertices){
+    this->device = GCGameEngine::Window::getDevice();
     this->num_vertices = num_vertices;
 
+    vec3 pos1 = {0.0f, 0.5f, 0.0f};
+    vec3 pos2 = {-0.5f, -0.5f, 0.0f};
+    vec3 pos3 = {0.5f, -0.5f, 0.0f};
+
+    vec4 color1 = {1.0f, 0.0f, 1.0f, 0.0f};
+    vec4 color2 = {1.0f, 1.0f, 0.0f, 0.0f};
+    vec4 color3 = {1.0f, 0.0f, 0.25f, 0.0f};
+
     vertices = new Vertex[3];
-    vertices[0] = Vertex{0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f};
-    vertices[1] = Vertex{-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f};
-    vertices[2] = Vertex{0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f};
+    vertices[0] = Vertex{pos1, color1};
+    vertices[1] = Vertex{pos2, color2};
+    vertices[2] = Vertex{pos3, color3};
 
     SDL_GPUBufferCreateInfo bufferInfo{};
-    bufferInfo.size = sizeof(Vertex) * 3;
+    bufferInfo.size = sizeof(Vertex) * num_vertices;
     bufferInfo.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
     vertex_buffer = SDL_CreateGPUBuffer(device, &bufferInfo);
 
     SDL_GPUTransferBufferCreateInfo transferInfo{};
-    transferInfo.size = sizeof(Vertex) * 3;
+    transferInfo.size = sizeof(Vertex) * num_vertices;
     transferInfo.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
     transfer_buffer = SDL_CreateGPUTransferBuffer(device, &transferInfo);
 
     Vertex* data = (Vertex*)SDL_MapGPUTransferBuffer(device, transfer_buffer, false);
-    memcpy(data, vertices, sizeof(Vertex) * 3);
+    memcpy(data, vertices, sizeof(Vertex) * num_vertices);
     SDL_UnmapGPUTransferBuffer(device, transfer_buffer);
 
     SDL_GPUCommandBuffer* cmdBuffer = SDL_AcquireGPUCommandBuffer(device);
@@ -32,12 +41,12 @@ GCGameEngine::VBO::VBO(SDL_GPUDevice* device, const uint16_t num_vertices){
     
     SDL_GPUBufferRegion region;
     region.buffer = vertex_buffer;
-    region.size = sizeof(Vertex) * 3;
+    region.size = sizeof(Vertex) * num_vertices;
     region.offset = 0;
 
-    m_buffer_binding = new SDL_GPUBufferBinding;
-    m_buffer_binding->buffer = vertex_buffer;
-    m_buffer_binding->offset = 0;
+    buffer_binding = new SDL_GPUBufferBinding;
+    buffer_binding->buffer = vertex_buffer;
+    buffer_binding->offset = 0;
 
     SDL_UploadToGPUBuffer(copyPass, &location, &region, true);
 
@@ -52,5 +61,5 @@ GCGameEngine::VBO::~VBO(){
 }
 
 SDL_GPUBufferBinding* GCGameEngine::VBO::getBufferBinding(){
-    return m_buffer_binding;
+    return buffer_binding;
 }

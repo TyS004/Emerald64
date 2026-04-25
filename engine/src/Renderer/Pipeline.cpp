@@ -2,6 +2,8 @@
 #include "Logger/Logger.h"
 #include "Renderer/VBO.h"
 
+#include <cstddef>
+
 static GCGameEngine::Log logger = GCGameEngine::Log();
 
 GCGameEngine::Pipeline::Pipeline(const char* shaderPath){
@@ -35,7 +37,7 @@ GCGameEngine::Pipeline::Pipeline(const char* shaderPath){
     vertexAttributes[1].buffer_slot = 0; // use buffer at slot 0
     vertexAttributes[1].location = 1; // layout (location = 1) in shader
     vertexAttributes[1].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4; // vec4
-    vertexAttributes[1].offset = sizeof(float) * 4; // 4th float from current buffer position
+    vertexAttributes[1].offset = sizeof(vec3); // 4th float from current buffer position
 
     pipelineInfo.vertex_input_state.num_vertex_attributes = 2;
     pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;

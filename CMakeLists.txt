@@ -14,6 +14,7 @@ target_precompile_headers(GCGameEngine PRIVATE engine/src/pch.h)
 
 # ── Editor (EXE) ──────────────────────────────
 file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS editor/src/*.cpp)
+target_include_directories(GCGameEngine PUBLIC ./editor/include)
 add_executable(GCEditor ${EDITOR_SOURCES})
 target_link_libraries(GCEditor PRIVATE GCGameEngine)
 target_precompile_headers(GCEditor REUSE_FROM GCGameEngine)

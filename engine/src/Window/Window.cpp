@@ -27,7 +27,9 @@ void GCGameEngine::Window::Destory(){
 
 SDL_Event GCGameEngine::Window::PollEvent(){
     SDL_Event event;
-    while(SDL_PollEvent(&event))
+    while(SDL_PollEvent(&event)){
+        GCGameEngine::Input::processEvent(event);
+    }
     return event;
 }
 

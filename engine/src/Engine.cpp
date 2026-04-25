@@ -1,17 +1,24 @@
 #include "Engine.h"
 
 bool GCGameEngine::Engine::running = true;
+std::vector<GCGameEngine::Layer*> GCGameEngine::Engine::layers = {};
 
 void GCGameEngine::Engine::run(){
+    GCGameEngine::Window::Create("Editor", 800, 600);
+
     SDL_GPUDevice* device = GCGameEngine::Window::getDevice();
     SDL_Window* window = GCGameEngine::Window::getWindow();
 
     Pipeline* pipeline = new Pipeline("../assets/shaders/object");
-    VBO* vbo = new VBO(device, 3);
+    GCGameEngine::Object* obj = new Object();
 
     while(running){
-        SDL_Event event = GCGameEngine::Window::PollEvent();
-        if(!GCGameEngine::EventDispatcher::handle(event)){ break; }
+        GCGameEngine::Window::PollEvent();
+        if(!GCGameEngine::Input::isRunning()) break;
+
+        for(Layer* layer : layers){
+            layer->OnUpdate();
+        }
 
         SDL_GPUCommandBuffer* cmd_buffer = SDL_AcquireGPUCommandBuffer(device);
 
@@ -27,10 +34,15 @@ void GCGameEngine::Engine::run(){
 
         GCGameEngine::Renderer::begin(cmd_buffer, &colorTargetInfo);
         GCGameEngine::Renderer::bindPipeline(pipeline->getPipeline());
-        GCGameEngine::Renderer::bindVertexBuffers(vbo->getBufferBinding());
+        GCGameEngine::Renderer::bindVertexBuffers(obj->getMesh().vbo->getBufferBinding());
         GCGameEngine::Renderer::draw();
         GCGameEngine::Renderer::end();
 
         SDL_SubmitGPUCommandBuffer(cmd_buffer);
     }
+    GCGameEngine::Window::Destory();
+}
+
+void GCGameEngine::Engine::pushLayer(Layer* layer){
+    GCGameEngine::Engine::layers.push_back(layer);
 }
