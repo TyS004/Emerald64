@@ -11,7 +11,7 @@ namespace GCGameEngine{
             static void end();
 
             static void bindPipeline(SDL_GPUGraphicsPipeline* pipeline);
-            static void sendUniforms(SDL_GPUCommandBuffer* cmd_buf, Object* obj);
+            static void sendUniforms(SDL_GPUCommandBuffer* cmd_buf, glm::mat4 mvp);
             static void bindVertexBuffers(SDL_GPUBufferBinding* bindings);
             static void draw();
         private:

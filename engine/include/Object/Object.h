@@ -2,28 +2,21 @@
 #define OBJECT_H
 
 #include "Renderer/VBO.h"
+#include "ECS/Componet.h"
 
 namespace GCGameEngine{
-
-    struct Transform{
-        glm::vec3 transform;
-    };
-
-    struct Mesh{
-        VBO* vbo;
-    };
-
     class Object{
         public:
             Object();
             ~Object();
 
-            Mesh getMesh();
-            glm::mat4 getMVP();
+            Componet::Mesh getMesh();
+            glm::mat4 getModel();
         private:
-            Mesh mesh;
-            Transform transform;
-            glm::mat4 mvp;
+            Componet::Mesh mesh;
+            Componet::Transform transform;
+            
+            glm::mat4 model;
     };
 }
 

@@ -7,9 +7,12 @@ namespace Editor{
     class EditorLayer : public GCGameEngine::Layer{
         public:
             EditorLayer();
+            ~EditorLayer();
 
             void OnUpdate();
         private:
+            GCGameEngine::Object* objects;
+            GCGameEngine::Scene* scene;
     };
 }
 

@@ -2,15 +2,21 @@
 
 bool GCGameEngine::Engine::running = true;
 std::vector<GCGameEngine::Layer*> GCGameEngine::Engine::layers = {};
+GCGameEngine::Scene* GCGameEngine::Engine::active_scene = nullptr;
 
 void GCGameEngine::Engine::run(){
-    GCGameEngine::Window::Create("Editor", 800, 600);
-
     SDL_GPUDevice* device = GCGameEngine::Window::getDevice();
     SDL_Window* window = GCGameEngine::Window::getWindow();
-
+    
     Pipeline* pipeline = new Pipeline("../assets/shaders/object");
-    GCGameEngine::Object* obj = new Object();
+
+    if (!active_scene) {
+        std::cout << "No active scene!" << std::endl;
+        return;
+    }
+
+    std::cout << "Scene: " << active_scene << std::endl;
+    std::cout << "Object: " << active_scene->getObject() << std::endl;
 
     while(running){
         GCGameEngine::Window::PollEvent();
@@ -34,16 +40,19 @@ void GCGameEngine::Engine::run(){
 
         GCGameEngine::Renderer::begin(cmd_buffer, &colorTargetInfo);
         GCGameEngine::Renderer::bindPipeline(pipeline->getPipeline());
-        GCGameEngine::Renderer::bindVertexBuffers(obj->getMesh().vbo->getBufferBinding());
-        GCGameEngine::Renderer::sendUniforms(cmd_buffer, obj);
+        GCGameEngine::Renderer::bindVertexBuffers(active_scene->getObject()->getMesh().vbo->getBufferBinding());
+        GCGameEngine::Renderer::sendUniforms(cmd_buffer, active_scene->getMVP());
         GCGameEngine::Renderer::draw();
         GCGameEngine::Renderer::end();
 
         SDL_SubmitGPUCommandBuffer(cmd_buffer);
     }
-    GCGameEngine::Window::Destory();
 }
 
 void GCGameEngine::Engine::pushLayer(Layer* layer){
     GCGameEngine::Engine::layers.push_back(layer);
+}
+
+void GCGameEngine::Engine::setActiveScene(Scene* scene){
+    GCGameEngine::Engine::active_scene = scene;
 }

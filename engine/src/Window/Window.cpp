@@ -34,9 +34,11 @@ SDL_Event GCGameEngine::Window::PollEvent(){
 }
 
 SDL_Window* GCGameEngine::Window::getWindow(){
+    if(window == nullptr) { GCGameEngine::Log::error("NO WINDOW CREATED!"); }
     return window;
 }
 
 SDL_GPUDevice* GCGameEngine::Window::getDevice(){
+    if(device == nullptr) { GCGameEngine::Log::error("NO DEVICE FOUND!"); }
     return device;
 }
