@@ -39,12 +39,13 @@ SDL_GPUShader* GCGameEngine::Shader::loadShader(){
     info.num_samplers = 0;
     info.num_storage_buffers = 0;
     info.num_storage_textures = 0;
-    info.num_uniform_buffers = 0;
 
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
+        info.num_uniform_buffers = 1;
         info.entrypoint = "vertex_main";
     }
     else{
+        info.num_uniform_buffers = 0;
         info.entrypoint = "fragment_main";
     }
 

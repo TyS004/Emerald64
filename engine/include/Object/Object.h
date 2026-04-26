@@ -5,14 +5,12 @@
 
 namespace GCGameEngine{
 
-    struct Mesh{
-        VBO* vbo;
+    struct Transform{
+        glm::vec3 transform;
     };
 
-    struct Transform{
-        float x;
-        float y;
-        float z;
+    struct Mesh{
+        VBO* vbo;
     };
 
     class Object{
@@ -21,8 +19,11 @@ namespace GCGameEngine{
             ~Object();
 
             Mesh getMesh();
+            glm::mat4 getMVP();
         private:
             Mesh mesh;
+            Transform transform;
+            glm::mat4 mvp;
     };
 }
 

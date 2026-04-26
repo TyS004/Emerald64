@@ -31,7 +31,7 @@ namespace GCGameEngine{
             SDL_GPUDevice* device;
             SDL_GPUBuffer* vertex_buffer;
             SDL_GPUTransferBuffer* transfer_buffer;
-            SDL_GPUBufferBinding* buffer_binding;
+            SDL_GPUBufferBinding buffer_binding;
     };
 }
 

@@ -16,7 +16,7 @@ GCGameEngine::Pipeline::Pipeline(const char* shaderPath){
     SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {};
     pipelineInfo.vertex_shader = vert_shader->getShader();
     pipelineInfo.fragment_shader = frag_shader->getShader();
-
+    
     SDL_GPUVertexBufferDescription vertexBufferDesctiptions[1];
     vertexBufferDesctiptions[0].slot = 0;
     vertexBufferDesctiptions[0].input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
@@ -37,7 +37,7 @@ GCGameEngine::Pipeline::Pipeline(const char* shaderPath){
     vertexAttributes[1].buffer_slot = 0; // use buffer at slot 0
     vertexAttributes[1].location = 1; // layout (location = 1) in shader
     vertexAttributes[1].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4; // vec4
-    vertexAttributes[1].offset = sizeof(vec3); // 4th float from current buffer position
+    vertexAttributes[1].offset = offsetof(Vertex, color); // 4th float from current buffer position
 
     pipelineInfo.vertex_input_state.num_vertex_attributes = 2;
     pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;

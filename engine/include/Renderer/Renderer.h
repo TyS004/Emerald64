@@ -2,6 +2,7 @@
 #define Renderer_H
 
 #include "SDL3/SDL.h"
+#include "Object/Object.h"
 
 namespace GCGameEngine{
     class Renderer{
@@ -10,6 +11,7 @@ namespace GCGameEngine{
             static void end();
 
             static void bindPipeline(SDL_GPUGraphicsPipeline* pipeline);
+            static void sendUniforms(SDL_GPUCommandBuffer* cmd_buf, Object* obj);
             static void bindVertexBuffers(SDL_GPUBufferBinding* bindings);
             static void draw();
         private:

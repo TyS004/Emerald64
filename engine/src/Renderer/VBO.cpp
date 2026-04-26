@@ -9,9 +9,9 @@ GCGameEngine::VBO::VBO(const uint16_t num_vertices){
     vec3 pos2 = {-0.5f, -0.5f, 0.0f};
     vec3 pos3 = {0.5f, -0.5f, 0.0f};
 
-    vec4 color1 = {1.0f, 0.0f, 1.0f, 0.0f};
-    vec4 color2 = {1.0f, 1.0f, 0.0f, 0.0f};
-    vec4 color3 = {1.0f, 0.0f, 0.25f, 0.0f};
+    vec4 color1 = {1.0f, 0.0f, 1.0f, 1.0f};
+    vec4 color2 = {1.0f, 1.0f, 0.0f, 1.0f};
+    vec4 color3 = {1.0f, 0.0f, 0.25f, 1.0f};
 
     vertices = new Vertex[3];
     vertices[0] = Vertex{pos1, color1};
@@ -44,9 +44,9 @@ GCGameEngine::VBO::VBO(const uint16_t num_vertices){
     region.size = sizeof(Vertex) * num_vertices;
     region.offset = 0;
 
-    buffer_binding = new SDL_GPUBufferBinding;
-    buffer_binding->buffer = vertex_buffer;
-    buffer_binding->offset = 0;
+    buffer_binding = {};
+    buffer_binding.buffer = vertex_buffer;
+    buffer_binding.offset = 0;
 
     SDL_UploadToGPUBuffer(copyPass, &location, &region, true);
 
@@ -61,5 +61,5 @@ GCGameEngine::VBO::~VBO(){
 }
 
 SDL_GPUBufferBinding* GCGameEngine::VBO::getBufferBinding(){
-    return buffer_binding;
+    return &buffer_binding;
 }

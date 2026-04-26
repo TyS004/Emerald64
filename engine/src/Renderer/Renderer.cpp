@@ -21,3 +21,8 @@ void GCGameEngine::Renderer::bindVertexBuffers(SDL_GPUBufferBinding* binding){
 void GCGameEngine::Renderer::draw(){
     SDL_DrawGPUPrimitives(render_pass, 3, 1, 0, 0);
 }
+
+void GCGameEngine::Renderer::sendUniforms(SDL_GPUCommandBuffer* cmd_buf, Object* obj){
+    glm::mat4 mvp = obj->getMVP();
+    SDL_PushGPUVertexUniformData(cmd_buf, 0, &mvp, sizeof(mvp));
+}

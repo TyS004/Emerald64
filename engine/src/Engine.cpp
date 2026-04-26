@@ -35,6 +35,7 @@ void GCGameEngine::Engine::run(){
         GCGameEngine::Renderer::begin(cmd_buffer, &colorTargetInfo);
         GCGameEngine::Renderer::bindPipeline(pipeline->getPipeline());
         GCGameEngine::Renderer::bindVertexBuffers(obj->getMesh().vbo->getBufferBinding());
+        GCGameEngine::Renderer::sendUniforms(cmd_buffer, obj);
         GCGameEngine::Renderer::draw();
         GCGameEngine::Renderer::end();
 
