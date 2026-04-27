@@ -3,10 +3,14 @@
 bool* GCGameEngine::Input::pressed_keys = new bool[SDL_SCANCODE_COUNT];
 bool GCGameEngine::Input::running = true;
 
+std::function<void(SDL_Scancode)> GCGameEngine::Input::OnKeyPressedBind = GCGameEngine::Input::OnKeyPressed;
+std::function<void(SDL_Scancode)> GCGameEngine::Input::OnKeyDownBind = GCGameEngine::Input::OnKeyDown;
+
 void GCGameEngine::Input::processEvent(SDL_Event e){
     switch(e.type){
         case SDL_EVENT_KEY_DOWN:
             pressed_keys[e.key.scancode] = true;
+            OnKeyPressedBind(e.key.scancode);
             break;
         case SDL_EVENT_KEY_UP:
             pressed_keys[e.key.scancode] = false;

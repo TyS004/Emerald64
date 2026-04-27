@@ -10,8 +10,8 @@ namespace Editor{
             ~EditorLayer();
 
             void OnUpdate();
-        private:
-            GCGameEngine::Scene* scene;
+
+            static GCGameEngine::Scene* scene;
     };
 }
 
