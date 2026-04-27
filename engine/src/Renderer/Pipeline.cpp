@@ -16,6 +16,15 @@ GCGameEngine::Pipeline::Pipeline(const char* shaderPath){
     SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {};
     pipelineInfo.vertex_shader = vert_shader->getShader();
     pipelineInfo.fragment_shader = frag_shader->getShader();
+
+    SDL_GPUDepthStencilState stencil_state = {};
+    stencil_state.enable_depth_test = true;
+    stencil_state.enable_depth_write = true;
+    stencil_state.compare_op = SDL_GPU_COMPAREOP_LESS_OR_EQUAL;
+
+    pipelineInfo.depth_stencil_state = stencil_state;
+    pipelineInfo.target_info.has_depth_stencil_target = true;
+    pipelineInfo.target_info.depth_stencil_format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT;
     
     SDL_GPUVertexBufferDescription vertexBufferDesctiptions[1];
     vertexBufferDesctiptions[0].slot = 0;

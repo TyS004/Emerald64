@@ -28,3 +28,7 @@ bool GCGameEngine::Input::isKeyDown(SDL_Scancode scancode){
 bool GCGameEngine::Input::isRunning(){
     return running;
 }
+
+void GCGameEngine::Input::clean(){
+    delete[] pressed_keys;
+}

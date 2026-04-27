@@ -3,7 +3,6 @@
 
 #include "ECS/Entity.h"
 #include "Camera/Camera.h"
-#include "Object/Object.h"
 
 namespace GCGameEngine{
     class Scene{

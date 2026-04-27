@@ -5,6 +5,8 @@ GCGameEngine::Log logger;
 
 SDL_Window* GCGameEngine::Window::window = nullptr;
 SDL_GPUDevice* GCGameEngine::Window::device = nullptr;
+uint32_t GCGameEngine::Window::width = 800;
+uint32_t  GCGameEngine::Window::height = 600;
 
 void GCGameEngine::Window::Create(const char* name, int width, int height){
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -14,6 +16,9 @@ void GCGameEngine::Window::Create(const char* name, int width, int height){
 
     window = SDL_CreateWindow(name, width, height, 0);
     if(!window) { logger.warn("Window could not be created"); SDL_Quit();}
+
+    GCGameEngine::Window::width = width;
+    GCGameEngine::Window::height = height;
 
     device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, "metal");
     SDL_ClaimWindowForGPUDevice(device, window);
@@ -41,4 +46,12 @@ SDL_Window* GCGameEngine::Window::getWindow(){
 SDL_GPUDevice* GCGameEngine::Window::getDevice(){
     if(device == nullptr) { GCGameEngine::Log::error("NO DEVICE FOUND!"); }
     return device;
+}
+
+uint32_t  GCGameEngine::Window::getWidth(){
+    return width;
+}
+
+uint32_t  GCGameEngine::Window::getHeight(){
+    return height;
 }

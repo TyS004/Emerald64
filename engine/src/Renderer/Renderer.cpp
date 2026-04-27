@@ -2,8 +2,8 @@
 
 SDL_GPURenderPass* GCGameEngine::Renderer::render_pass = nullptr;
 
-void GCGameEngine::Renderer::begin(SDL_GPUCommandBuffer* cmdBuffer, SDL_GPUColorTargetInfo* colorTargetInfo){
-    render_pass = SDL_BeginGPURenderPass(cmdBuffer, colorTargetInfo, 1, NULL);
+void GCGameEngine::Renderer::begin(SDL_GPUCommandBuffer* cmdBuffer, SDL_GPUColorTargetInfo* color_target_info, SDL_GPUDepthStencilTargetInfo* depth_target_info){
+    render_pass = SDL_BeginGPURenderPass(cmdBuffer, color_target_info, 1, depth_target_info);
 }
 
 void GCGameEngine::Renderer::end(){

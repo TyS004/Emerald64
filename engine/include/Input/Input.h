@@ -12,6 +12,8 @@ namespace GCGameEngine{
             static bool isKeyDown(SDL_Scancode code);
 
             static bool isRunning();
+            
+            static void clean();
         private:
             static bool* pressed_keys;
             static bool running;

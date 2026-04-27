@@ -11,7 +11,6 @@ namespace Editor{
 
             void OnUpdate();
         private:
-            GCGameEngine::Object* objects;
             GCGameEngine::Scene* scene;
     };
 }

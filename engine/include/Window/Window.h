@@ -15,9 +15,15 @@ namespace GCGameEngine{
 
             static SDL_Window* getWindow();
             static SDL_GPUDevice* getDevice();
+
+            static uint32_t getWidth();
+            static uint32_t  getHeight();
         private:
             static SDL_Window* window;
             static SDL_GPUDevice* device;
+
+            static uint32_t width;
+            static uint32_t height;
     };
 }
 

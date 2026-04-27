@@ -21,6 +21,18 @@ void GCGameEngine::Engine::run(){
         std::cout << "Entity ID: " << e << std::endl;
     }
 
+    SDL_GPUTextureCreateInfo depth_texture_info = {
+        .type = SDL_GPU_TEXTURETYPE_2D,
+        .format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT,
+        .usage = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET,
+        .width = GCGameEngine::Window::getWidth(),
+        .height = GCGameEngine::Window::getHeight(),
+        .layer_count_or_depth = 1,
+        .num_levels = 1,
+        .sample_count = SDL_GPU_SAMPLECOUNT_1
+    };
+    SDL_GPUTexture* depth_texture = SDL_CreateGPUTexture(device, &depth_texture_info);
+
     while(running){
         GCGameEngine::Window::PollEvent();
         if(!GCGameEngine::Input::isRunning()) break;
@@ -35,18 +47,24 @@ void GCGameEngine::Engine::run(){
         Uint32 width, height;
         SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buffer, window, &swapchain, &width, &height);
 
-        SDL_GPUColorTargetInfo colorTargetInfo{};
-        colorTargetInfo.clear_color = {80/255.0f, 80/255.0f, 80/255.0f, 255/255.0f};
-        colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
-        colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
-        colorTargetInfo.texture = swapchain;
+        SDL_GPUColorTargetInfo color_target_info{};
+        color_target_info.clear_color = {80/255.0f, 80/255.0f, 80/255.0f, 255/255.0f};
+        color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+        color_target_info.store_op = SDL_GPU_STOREOP_STORE;
+        color_target_info.texture = swapchain;
 
-        GCGameEngine::Renderer::begin(cmd_buffer, &colorTargetInfo);
+        SDL_GPUDepthStencilTargetInfo depth_target_info{};
+        depth_target_info.texture = depth_texture;
+        depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+        depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
+        depth_target_info.clear_depth = 1.0f;
+
+        GCGameEngine::Renderer::begin(cmd_buffer, &color_target_info, &depth_target_info);
         GCGameEngine::Renderer::bindPipeline(pipeline->getPipeline());
 
         for(ECS::Entity entity : active_scene->getEntites()){
             if(ECS::ComponetManager::hasComponet<ECS::Mesh>(entity)){
-                ECS::Transform transform = *ECS::ComponetManager::getComponet<ECS::Transform*>(0);
+                ECS::Transform transform = *ECS::ComponetManager::getComponet<ECS::Transform*>(entity);
                 ECS::Mesh mesh = *ECS::ComponetManager::getComponet<ECS::Mesh*>(entity);
     
                 glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.transform);
@@ -61,6 +79,11 @@ void GCGameEngine::Engine::run(){
         GCGameEngine::Renderer::end();
         SDL_SubmitGPUCommandBuffer(cmd_buffer);
     }
+    GCGameEngine::Input::clean();
+}
+
+void GCGameEngine::Engine::exit(){
+    running = false;
 }
 
 void GCGameEngine::Engine::pushLayer(Layer* layer){

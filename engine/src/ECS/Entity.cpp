@@ -5,9 +5,11 @@ using namespace ECS;
 
 std::unordered_map<Entity, ComponetMask> EntityManager::entity_index = {};
 
+static uint32_t id = 0;
+
 Entity GCGameEngine::ECS::EntityManager::createEntity(){
     ComponetMask mask = 0;
-    Entity e = 0;
+    Entity e = id++;
 
     entity_index[e] = mask;
     return e;

@@ -4,8 +4,6 @@
 #include "ECS/Entity.h"
 
 GCGameEngine::Scene::Scene(){
-    GCGameEngine::ECS::Entity e = GCGameEngine::ECS::EntityManager::createEntity();
-    entites.push_back(e);
     this->camera = new Camera();
 }
 
@@ -14,6 +12,7 @@ GCGameEngine::Scene::~Scene(){
 }
 
 void GCGameEngine::Scene::pushEntity(ECS::Entity* entity){
+    entites.push_back(*entity);
     return;
 }
 
@@ -22,6 +21,7 @@ std::vector<GCGameEngine::ECS::Entity> GCGameEngine::Scene::getEntites(){
 }
 
 void GCGameEngine::Scene::OnUpdate(){
+
 }
 
 GCGameEngine::Camera* GCGameEngine::Scene::getCamera(){
