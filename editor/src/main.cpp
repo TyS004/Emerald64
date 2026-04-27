@@ -9,7 +9,6 @@ int main(){
 
     Editor::EditorLayer* layer = new Editor::EditorLayer();
     GCGameEngine::Engine::pushLayer(layer);
-    
     GCGameEngine::Engine::run();
     
     GCGameEngine::Window::Destory();

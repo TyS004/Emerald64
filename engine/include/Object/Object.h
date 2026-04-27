@@ -3,6 +3,7 @@
 
 #include "Renderer/VBO.h"
 #include "ECS/Componet.h"
+#include "Camera/Camera.h"
 
 namespace GCGameEngine{
     class Object{
@@ -10,13 +11,18 @@ namespace GCGameEngine{
             Object();
             ~Object();
 
-            Componet::Mesh getMesh();
             glm::mat4 getModel();
+
+            void setMVP(glm::mat4 mvp);
+            glm::mat4 getMVP();
+
+            void OnUpdate(Camera* camera);
+
+            ECS::Mesh mesh;
+            ECS::Transform transform;
         private:
-            Componet::Mesh mesh;
-            Componet::Transform transform;
-            
             glm::mat4 model;
+            glm::mat4 mvp;
     };
 }
 

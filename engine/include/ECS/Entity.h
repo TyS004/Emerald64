@@ -1,11 +1,23 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <uuid/uuid.h>
+#include <unordered_map>
+
+#include "ECS/Componet.h"
+
 namespace GCGameEngine{
-    class Entity{
-        public:
-            virtual void OnUpdate() {};
-    };
+    namespace ECS{
+        using Entity = uint32_t;
+
+        class EntityManager{
+            public:
+                static Entity createEntity();
+                static void deleteEntity();
+
+                static std::unordered_map<Entity, ComponetMask> entity_index;
+        };
+    }
 }
 
 #endif

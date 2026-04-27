@@ -16,7 +16,10 @@ void GCGameEngine::Engine::run(){
     }
 
     std::cout << "Scene: " << active_scene << std::endl;
-    std::cout << "Object: " << active_scene->getObject() << std::endl;
+    for(GCGameEngine::ECS::Entity e : active_scene->getEntites()){
+        
+        std::cout << "Entity ID: " << e << std::endl;
+    }
 
     while(running){
         GCGameEngine::Window::PollEvent();
@@ -40,11 +43,22 @@ void GCGameEngine::Engine::run(){
 
         GCGameEngine::Renderer::begin(cmd_buffer, &colorTargetInfo);
         GCGameEngine::Renderer::bindPipeline(pipeline->getPipeline());
-        GCGameEngine::Renderer::bindVertexBuffers(active_scene->getObject()->getMesh().vbo->getBufferBinding());
-        GCGameEngine::Renderer::sendUniforms(cmd_buffer, active_scene->getMVP());
-        GCGameEngine::Renderer::draw();
-        GCGameEngine::Renderer::end();
 
+        for(ECS::Entity entity : active_scene->getEntites()){
+            if(ECS::ComponetManager::hasComponet<ECS::Mesh>(entity)){
+                ECS::Transform transform = *ECS::ComponetManager::getComponet<ECS::Transform*>(0);
+                ECS::Mesh mesh = *ECS::ComponetManager::getComponet<ECS::Mesh*>(entity);
+    
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.transform);
+                glm::mat4 mvp = active_scene->getCamera()->getProj() * active_scene->getCamera()->getView() * model;
+    
+                GCGameEngine::Renderer::bindVertexBuffers(mesh.vbo->getBufferBinding());
+                GCGameEngine::Renderer::sendUniforms(cmd_buffer, mvp);
+                GCGameEngine::Renderer::draw();
+            }
+        }
+
+        GCGameEngine::Renderer::end();
         SDL_SubmitGPUCommandBuffer(cmd_buffer);
     }
 }

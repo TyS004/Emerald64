@@ -1,26 +1,29 @@
 #include "Scene/Scene.h"
+#include "ECS/ComponetManager.h"
+#include "Renderer/Renderer.h"
+#include "ECS/Entity.h"
 
 GCGameEngine::Scene::Scene(){
-    this->entites = new Entity*[2];
-
-    this->obj = new Object();
-    GCGameEngine::Camera* camera = new Camera();
-
-    mvp = camera->getProj() * camera->getView() * obj->getModel();
+    GCGameEngine::ECS::Entity e = GCGameEngine::ECS::EntityManager::createEntity();
+    entites.push_back(e);
+    this->camera = new Camera();
 }
 
 GCGameEngine::Scene::~Scene(){
-    delete[] entites;
+    delete this->camera;
 }
 
-void GCGameEngine::Scene::pushEntity(Entity* entity){
+void GCGameEngine::Scene::pushEntity(ECS::Entity* entity){
     return;
 }
 
-glm::mat4 GCGameEngine::Scene::getMVP(){
-    return this->mvp;
+std::vector<GCGameEngine::ECS::Entity> GCGameEngine::Scene::getEntites(){
+    return this->entites;
 }
 
-GCGameEngine::Object* GCGameEngine::Scene::getObject(){
-    return this->obj;
+void GCGameEngine::Scene::OnUpdate(){
+}
+
+GCGameEngine::Camera* GCGameEngine::Scene::getCamera(){
+    return this->camera;
 }

@@ -7,15 +7,15 @@
 #include "ECS/Entity.h"
 
 namespace GCGameEngine{
-    class Camera : Entity{
+    class Camera{
         public:
             Camera();
             ~Camera();
 
             void OnUpdate();
 
-            Componet::Transform getTransform();
-            void setTransform(Componet::Transform transform);
+            ECS::Transform getTransform();
+            void setTransform(ECS::Transform transform);
 
             glm::mat4 getView();
             glm::mat4 getProj();
@@ -23,7 +23,7 @@ namespace GCGameEngine{
             glm::mat4 view;
             glm::mat4 proj;
 
-            Componet::Transform transform;
+            ECS::Transform transform;
     };
 }
 

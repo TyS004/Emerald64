@@ -7,6 +7,7 @@
 #include "Layer/Layer.h"
 #include "Object/Object.h"
 #include "ECS/Entity.h"
+#include "ECS/ComponetManager.h"
 #include "Camera/Camera.h"
 #include "Scene/Scene.h"
 

@@ -25,11 +25,11 @@ void GCGameEngine::Camera::OnUpdate(){
     return;
 }
 
-GCGameEngine::Componet::Transform GCGameEngine::Camera::getTransform(){
+GCGameEngine::ECS::Transform GCGameEngine::Camera::getTransform(){
     this->transform;
 }
 
-void GCGameEngine::Camera::setTransform(GCGameEngine::Componet::Transform transform){
+void GCGameEngine::Camera::setTransform(GCGameEngine::ECS::Transform transform){
     this->transform = transform;
 }
 
