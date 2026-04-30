@@ -36,7 +36,7 @@ bool ComponetManager::hasComponet<Mesh>(Entity e){
 template <>
 void ComponetManager::addComponet<Transform*>(Entity e){
     Transform* transform = (Transform*)malloc(sizeof(Transform));
-    transform->transform = glm::vec3(0.0f, 0.0f, 0.0f);
+    transform->position = glm::vec3(0.0f, 0.0f, 0.0f);
 
     EntityManager::entity_index[e] |= TRANSFORM;
     transforms.push_back(transform);
@@ -55,6 +55,7 @@ void ComponetManager::clean(){
     for(Transform* transform : transforms){
         delete transform;
     }
+
     for(Mesh* mesh : meshes){
         delete mesh;
     }

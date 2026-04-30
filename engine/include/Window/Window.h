@@ -16,6 +16,9 @@ namespace GCGameEngine{
             static SDL_Window* getWindow();
             static SDL_GPUDevice* getDevice();
 
+            static void setMouseLock();
+            static bool isMouseLock();
+
             static uint32_t getWidth();
             static uint32_t  getHeight();
         private:
@@ -24,6 +27,8 @@ namespace GCGameEngine{
 
             static uint32_t width;
             static uint32_t height;
+
+            static bool isMouseLocked;
     };
 }
 

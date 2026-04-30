@@ -36,7 +36,7 @@ void GCGameEngine::Engine::run(){
     while(running){
         GCGameEngine::Window::PollEvent();
         if(!GCGameEngine::Input::isRunning()) break;
-
+        
         for(Layer* layer : layers){
             layer->OnUpdate();
         }
@@ -67,7 +67,7 @@ void GCGameEngine::Engine::run(){
                 ECS::Transform transform = *ECS::ComponetManager::getComponet<ECS::Transform*>(entity);
                 ECS::Mesh mesh = *ECS::ComponetManager::getComponet<ECS::Mesh*>(entity);
     
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.transform);
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.position);
                 glm::mat4 mvp = active_scene->getCamera()->getProj() * active_scene->getCamera()->getView() * model;
     
                 GCGameEngine::Renderer::bindVertexBuffers(mesh.vbo->getBufferBinding());

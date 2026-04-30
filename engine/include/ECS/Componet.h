@@ -11,7 +11,9 @@ namespace GCGameEngine{
         constexpr ComponetMask MESH      = 1 << 1; // 0010
 
         struct Transform{
-            glm::vec3 transform;
+            glm::vec3 position;
+            glm::vec3 euler;
+            glm::vec3 scale;
         };
         
         struct Mesh{

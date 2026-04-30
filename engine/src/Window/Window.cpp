@@ -8,8 +8,10 @@ SDL_GPUDevice* GCGameEngine::Window::device = nullptr;
 uint32_t GCGameEngine::Window::width = 800;
 uint32_t  GCGameEngine::Window::height = 600;
 
+bool GCGameEngine::Window::isMouseLocked = false;
+
 void GCGameEngine::Window::Create(const char* name, int width, int height){
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+    if(SDL_Init(SDL_INIT_VIDEO) == 0){
         logger.warn("SDL Could not Initalize");
         return;
     }
@@ -54,4 +56,13 @@ uint32_t  GCGameEngine::Window::getWidth(){
 
 uint32_t  GCGameEngine::Window::getHeight(){
     return height;
+}
+
+void GCGameEngine::Window::setMouseLock(){
+    SDL_SetWindowRelativeMouseMode(window, true);
+    isMouseLocked = true;
+}
+
+bool GCGameEngine::Window::isMouseLock(){
+    return isMouseLocked;
 }

@@ -1,10 +1,12 @@
 #include "Input/Input.h"
+#include "Window/Window.h"
 
 bool* GCGameEngine::Input::pressed_keys = new bool[SDL_SCANCODE_COUNT];
 bool GCGameEngine::Input::running = true;
 
 std::function<void(SDL_Scancode)> GCGameEngine::Input::OnKeyPressedBind = GCGameEngine::Input::OnKeyPressed;
 std::function<void(SDL_Scancode)> GCGameEngine::Input::OnKeyDownBind = GCGameEngine::Input::OnKeyDown;
+std::function<void(SDL_MouseMotionEvent e)> GCGameEngine::Input::OnMouseMoveBind = GCGameEngine::Input::OnMouseMove;
 
 void GCGameEngine::Input::processEvent(SDL_Event e){
     switch(e.type){
@@ -14,6 +16,13 @@ void GCGameEngine::Input::processEvent(SDL_Event e){
             break;
         case SDL_EVENT_KEY_UP:
             pressed_keys[e.key.scancode] = false;
+            break;
+        case SDL_EVENT_MOUSE_MOTION:
+            OnMouseMoveBind(e.motion);
+            break;
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            SDL_HideCursor();
+            GCGameEngine::Window::setMouseLock();
             break;
         case SDL_EVENT_QUIT:
             running = false;
