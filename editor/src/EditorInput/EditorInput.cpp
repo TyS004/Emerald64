@@ -16,7 +16,7 @@ void Editor::EditorInput::OnKeyDown(SDL_Scancode scancode){
 }
 
 void Editor::EditorInput::OnMouseMove(SDL_MouseMotionEvent e){
-    std::cout <<  "Mouse Offset: " << e.xrel << " " << e.yrel << std::endl;
+    //std::cout <<  "Mouse Offset: " << e.xrel << " " << e.yrel << std::endl;
 
     GCGameEngine::Camera* camera = Editor::EditorLayer::scene->getCamera();
     GCGameEngine::ECS::Transform* transform = camera->getTransform();

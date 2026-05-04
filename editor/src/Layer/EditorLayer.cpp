@@ -5,8 +5,9 @@ using namespace GCGameEngine;
 using namespace ECS;
 
 GCGameEngine::Scene* Editor::EditorLayer::scene = new GCGameEngine::Scene();
+FBXParser* Editor::EditorLayer::parser = new FBXParser("../assets/meshes/tinker.obj");
 
-Editor::EditorLayer::EditorLayer(){
+Editor::EditorLayer::EditorLayer(){    
     Entity e1 = GCGameEngine::ECS::EntityManager::createEntity();
     scene->pushEntity(&e1);
 
@@ -14,8 +15,10 @@ Editor::EditorLayer::EditorLayer(){
 
     std::vector<GCGameEngine::ECS::Entity> entities = scene->getEntites();
     
-    GCGameEngine::ECS::ComponetManager::addComponet<Transform*>(entities[0]);
-    GCGameEngine::ECS::ComponetManager::addComponet<Mesh*>(entities[0]);
+    GCGameEngine::ECS::Transform* transform = new Transform{};
+    GCGameEngine::ECS::Mesh* obj_mesh = parser->getMesh();
+    GCGameEngine::ECS::ComponetManager::addComponet<Transform*>(entities[0], transform);
+    GCGameEngine::ECS::ComponetManager::addComponet<Mesh*>(entities[0], obj_mesh);
 
     GCGameEngine::Input::OnKeyPressedBind = Editor::EditorInput::OnKeyPressed;
     GCGameEngine::Input::OnKeyDownBind = Editor::EditorInput::OnKeyDown;
@@ -24,7 +27,7 @@ Editor::EditorLayer::EditorLayer(){
 
 Editor::EditorLayer::~EditorLayer(){
     delete scene;
-    GCGameEngine::ECS::ComponetManager::clean();
+    delete parser;
 }
 
 void Editor::EditorLayer::OnUpdate(){

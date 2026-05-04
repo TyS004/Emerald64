@@ -14,12 +14,21 @@ void GCGameEngine::Renderer::bindPipeline(SDL_GPUGraphicsPipeline* pipeline){
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline);
 }
 
-void GCGameEngine::Renderer::bindVertexBuffers(SDL_GPUBufferBinding* binding){
-    SDL_BindGPUVertexBuffers(render_pass, 0, binding, 1);
+void GCGameEngine::Renderer::bindVertexBuffers(GCGameEngine::ECS::Mesh* mesh){
+    SDL_BindGPUVertexBuffers(render_pass, 0, mesh->vbo->getBufferBinding(), 1);
 }
 
-void GCGameEngine::Renderer::draw(){
-    SDL_DrawGPUPrimitives(render_pass, 3, 1, 0, 0);
+void GCGameEngine::Renderer::bindIndexBuffers(GCGameEngine::ECS::Mesh* mesh){
+    SDL_GPUBuffer* index_buffer = mesh->ibo->getIndexBuffer();
+    SDL_GPUBufferBinding binding;
+    binding.buffer = index_buffer;
+    binding.offset = 0;
+
+    SDL_BindGPUIndexBuffer(render_pass, &binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
+}
+
+void GCGameEngine::Renderer::draw(GCGameEngine::ECS::Mesh* mesh){
+    SDL_DrawGPUIndexedPrimitives(render_pass, mesh->ibo->getNumIndices(), 1, 0, 0, 0);
 }
 
 void GCGameEngine::Renderer::sendUniforms(SDL_GPUCommandBuffer* cmd_buf, glm::mat4 mvp){

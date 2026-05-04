@@ -16,7 +16,7 @@ namespace GCGameEngine{
                 static bool hasComponet(Entity e);
     
                 template <typename T>
-                static void addComponet(Entity e);
+                static void addComponet(Entity e, T componet);
 
                 static void clean();
     

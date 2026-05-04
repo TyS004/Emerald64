@@ -1,23 +1,43 @@
 #include "Renderer/VBO.h"
 #include "Window/Window.h"
 
-GCGameEngine::VBO::VBO(const uint16_t num_vertices){
+GCGameEngine::VBO::VBO(){
+    //DEFAULT TRIANGLE
+    
     this->device = GCGameEngine::Window::getDevice();
-    this->num_vertices = num_vertices;
+    this->num_vertices = 3;
+    this->vertices = new Vertex[3];
 
-    vec3 pos1 = {0.0f, 0.5f, 0.0f};
-    vec3 pos2 = {-0.5f, -0.5f, 0.0f};
-    vec3 pos3 = {0.5f, -0.5f, 0.0f};
+    glm::vec3 pos1 = {0.0f, 0.5f, 0.0f};
+    glm::vec3 pos2 = {-0.5f, -0.5f, 0.0f};
+    glm::vec3 pos3 = {0.5f, -0.5f, 0.0f};
 
-    vec4 color1 = {1.0f, 0.0f, 1.0f, 1.0f};
-    vec4 color2 = {1.0f, 1.0f, 0.0f, 1.0f};
-    vec4 color3 = {1.0f, 0.0f, 0.25f, 1.0f};
+    glm::vec4 color1 = {1.0f, 0.0f, 1.0f, 1.0f};
+    glm::vec4 color2 = {1.0f, 1.0f, 0.0f, 1.0f};
+    glm::vec4 color3 = {1.0f, 0.0f, 0.25f, 1.0f};
 
-    vertices = new Vertex[3];
     vertices[0] = Vertex{pos1, color1};
-    vertices[1] = Vertex{pos2, color2};
+    vertices[1] = Vertex{pos2, color2}; 
     vertices[2] = Vertex{pos3, color3};
 
+    bind();
+}
+
+GCGameEngine::VBO::VBO(Vertex* vertices, int num_vertices){
+    this->device = GCGameEngine::Window::getDevice();
+    this->num_vertices = num_vertices;
+    this->vertices = vertices;
+
+    bind();
+}   
+
+GCGameEngine::VBO::~VBO(){
+    delete[] vertices;
+    SDL_ReleaseGPUBuffer(device, vertex_buffer); 
+    SDL_ReleaseGPUTransferBuffer(device, transfer_buffer);
+}
+
+void GCGameEngine::VBO::bind(){
     SDL_GPUBufferCreateInfo bufferInfo{};
     bufferInfo.size = sizeof(Vertex) * num_vertices;
     bufferInfo.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
@@ -52,14 +72,14 @@ GCGameEngine::VBO::VBO(const uint16_t num_vertices){
 
     SDL_EndGPUCopyPass(copyPass);
     SDL_SubmitGPUCommandBuffer(cmdBuffer);
-}   
 
-GCGameEngine::VBO::~VBO(){
-    delete[] vertices;
-    SDL_ReleaseGPUBuffer(device, vertex_buffer); 
-    SDL_ReleaseGPUTransferBuffer(device, transfer_buffer);
+    GCGameEngine::Log::debug("Sent VBO Info to GPU");
 }
 
 SDL_GPUBufferBinding* GCGameEngine::VBO::getBufferBinding(){
     return &buffer_binding;
+}
+
+int GCGameEngine::VBO::getNumVertices(){
+    return this->num_vertices;
 }

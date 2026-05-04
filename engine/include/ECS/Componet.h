@@ -2,6 +2,7 @@
 #define ECS_H
 
 #include "Renderer/VBO.h"
+#include "Renderer/IBO.h"
 
 namespace GCGameEngine{
     namespace ECS{
@@ -11,13 +12,14 @@ namespace GCGameEngine{
         constexpr ComponetMask MESH      = 1 << 1; // 0010
 
         struct Transform{
-            glm::vec3 position;
-            glm::vec3 euler;
-            glm::vec3 scale;
+            glm::vec3 position = {0, 0, 0};
+            glm::vec3 euler = {0, 0, 0};
+            glm::vec3 scale = {1, 1 , 1};
         };
         
         struct Mesh{
             VBO* vbo;
+            IBO* ibo;
         };
     }
 }

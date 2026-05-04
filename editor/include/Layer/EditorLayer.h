@@ -12,6 +12,7 @@ namespace Editor{
             void OnUpdate();
 
             static GCGameEngine::Scene* scene;
+            static FBXParser* parser;
     };
 }
 

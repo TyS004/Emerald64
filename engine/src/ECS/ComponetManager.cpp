@@ -34,19 +34,13 @@ bool ComponetManager::hasComponet<Mesh>(Entity e){
 }
 
 template <>
-void ComponetManager::addComponet<Transform*>(Entity e){
-    Transform* transform = (Transform*)malloc(sizeof(Transform));
-    transform->position = glm::vec3(0.0f, 0.0f, 0.0f);
-
+void ComponetManager::addComponet<Transform*>(Entity e, Transform* transform){
     EntityManager::entity_index[e] |= TRANSFORM;
     transforms.push_back(transform);
 }
 
 template <>
-void ComponetManager::addComponet<Mesh*>(Entity e){
-    Mesh* mesh = (Mesh*)malloc(sizeof(Mesh));
-    mesh->vbo = new VBO(3);
-
+void ComponetManager::addComponet<Mesh*>(Entity e, Mesh* mesh){
     EntityManager::entity_index[e] |= MESH;  
     meshes.push_back(mesh);
 }

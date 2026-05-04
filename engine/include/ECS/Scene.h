@@ -11,13 +11,13 @@ namespace GCGameEngine{
             ~Scene();
 
             void pushEntity(ECS::Entity* entity);
+            std::vector<ECS::Entity> getEntites();
 
             glm::mat4 getMVP();
             Camera* getCamera();
-
-            std::vector<ECS::Entity> getEntites();
             
             void OnUpdate();
+            void PrintScene();
         private:
             std::vector<ECS::Entity> entites;
 

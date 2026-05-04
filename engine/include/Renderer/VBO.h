@@ -4,27 +4,26 @@
 #include "SDL3/SDL.h"
 
 namespace GCGameEngine{
-
-    struct vec3{
-        float x, y, z;
-    };
-
-    struct vec4{
-        float x, y, z, w;
-    };
-
     struct Vertex{
-        vec3 pos;
-        vec4 color;
+        glm::vec3 pos;
+        glm::vec4 color;
     };
 
     class VBO{
         public:
-            VBO(const uint16_t num_vertices);
+            VBO();
+            VBO(Vertex* vertices, int num_vertices);
             ~VBO();
 
+            void bind();
             SDL_GPUBufferBinding* getBufferBinding();
+
+            void setVerticies(Vertex* vertices, int num_vertices);
+
+            int getNumVertices();
         private:
+            void setTriangle();
+
             uint16_t num_vertices;
             Vertex* vertices;
 

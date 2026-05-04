@@ -28,8 +28,8 @@ GCGameEngine::Camera::~Camera(){
 }
 
 void GCGameEngine::Camera::OnUpdate(){
-    std::cout << "Camera Transform: " <<
-       this->transform->position.x << " " << this->transform->position.y << " " << this->transform->position.z << " " << std::endl;
+    //std::cout << "Camera Transform: " <<
+     //  this->transform->position.x << " " << this->transform->position.y << " " << this->transform->position.z << " " << std::endl;
     
     glm::vec3 direction;
     direction.x = cos(glm::radians(transform->euler.x)) * cos(glm::radians(transform->euler.y));

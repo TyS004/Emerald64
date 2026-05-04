@@ -16,10 +16,7 @@ void GCGameEngine::Engine::run(){
     }
 
     std::cout << "Scene: " << active_scene << std::endl;
-    for(GCGameEngine::ECS::Entity e : active_scene->getEntites()){
-        
-        std::cout << "Entity ID: " << e << std::endl;
-    }
+    active_scene->PrintScene();
 
     SDL_GPUTextureCreateInfo depth_texture_info = {
         .type = SDL_GPU_TEXTURETYPE_2D,
@@ -36,7 +33,7 @@ void GCGameEngine::Engine::run(){
     while(running){
         GCGameEngine::Window::PollEvent();
         if(!GCGameEngine::Input::isRunning()) break;
-        
+
         for(Layer* layer : layers){
             layer->OnUpdate();
         }
@@ -48,7 +45,7 @@ void GCGameEngine::Engine::run(){
         SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buffer, window, &swapchain, &width, &height);
 
         SDL_GPUColorTargetInfo color_target_info{};
-        color_target_info.clear_color = {80/255.0f, 80/255.0f, 80/255.0f, 255/255.0f};
+        color_target_info.clear_color = {0/255.0f, 0/255.0f, 0/255.0f, 255/255.0f};
         color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
         color_target_info.store_op = SDL_GPU_STOREOP_STORE;
         color_target_info.texture = swapchain;
@@ -63,16 +60,18 @@ void GCGameEngine::Engine::run(){
         GCGameEngine::Renderer::bindPipeline(pipeline->getPipeline());
 
         for(ECS::Entity entity : active_scene->getEntites()){
-            if(ECS::ComponetManager::hasComponet<ECS::Mesh>(entity)){
-                ECS::Transform transform = *ECS::ComponetManager::getComponet<ECS::Transform*>(entity);
-                ECS::Mesh mesh = *ECS::ComponetManager::getComponet<ECS::Mesh*>(entity);
+            if(ECS::ComponetManager::hasComponet<ECS::Mesh>(entity) &&
+                ECS::ComponetManager::hasComponet<ECS::Transform>(entity)){
+                ECS::Transform* transform = ECS::ComponetManager::getComponet<ECS::Transform*>(entity);
+                ECS::Mesh* mesh = ECS::ComponetManager::getComponet<ECS::Mesh*>(entity);
     
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.position);
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position);
                 glm::mat4 mvp = active_scene->getCamera()->getProj() * active_scene->getCamera()->getView() * model;
     
-                GCGameEngine::Renderer::bindVertexBuffers(mesh.vbo->getBufferBinding());
+                GCGameEngine::Renderer::bindVertexBuffers(mesh);
+                GCGameEngine::Renderer::bindIndexBuffers(mesh);
                 GCGameEngine::Renderer::sendUniforms(cmd_buffer, mvp);
-                GCGameEngine::Renderer::draw();
+                GCGameEngine::Renderer::draw(mesh);
             }
         }
 
