@@ -7,6 +7,7 @@ set(FBX_SDK "/Applications/Autodesk/FBX SDK/2020.3.9")
 
 add_subdirectory(./vendor/SDL)
 add_subdirectory(./vendor/glm)
+add_subdirectory(./vendor/imgui)
 
 # ── Engine (DLL) ──────────────────────────────
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS engine/src/*.cpp)
@@ -14,7 +15,7 @@ add_library(GCGameEngine SHARED ${ENGINE_SOURCES})
 target_include_directories(GCGameEngine PUBLIC ./engine/include)
 include_directories(${FBX_SDK}/include)
 link_directories(${FBX_SDK}/lib/clang/release)
-target_link_libraries(GCGameEngine PUBLIC SDL3::SDL3 glm::glm ${FBX_SDK}/lib/clang/release/libfbxsdk.dylib)
+target_link_libraries(GCGameEngine PUBLIC SDL3::SDL3 glm::glm  ImGui::ImGui ${FBX_SDK}/lib/clang/release/libfbxsdk.dylib)
 target_precompile_headers(GCGameEngine PRIVATE engine/src/pch.h)
 
 # ── Editor (EXE) ──────────────────────────────
