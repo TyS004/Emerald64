@@ -146,8 +146,8 @@ GCGameEngine::ECS::Mesh* FBXParser::getMesh(){
 
         if((i % 2) == 0){
             vertices[i].color.r = 1;
-            vertices[i].color.g = 0;
-            vertices[i].color.b = 1;
+            vertices[i].color.g = .5;
+            vertices[i].color.b = 0;
         }
         else{
             vertices[i].color.r = .2;

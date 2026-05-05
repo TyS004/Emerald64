@@ -5,9 +5,9 @@ using namespace GCGameEngine;
 using namespace ECS;
 
 GCGameEngine::Scene* Editor::EditorLayer::scene = new GCGameEngine::Scene();
-FBXParser* Editor::EditorLayer::parser = new FBXParser("../assets/meshes/tinker.obj");
+FBXParser* Editor::EditorLayer::parser = new FBXParser("../assets/meshes/gemstone.obj");
 
-Editor::EditorLayer::EditorLayer(){    
+Editor::EditorLayer::EditorLayer(){
     Entity e1 = GCGameEngine::ECS::EntityManager::createEntity();
     scene->pushEntity(&e1);
 

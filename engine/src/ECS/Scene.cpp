@@ -36,7 +36,7 @@ void GCGameEngine::Scene::PrintScene(){
         {
             GCGameEngine::Log::info("Transform");
         }
-        else if(GCGameEngine::ECS::EntityManager::entity_index[e] & GCGameEngine::ECS::MESH)
+        if(GCGameEngine::ECS::EntityManager::entity_index[e] & GCGameEngine::ECS::MESH)
         {
             GCGameEngine::Log::info("Mesh");
         }
