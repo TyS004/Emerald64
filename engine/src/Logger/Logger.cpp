@@ -1,23 +1,23 @@
 #include "Logger/Logger.h"
 
-GCGameEngine::Log::Log(){}
+E64::Log::Log(){}
 
-void GCGameEngine::Log::info(const std::string& msg){
+void E64::Log::info(const std::string& msg){
     std::cout << "[INFO]: " << msg << std::endl;
 }
 
-void GCGameEngine::Log::warn(const std::string& msg){
+void E64::Log::warn(const std::string& msg){
     std::cout << "[WARN]: " << msg << std::endl;
 }
 
-void GCGameEngine::Log::error(const std::string& msg){
+void E64::Log::error(const std::string& msg){
     std::cout << "[ERROR]: " << msg << std::endl;
 }
 
-void GCGameEngine::Log::debug(const std::string& msg){
+void E64::Log::debug(const std::string& msg){
     std::cout << "[DEBUG]: " << msg << std::endl;
 }
 
-void GCGameEngine::Log::trace(const std::string& msg){
+void E64::Log::trace(const std::string& msg){
     std::cout << "[TRACE]: " << msg << std::endl;
 } 

@@ -1,20 +1,20 @@
 #include "Renderer/Shader.h"
 #include "Logger/Logger.h"
 
-static GCGameEngine::Log logger = GCGameEngine::Log();
+static E64::Log logger = E64::Log();
 
-GCGameEngine::Shader::Shader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device){
+E64::Shader::Shader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device){
     this->device = device;
     this->stage = stage;
     this->path = path;
     this->shader = loadShader();
 }
 
-GCGameEngine::Shader::~Shader(){
+E64::Shader::~Shader(){
     SDL_ReleaseGPUShader(this->device, this->shader);
 }
 
-SDL_GPUShader* GCGameEngine::Shader::loadShader(){
+SDL_GPUShader* E64::Shader::loadShader(){
     char fullPath[256];
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
         snprintf(fullPath, sizeof(fullPath), "%s_vert.metal", path);
@@ -62,6 +62,6 @@ SDL_GPUShader* GCGameEngine::Shader::loadShader(){
     return shader;
 }
 
-SDL_GPUShader* GCGameEngine::Shader::getShader(){
+SDL_GPUShader* E64::Shader::getShader(){
     return this->shader;
 }

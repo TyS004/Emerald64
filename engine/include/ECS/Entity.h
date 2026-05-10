@@ -6,7 +6,7 @@
 
 #include "ECS/Componet.h"
 
-namespace GCGameEngine{
+namespace E64{
     namespace ECS{
         using Entity = uint32_t;
 

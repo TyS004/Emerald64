@@ -6,10 +6,11 @@
 
 class FBXParser{
     public:
+        FBXParser();
         FBXParser(const char* path);
         ~FBXParser();
 
-        GCGameEngine::ECS::Mesh* getMesh();
+        E64::ECS::Mesh* getMesh();
     private:
         FbxMesh* getRawMesh(FbxNode* pNode);
         FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);

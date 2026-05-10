@@ -1,12 +1,12 @@
 #include "ECS/ComponetManager.h"
-using namespace GCGameEngine;
+using namespace E64;
 using namespace ECS;
  
 std::vector<Transform*> ComponetManager::transforms = {};
 std::vector<Mesh*> ComponetManager::meshes = {};
 
 template <>
-Transform* ComponetManager::getComponet<Transform*>(Entity e){
+Transform* ComponetManager::getComponet<Transform>(Entity e){
     if(!(EntityManager::entity_index[e] & TRANSFORM)) { 
         std::cout << "No Transform Componet" << std::endl; 
         return nullptr; 
@@ -15,7 +15,7 @@ Transform* ComponetManager::getComponet<Transform*>(Entity e){
 }
 
 template <>
-Mesh* ComponetManager::getComponet<Mesh*>(Entity e){
+Mesh* ComponetManager::getComponet<Mesh>(Entity e){
     if(!(EntityManager::entity_index[e] & MESH)) { 
         std::cout << "No Mesh Componet" << std::endl; 
         return nullptr; 

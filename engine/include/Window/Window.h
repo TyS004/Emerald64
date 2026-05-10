@@ -4,7 +4,7 @@
 #include <SDL3/SDL.h>
 #include "Input/Input.h"
 
-namespace GCGameEngine{
+namespace E64{
     class Window
     {
         public:
@@ -16,7 +16,7 @@ namespace GCGameEngine{
             static SDL_Window* getWindow();
             static SDL_GPUDevice* getDevice();
 
-            static void setMouseLock();
+            static void setMouseLock(bool lock);
             static bool isMouseLock();
 
             static uint32_t getWidth();

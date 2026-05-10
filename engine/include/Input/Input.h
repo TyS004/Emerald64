@@ -3,7 +3,7 @@
 
 #include "SDL3/SDL.h"
 
-namespace GCGameEngine{
+namespace E64{
     class Input{
         public:
             static bool isRunning();
@@ -16,11 +16,14 @@ namespace GCGameEngine{
 
             static void OnMouseMove(SDL_MouseMotionEvent e) {};
 
+            static void OnWindowResize(SDL_WindowEvent e) {};
+
             static void clean();
 
             static std::function<void(SDL_Scancode)> OnKeyPressedBind;
             static std::function<void(SDL_Scancode)> OnKeyDownBind;
             static std::function<void(SDL_MouseMotionEvent e)> OnMouseMoveBind;
+            static std::function<void(SDL_WindowEvent e)> OnWindowResizeBind;
         private:
             static bool* pressed_keys;
             static bool running;

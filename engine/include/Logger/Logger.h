@@ -3,7 +3,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace GCGameEngine{
+namespace E64{
     class Log
     {
         public:

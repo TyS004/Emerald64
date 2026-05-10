@@ -1,6 +1,6 @@
 #include "Renderer/IBO.h"
 
-GCGameEngine::IBO::IBO(){
+E64::IBO::IBO(){
     //DEFAULT TRIANGLE
     
     num_indices = 3;
@@ -13,15 +13,15 @@ GCGameEngine::IBO::IBO(){
     sendToGPU();
 }
 
-GCGameEngine::IBO::IBO(uint32_t* indices, int num_indices){
+E64::IBO::IBO(uint32_t* indices, int num_indices){
     this->num_indices = num_indices;
     this->indices = indices;
 
     sendToGPU();
 }
 
-void GCGameEngine::IBO::sendToGPU(){
-    SDL_GPUDevice* device = GCGameEngine::Window::getDevice();
+void E64::IBO::sendToGPU(){
+    SDL_GPUDevice* device = E64::Window::getDevice();
     SDL_GPUCommandBuffer* cmd_buffer = SDL_AcquireGPUCommandBuffer(device);
 
     SDL_GPUBufferCreateInfo buffer_info{};
@@ -54,14 +54,14 @@ void GCGameEngine::IBO::sendToGPU(){
     SDL_SubmitGPUCommandBuffer(cmd_buffer);
 }
 
-GCGameEngine::IBO::~IBO(){
+E64::IBO::~IBO(){
     delete[] indices;
 }
 
-SDL_GPUBuffer* GCGameEngine::IBO::getIndexBuffer(){
+SDL_GPUBuffer* E64::IBO::getIndexBuffer(){
     return index_buffer;
 }
 
-int GCGameEngine::IBO::getNumIndices(){
+int E64::IBO::getNumIndices(){
     return num_indices;
 }

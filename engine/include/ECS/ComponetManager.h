@@ -5,12 +5,12 @@
 #include "ECS/Entity.h"
 #include <vector>
 
-namespace GCGameEngine{
+namespace E64{
     namespace ECS{
         class ComponetManager{
             public:
                 template <typename T>
-                static T getComponet(Entity e);
+                static T* getComponet(Entity e);
 
                 template <typename T>
                 static bool hasComponet(Entity e);
@@ -23,6 +23,8 @@ namespace GCGameEngine{
             private:
                 static std::vector<Transform*> transforms;
                 static std::vector<Mesh*> meshes;
+                
+                static std::unordered_map<std::type_info, void*> componet_map;
         };
     }
 }

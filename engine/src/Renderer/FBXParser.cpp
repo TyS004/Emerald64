@@ -67,6 +67,7 @@ FbxMesh* FBXParser::getRawMesh(FbxNode* pNode) {
         if(attribute->GetAttributeType() == FbxNodeAttribute::eMesh){
             FbxGeometryConverter converter(sdk_manager);
             mesh = (FbxMesh*)converter.Triangulate(pNode->GetMesh(), true);
+            if(!mesh) { E64::Log::error("Mesh Not FOund"); }
         }
         PrintAttribute(pNode->GetNodeAttributeByIndex(i));
     }
@@ -80,6 +81,10 @@ FbxMesh* FBXParser::getRawMesh(FbxNode* pNode) {
     printf("</node>\n");
 
     return mesh;
+}
+
+FBXParser::FBXParser(){
+    
 }
 
 FBXParser::FBXParser(const char* path){ 
@@ -103,8 +108,8 @@ FBXParser::FBXParser(const char* path){
     raw_mesh = getRawMesh(rootNode);
     if(!raw_mesh) { std::cout << "ERROR NO MESH FOUND" << std::endl; }
     else {
-        GCGameEngine::Log::debug(std::to_string(raw_mesh->GetControlPointsCount()) + " Verticies from " + std::string(path));
-        GCGameEngine::Log::debug(std::to_string(raw_mesh->GetPolygonCount()) + " Polygon Faces");
+        E64::Log::debug(std::to_string(raw_mesh->GetControlPointsCount()) + " Verticies from " + std::string(path));
+        E64::Log::debug(std::to_string(raw_mesh->GetPolygonCount()) + " Polygon Faces");
     }
 }
 
@@ -112,14 +117,14 @@ FBXParser::~FBXParser(){
     sdk_manager->Destroy();
 }
 
-GCGameEngine::ECS::Mesh* FBXParser::getMesh(){
-    GCGameEngine::ECS::Mesh* mesh = new GCGameEngine::ECS::Mesh{};
+E64::ECS::Mesh* FBXParser::getMesh(){
+    E64::ECS::Mesh* mesh = new E64::ECS::Mesh{};
 
     int num_indices = raw_mesh->GetPolygonCount() * 3;
     int num_vertices = raw_mesh->GetControlPointsCount();
 
     uint32_t* indices = new uint32_t[num_indices];
-    GCGameEngine::Vertex* vertices = new GCGameEngine::Vertex[num_vertices];
+    E64::Vertex* vertices = new E64::Vertex[num_vertices];
 
     int* poly_verts = raw_mesh->GetPolygonVertices();
     for(int i = 0; i < raw_mesh->GetPolygonCount() * 3; i += 3){
@@ -133,7 +138,7 @@ GCGameEngine::ECS::Mesh* FBXParser::getMesh(){
     }
     std::cout << std::endl;
 
-    mesh->ibo = new GCGameEngine::IBO(indices, num_indices);
+    mesh->ibo = new E64::IBO(indices, num_indices);
 
     FbxVector4* raw_vertices = raw_mesh->GetControlPoints();
     for(int i = 0; i < num_vertices; ++i){
@@ -148,15 +153,17 @@ GCGameEngine::ECS::Mesh* FBXParser::getMesh(){
             vertices[i].color.r = 1;
             vertices[i].color.g = .5;
             vertices[i].color.b = 0;
+            vertices[i].color.a = 1;
         }
         else{
             vertices[i].color.r = .2;
             vertices[i].color.g = 1;
             vertices[i].color.b = .5;
+            vertices[i].color.a = 1;
         }
     }
 
-    mesh->vbo = new GCGameEngine::VBO(vertices, num_vertices);
+    mesh->vbo = new E64::VBO(vertices, num_vertices);
 
     return mesh;
 }

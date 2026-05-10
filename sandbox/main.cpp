@@ -1,5 +1,5 @@
 #include "Sandbox.h"
-#include <GCGameEngine.h>
+#include <E64.h>
 
 int main(){
     Sandbox* app = new Sandbox();

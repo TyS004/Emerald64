@@ -4,11 +4,11 @@
 
 #include <cstddef>
 
-static GCGameEngine::Log logger = GCGameEngine::Log();
+static E64::Log logger = E64::Log();
 
-GCGameEngine::Pipeline::Pipeline(const char* shaderPath){
-    this->device = GCGameEngine::Window::getDevice();
-    SDL_Window* window = GCGameEngine::Window::getWindow();
+E64::Pipeline::Pipeline(const char* shaderPath){
+    this->device = E64::Window::getDevice();
+    SDL_Window* window = E64::Window::getWindow();
     
     vert_shader = new Shader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
     frag_shader = new Shader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
@@ -62,10 +62,10 @@ GCGameEngine::Pipeline::Pipeline(const char* shaderPath){
     pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
 }
 
-GCGameEngine::Pipeline::~Pipeline(){
+E64::Pipeline::~Pipeline(){
     SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
 }
 
-SDL_GPUGraphicsPipeline* GCGameEngine::Pipeline::getPipeline(){
+SDL_GPUGraphicsPipeline* E64::Pipeline::getPipeline(){
     return this->pipeline;
 }

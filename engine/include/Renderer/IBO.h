@@ -4,7 +4,7 @@
 #include "SDL3/SDL.h"
 #include "Window/Window.h"
 
-namespace GCGameEngine{
+namespace E64{
     class IBO{
         public:
             IBO();

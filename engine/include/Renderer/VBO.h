@@ -3,7 +3,7 @@
 
 #include "SDL3/SDL.h"
 
-namespace GCGameEngine{
+namespace E64{
     struct Vertex{
         glm::vec3 pos;
         glm::vec4 color;

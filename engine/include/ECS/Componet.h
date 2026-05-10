@@ -4,7 +4,7 @@
 #include "Renderer/VBO.h"
 #include "Renderer/IBO.h"
 
-namespace GCGameEngine{
+namespace E64{
     namespace ECS{
         using ComponetMask = uint32_t;
 

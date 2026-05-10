@@ -2,9 +2,13 @@
 #define SCENE_H
 
 #include "ECS/Entity.h"
-#include "Camera/Camera.h"
 
-namespace GCGameEngine{
+namespace E64{
+    struct CameraData{
+        glm::mat4 proj;
+        glm::mat4 view;
+    };
+
     class Scene{
         public:
             Scene();
@@ -14,14 +18,14 @@ namespace GCGameEngine{
             std::vector<ECS::Entity> getEntites();
 
             glm::mat4 getMVP();
-            Camera* getCamera();
+            void setCameraData(CameraData camera_data);
             
-            void OnUpdate();
-            void PrintScene();
+            void printScene();
+            void render();
         private:
             std::vector<ECS::Entity> entites;
-
-            Camera* camera;
+            CameraData camera_data;
+            
     };
 }
 

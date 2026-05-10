@@ -1,10 +1,10 @@
 #include "Renderer/VBO.h"
 #include "Window/Window.h"
 
-GCGameEngine::VBO::VBO(){
+E64::VBO::VBO(){
     //DEFAULT TRIANGLE
     
-    this->device = GCGameEngine::Window::getDevice();
+    this->device = E64::Window::getDevice();
     this->num_vertices = 3;
     this->vertices = new Vertex[3];
 
@@ -23,21 +23,21 @@ GCGameEngine::VBO::VBO(){
     bind();
 }
 
-GCGameEngine::VBO::VBO(Vertex* vertices, int num_vertices){
-    this->device = GCGameEngine::Window::getDevice();
+E64::VBO::VBO(Vertex* vertices, int num_vertices){
+    this->device = E64::Window::getDevice();
     this->num_vertices = num_vertices;
     this->vertices = vertices;
 
     bind();
 }   
 
-GCGameEngine::VBO::~VBO(){
+E64::VBO::~VBO(){
     delete[] vertices;
     SDL_ReleaseGPUBuffer(device, vertex_buffer); 
     SDL_ReleaseGPUTransferBuffer(device, transfer_buffer);
 }
 
-void GCGameEngine::VBO::bind(){
+void E64::VBO::bind(){
     SDL_GPUBufferCreateInfo bufferInfo{};
     bufferInfo.size = sizeof(Vertex) * num_vertices;
     bufferInfo.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
@@ -73,13 +73,13 @@ void GCGameEngine::VBO::bind(){
     SDL_EndGPUCopyPass(copyPass);
     SDL_SubmitGPUCommandBuffer(cmdBuffer);
 
-    GCGameEngine::Log::debug("Sent VBO Info to GPU");
+    E64::Log::debug("Sent VBO Info to GPU");
 }
 
-SDL_GPUBufferBinding* GCGameEngine::VBO::getBufferBinding(){
+SDL_GPUBufferBinding* E64::VBO::getBufferBinding(){
     return &buffer_binding;
 }
 
-int GCGameEngine::VBO::getNumVertices(){
+int E64::VBO::getNumVertices(){
     return this->num_vertices;
 }

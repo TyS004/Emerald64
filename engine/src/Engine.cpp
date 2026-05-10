@@ -1,94 +1,69 @@
 #include "Engine.h"
 
-bool GCGameEngine::Engine::running = true;
-std::vector<GCGameEngine::Layer*> GCGameEngine::Engine::layers = {};
-GCGameEngine::Scene* GCGameEngine::Engine::active_scene = nullptr;
+#include <imgui.h>
+#include <backends/imgui_impl_sdl3.h>
+#include <backends/imgui_impl_sdlgpu3.h>
 
-void GCGameEngine::Engine::run(){
-    SDL_GPUDevice* device = GCGameEngine::Window::getDevice();
-    SDL_Window* window = GCGameEngine::Window::getWindow();
+bool E64::Engine::running = true;
+E64::EngineCtx* E64::Engine::ctx = new E64::EngineCtx();
+
+void E64::Engine::run(){
+    E64::Renderer* renderer = new E64::Renderer();
+    ctx->renderer = renderer;
+    ctx->elapsed  = 0.0f;
+
+    SDL_GPUDevice* device = E64::Window::getDevice();
+    SDL_Window* window = E64::Window::getWindow();
     
     Pipeline* pipeline = new Pipeline("../assets/shaders/object");
 
-    if (!active_scene) {
-        std::cout << "No active scene!" << std::endl;
-        return;
-    }
-
-    std::cout << "Scene: " << active_scene << std::endl;
-    active_scene->PrintScene();
-
-    SDL_GPUTextureCreateInfo depth_texture_info = {
-        .type = SDL_GPU_TEXTURETYPE_2D,
-        .format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT,
-        .usage = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET,
-        .width = GCGameEngine::Window::getWidth(),
-        .height = GCGameEngine::Window::getHeight(),
-        .layer_count_or_depth = 1,
-        .num_levels = 1,
-        .sample_count = SDL_GPU_SAMPLECOUNT_1
-    };
-    SDL_GPUTexture* depth_texture = SDL_CreateGPUTexture(device, &depth_texture_info);
-
     while(running){
-        GCGameEngine::Window::PollEvent();
-        if(!GCGameEngine::Input::isRunning()) break;
+        auto start = std::chrono::high_resolution_clock::now();
 
-        for(Layer* layer : layers){
+        E64::Window::PollEvent();
+        if(!E64::Input::isRunning()) break;
+
+        for(Layer* layer : E64::Layer::layers){
             layer->OnUpdate();
+        }   
+
+        ImGui_ImplSDLGPU3_NewFrame();
+        ImGui_ImplSDL3_NewFrame();
+        ImGui::NewFrame();
+
+        for(Layer* layer : E64::Layer::layers){
+            layer->OnImGuiRender(ctx);
         }
 
-        SDL_GPUCommandBuffer* cmd_buffer = SDL_AcquireGPUCommandBuffer(device);
-
-        SDL_GPUTexture* swapchain;
-        Uint32 width, height;
-        SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buffer, window, &swapchain, &width, &height);
-
-        SDL_GPUColorTargetInfo color_target_info{};
-        color_target_info.clear_color = {0/255.0f, 0/255.0f, 0/255.0f, 255/255.0f};
-        color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
-        color_target_info.store_op = SDL_GPU_STOREOP_STORE;
-        color_target_info.texture = swapchain;
-
-        SDL_GPUDepthStencilTargetInfo depth_target_info{};
-        depth_target_info.texture = depth_texture;
-        depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
-        depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
-        depth_target_info.clear_depth = 1.0f;
-
-        GCGameEngine::Renderer::begin(cmd_buffer, &color_target_info, &depth_target_info);
-        GCGameEngine::Renderer::bindPipeline(pipeline->getPipeline());
-
-        for(ECS::Entity entity : active_scene->getEntites()){
-            if(ECS::ComponetManager::hasComponet<ECS::Mesh>(entity) &&
-                ECS::ComponetManager::hasComponet<ECS::Transform>(entity)){
-                ECS::Transform* transform = ECS::ComponetManager::getComponet<ECS::Transform*>(entity);
-                ECS::Mesh* mesh = ECS::ComponetManager::getComponet<ECS::Mesh*>(entity);
-    
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position);
-                glm::mat4 mvp = active_scene->getCamera()->getProj() * active_scene->getCamera()->getView() * model;
-    
-                GCGameEngine::Renderer::bindVertexBuffers(mesh);
-                GCGameEngine::Renderer::bindIndexBuffers(mesh);
-                GCGameEngine::Renderer::sendUniforms(cmd_buffer, mvp);
-                GCGameEngine::Renderer::draw(mesh);
-            }
+        renderer->beginSceneRenderPass();
+        renderer->bindPipeline(pipeline->getPipeline());
+        
+        for(Layer* layer : E64::Layer::layers){
+            layer->OnRender();
         }
 
-        GCGameEngine::Renderer::end();
-        SDL_SubmitGPUCommandBuffer(cmd_buffer);
+        renderer->endRenderPass();
+
+        renderer->beginUIRenderPass();
+        renderer->drawUI();
+        renderer->endRenderPass();
+        
+        renderer->submit();
+
+        SDL_Delay(10);
+
+        auto end = std::chrono::high_resolution_clock::now();
+        ctx->elapsed = (end - start).count();
     }
-    GCGameEngine::Input::clean();
+
+    E64::Input::clean();
+    
+    delete pipeline;
+    delete ctx->active_scene;
+    delete ctx->renderer;
+    delete ctx;
 }
 
-void GCGameEngine::Engine::exit(){
+void E64::Engine::exit(){
     running = false;
-}
-
-void GCGameEngine::Engine::pushLayer(Layer* layer){
-    GCGameEngine::Engine::layers.push_back(layer);
-}
-
-void GCGameEngine::Engine::setActiveScene(Scene* scene){
-    GCGameEngine::Engine::active_scene = scene;
 }

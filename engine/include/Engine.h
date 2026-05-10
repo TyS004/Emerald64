@@ -8,22 +8,21 @@
 #include "Layer/Layer.h"
 #include "ECS/Entity.h"
 #include "ECS/ComponetManager.h"
-#include "Camera/Camera.h"
 #include "ECS/Scene.h"
 #include "Renderer/FBXParser.h"
+#include "Layer/UILayer.h"
+#include "Layer/SceneLayer.h"
+#include "ctx.h"
 
-namespace GCGameEngine{
+namespace E64{
     class Engine{
     public:
         static void run();
         static void exit();
 
-        static void pushLayer(Layer* layer);
-        static void setActiveScene(Scene* scene);
+        static EngineCtx* ctx;
     private:
         static bool running;
-        static std::vector<Layer*> layers;
-        static Scene* active_scene;
     };
 }
 

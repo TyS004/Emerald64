@@ -5,7 +5,7 @@
 #include "Window/Window.h"
 #include "Renderer/Shader.h"
 
-namespace GCGameEngine{
+namespace E64{
     class Pipeline{
         public:
             Pipeline() {}

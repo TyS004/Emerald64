@@ -4,21 +4,49 @@
 #include "SDL3/SDL.h"
 #include "ECS/Componet.h"
 
-namespace GCGameEngine{
+#include <imgui.h>
+#include <backends/imgui_impl_sdl3.h>
+#include <backends/imgui_impl_sdlgpu3.h>
+
+namespace E64{
     class Renderer{
         public:
-            static void begin(SDL_GPUCommandBuffer* cmd_buffer, SDL_GPUColorTargetInfo* color_target_info, SDL_GPUDepthStencilTargetInfo* depth_target_info);
-            static void end();
+            Renderer();
+            ~Renderer();
 
-            static void bindPipeline(SDL_GPUGraphicsPipeline* pipeline);
-            static void bindVertexBuffers(GCGameEngine::ECS::Mesh* mesh);
-            static void bindIndexBuffers(GCGameEngine::ECS::Mesh* mesh);
+            void OnResize(float width, float height);
 
-            static void sendUniforms(SDL_GPUCommandBuffer* cmd_buf, glm::mat4 mvp);
+            void beginSceneRenderPass();
+            void beginUIRenderPass();
+            void endRenderPass();
+
+            void bindPipeline(SDL_GPUGraphicsPipeline* pipeline);
+            void bindVertexBuffers(E64::ECS::Mesh* mesh);
+            void bindIndexBuffers(E64::ECS::Mesh* mesh);
+
+            void sendUniforms(glm::mat4 mvp);
             
-            static void draw(ECS::Mesh* mesh);
+            void draw(ECS::Mesh* mesh);
+            void drawUI();
+            void submit();
+
+            SDL_GPURenderPass* getRenderPass();
+            SDL_GPUTexture* getDepthTexture();
+            SDL_GPUTexture* getSceneTexture();
         private:
-            static SDL_GPURenderPass* render_pass;
+            SDL_GPURenderPass* render_pass;
+            SDL_GPUCommandBuffer* cmd_buf;
+            SDL_GPUTexture* depth_texture;
+            SDL_GPUTexture* scene_texture;
+            SDL_GPUSampler* scene_sampler;
+
+            SDL_GPUColorTargetInfo         color_target_info;
+            SDL_GPUDepthStencilTargetInfo  depth_target_info;
+            SDL_GPUTextureCreateInfo       depth_texture_info;
+            SDL_GPUTextureCreateInfo       scene_texture_info;
+
+            SDL_GPUTexture* swapchain;
+            uint32_t width, height;
     };
 }
 

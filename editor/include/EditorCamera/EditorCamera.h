@@ -1,21 +1,23 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef EDITOR_CAMERA_H
+#define EDITOR_CAMERA_H
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "ECS/Componet.h"
 #include "ECS/Entity.h"
 
-namespace GCGameEngine{
-    class Camera{
+namespace Editor{
+    class EditorCamera{
         public:
-            Camera();
-            ~Camera();
+            EditorCamera();
+            ~EditorCamera();
 
             void OnUpdate();
+            void OnResize(float width, float height);
 
-            ECS::Transform* getTransform();
-            void setTransform(ECS::Transform* transform);
+            E64::ECS::Transform* getTransform();
+            void setTransform(E64::ECS::Transform* transform);
 
             glm::mat4 getView();
             glm::mat4 getProj();
@@ -28,7 +30,7 @@ namespace GCGameEngine{
             
             glm::vec3 camera_front;
 
-            ECS::Transform* transform;
+            E64::ECS::Transform* transform;
 
             float cam_sens;
             float cam_velocity;
