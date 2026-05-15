@@ -36,6 +36,7 @@ E64::Renderer::~Renderer(){
 }
 
 void E64::Renderer::OnResize(float width, float height){
+    if(width == 0 || height == 0) return;
     if (depth_texture)
         SDL_ReleaseGPUTexture(E64::Window::getDevice(), depth_texture);
     if (scene_texture)
