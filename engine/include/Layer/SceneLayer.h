@@ -9,7 +9,7 @@ namespace E64{
             SceneLayer();
             ~SceneLayer();
 
-            void OnUpdate() {};
+            void OnUpdate(float dt) {};
             void OnImGuiRender() {};
             void OnEvent(SDL_Event e) {};
             void OnRender();

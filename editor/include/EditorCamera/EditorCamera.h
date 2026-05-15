@@ -13,11 +13,11 @@ namespace Editor{
             EditorCamera();
             ~EditorCamera();
 
-            void OnUpdate();
+            void OnUpdate(float dt);
             void OnResize(float width, float height);
 
-            E64::ECS::Transform* getTransform();
-            void setTransform(E64::ECS::Transform* transform);
+            E64::ECS::TransformComponet* getTransform();
+            void setTransform(E64::ECS::TransformComponet* transform);
 
             glm::mat4 getView();
             glm::mat4 getProj();
@@ -30,10 +30,12 @@ namespace Editor{
             
             glm::vec3 camera_front;
 
-            E64::ECS::Transform* transform;
+            E64::ECS::TransformComponet* transform;
 
             float cam_sens;
-            float cam_velocity;
+            float cam_vel;
+            float xrel, yrel;
+            float prev_xrel, prev_yrel;
     };
 }
 

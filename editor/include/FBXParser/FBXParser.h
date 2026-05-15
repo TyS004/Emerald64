@@ -2,7 +2,7 @@
 #define FBXPARSER_H
 
 #include <fbxsdk.h>
-#include "ECS/Componet.h"
+#include <E64.h>
 
 class FBXParser{
     public:
@@ -18,7 +18,7 @@ class FBXParser{
 
         void parseIndicies();
         void parseVertices();
-
+    
         FbxManager* sdk_manager;
         FbxImporter* importer;
         FbxScene* scene;

@@ -15,9 +15,9 @@ namespace E64{
 
             static void Attach(Layer* layer) { layers.push_back(layer); };
 
-            virtual void OnUpdate() {};
+            virtual void OnUpdate(float dt) {};
             virtual void OnEvent(SDL_Event* e) {};
-            virtual void OnImGuiRender(E64::EngineCtx* ctx) {};
+            virtual void OnImGuiRender() {};
             virtual void OnRender() {};
 
             virtual LayerType GetLayerType() { return LAYER; };

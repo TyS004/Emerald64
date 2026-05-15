@@ -3,11 +3,14 @@
 
 bool* E64::Input::pressed_keys = new bool[SDL_SCANCODE_COUNT];
 bool E64::Input::running = true;
+float E64::Input::xrel = 0.0f;
+float E64::Input::yrel = 0.0f;
 
 std::function<void(SDL_Scancode)>           E64::Input::OnKeyPressedBind   = E64::Input::OnKeyPressed;
 std::function<void(SDL_Scancode)>           E64::Input::OnKeyDownBind      = E64::Input::OnKeyDown;
 std::function<void(SDL_MouseMotionEvent)>   E64::Input::OnMouseMoveBind    = E64::Input::OnMouseMove;
 std::function<void(SDL_WindowEvent)>        E64::Input::OnWindowResizeBind = E64::Input::OnWindowResize;
+std::function<void(const char*)>            E64::Input::OnFileDroppedBind  = E64::Input::OnFileDropped;
 
 void E64::Input::processEvent(SDL_Event e){
     switch(e.type){
@@ -21,6 +24,8 @@ void E64::Input::processEvent(SDL_Event e){
             break;
         case SDL_EVENT_MOUSE_MOTION:
             OnMouseMoveBind(e.motion);
+            xrel = e.motion.xrel;
+            yrel = e.motion.yrel;
             break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
             break;
@@ -29,6 +34,10 @@ void E64::Input::processEvent(SDL_Event e){
             break;
         case SDL_EVENT_QUIT:
             running = false;
+            break;
+        case SDL_EVENT_DROP_FILE:
+            OnFileDroppedBind(e.drop.data);
+        default:
             break;
     }
 }
@@ -43,6 +52,18 @@ bool E64::Input::isKeyDown(SDL_Scancode scancode){
 
 bool E64::Input::isRunning(){
     return running;
+}
+
+float E64::Input::getXRel(){
+    float x = xrel;
+    xrel = 0.0f;
+    return x;
+}
+
+float E64::Input::getYRel(){
+    float y = yrel;
+    yrel = 0.0f;
+    return y;
 }
 
 void E64::Input::clean(){

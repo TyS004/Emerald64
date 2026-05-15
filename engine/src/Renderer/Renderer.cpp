@@ -22,8 +22,13 @@ E64::Renderer::Renderer(){
     scene_texture_info.num_levels = 1;
     scene_texture = SDL_CreateGPUTexture(E64::Window::getDevice(), &scene_texture_info);
 
+    depth_target_info = {};
+    color_target_info = {};
+
     width = 800;
     height = 600;
+
+    draw_calls = 0;
 }
 
 E64::Renderer::~Renderer(){
@@ -46,15 +51,15 @@ void E64::Renderer::OnResize(float width, float height){
 }
 
 void E64::Renderer::beginSceneRenderPass(){
+    draw_calls = 0;
+
     cmd_buf = SDL_AcquireGPUCommandBuffer(E64::Window::getDevice());
 
-    color_target_info = {};
-    color_target_info.clear_color = {0/255.0f, 0/255.0f, 0/255.0f, 255/255.0f};
+    color_target_info.clear_color = {75/255.0f, 75/255.0f, 75/255.0f, 255/255.0f};
     color_target_info.texture = scene_texture;
     color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
     color_target_info.store_op = SDL_GPU_STOREOP_STORE;
 
-    depth_target_info = {};
     depth_target_info.clear_depth = 1.0f;
     depth_target_info.texture = depth_texture;
     depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
@@ -100,6 +105,7 @@ void E64::Renderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
 }
 
 void E64::Renderer::draw(E64::ECS::Mesh* mesh){
+    draw_calls++;
     SDL_DrawGPUIndexedPrimitives(render_pass, mesh->ibo->getNumIndices(), 1, 0, 0, 0);
 }
 
@@ -125,4 +131,8 @@ SDL_GPUTexture* E64::Renderer::getDepthTexture(){
 
 SDL_GPUTexture* E64::Renderer::getSceneTexture(){
     return scene_texture;
+}
+
+int E64::Renderer::getDrawCalls(){
+    return draw_calls;
 }

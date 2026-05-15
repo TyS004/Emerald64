@@ -1,56 +1,53 @@
 #include "ECS/ComponetManager.h"
+
 using namespace E64;
 using namespace ECS;
  
-std::vector<Transform*> ComponetManager::transforms = {};
-std::vector<Mesh*> ComponetManager::meshes = {};
+std::vector<TransformComponet> ComponetManager::transform_componets = {};
+std::vector<MeshComponet> ComponetManager::mesh_componets = {};
 
-template <>
-Transform* ComponetManager::getComponet<Transform>(Entity e){
+template <> 
+TransformComponet* ComponetManager::getComponet<TransformComponet>(Entity e){
+    if(e < 0) return nullptr;
     if(!(EntityManager::entity_index[e] & TRANSFORM)) { 
         std::cout << "No Transform Componet" << std::endl; 
         return nullptr; 
     }
-    return transforms[e];
+    return &transform_componets[e];
 }
 
 template <>
-Mesh* ComponetManager::getComponet<Mesh>(Entity e){
+MeshComponet* ComponetManager::getComponet<MeshComponet>(Entity e){
+    if(e < 0) return nullptr;
     if(!(EntityManager::entity_index[e] & MESH)) { 
         std::cout << "No Mesh Componet" << std::endl; 
         return nullptr; 
     }
-    return meshes[e];   
+    return &mesh_componets[e];   
 }
 
 template <>
-bool ComponetManager::hasComponet<Transform>(Entity e){
+bool ComponetManager::hasComponet<TransformComponet>(Entity e){
+    if(e < 0) return false;
     return EntityManager::entity_index[e] & TRANSFORM;
 }
 
 template <>
-bool ComponetManager::hasComponet<Mesh>(Entity e){
+bool ComponetManager::hasComponet<MeshComponet>(Entity e){
+    if(e < 0) return false;
     return EntityManager::entity_index[e] & MESH;
 }
 
 template <>
-void ComponetManager::addComponet<Transform*>(Entity e, Transform* transform){
+void ComponetManager::addComponet<TransformComponet>(Entity e, ECS::TransformComponet comp){
+    if(e < 0) return;
     EntityManager::entity_index[e] |= TRANSFORM;
-    transforms.push_back(transform);
+    transform_componets.push_back(comp);
 }
 
 template <>
-void ComponetManager::addComponet<Mesh*>(Entity e, Mesh* mesh){
-    EntityManager::entity_index[e] |= MESH;  
-    meshes.push_back(mesh);
-}
-
-void ComponetManager::clean(){
-    for(Transform* transform : transforms){
-        delete transform;
-    }
-
-    for(Mesh* mesh : meshes){
-        delete mesh;
-    }
+void ComponetManager::addComponet<MeshComponet>(Entity e, ECS::MeshComponet comp){
+    if(e < 0) return;
+    EntityManager::entity_index[e] |= MESH;
+    mesh_componets.push_back(comp);
 }

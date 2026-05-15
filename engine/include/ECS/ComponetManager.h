@@ -16,15 +16,13 @@ namespace E64{
                 static bool hasComponet(Entity e);
     
                 template <typename T>
-                static void addComponet(Entity e, T componet);
+                static void addComponet(Entity e, T comp);
 
                 static void clean();
     
             private:
-                static std::vector<Transform*> transforms;
-                static std::vector<Mesh*> meshes;
-                
-                static std::unordered_map<std::type_info, void*> componet_map;
+                static std::vector<TransformComponet> transform_componets;
+                static std::vector<MeshComponet> mesh_componets;
         };
     }
 }

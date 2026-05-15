@@ -10,6 +10,7 @@ uint32_t E64::Window::width = 1600;
 uint32_t  E64::Window::height = 900;
 
 bool E64::Window::isMouseLocked = false;
+bool E64::Window::VSync = false;
 
 void E64::Window::Create(const char* name, int width, int height){
     if(SDL_Init(SDL_INIT_VIDEO) == 0){
@@ -25,6 +26,12 @@ void E64::Window::Create(const char* name, int width, int height){
 
     device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, "metal");
     SDL_ClaimWindowForGPUDevice(device, window);
+    SDL_SetGPUSwapchainParameters(
+        device,
+        window,
+        SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
+        SDL_GPU_PRESENTMODE_IMMEDIATE
+    );
 }
 
 void E64::Window::Destory(){
@@ -62,6 +69,10 @@ uint32_t  E64::Window::getHeight(){
     return height;
 }
 
+bool E64::Window::getVSync(){
+    return VSync;
+}
+
 void E64::Window::setMouseLock(bool lock){
     SDL_SetWindowRelativeMouseMode(window, lock);
     isMouseLocked = lock;
@@ -69,4 +80,12 @@ void E64::Window::setMouseLock(bool lock){
 
 bool E64::Window::isMouseLock(){
     return isMouseLocked;
+}
+
+void E64::Window::toggleVSync(){
+    VSync = !VSync;
+    SDL_WaitForGPUIdle(device);
+    SDL_SetGPUSwapchainParameters(device, window,
+        SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
+        VSync ? SDL_GPU_PRESENTMODE_VSYNC : SDL_GPU_PRESENTMODE_IMMEDIATE);
 }

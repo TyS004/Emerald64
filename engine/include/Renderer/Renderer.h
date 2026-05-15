@@ -33,6 +33,7 @@ namespace E64{
             SDL_GPURenderPass* getRenderPass();
             SDL_GPUTexture* getDepthTexture();
             SDL_GPUTexture* getSceneTexture();
+            int getDrawCalls();
         private:
             SDL_GPURenderPass* render_pass;
             SDL_GPUCommandBuffer* cmd_buf;
@@ -47,6 +48,8 @@ namespace E64{
 
             SDL_GPUTexture* swapchain;
             uint32_t width, height;
+
+            int draw_calls;
     };
 }
 

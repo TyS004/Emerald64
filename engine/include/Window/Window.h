@@ -21,6 +21,9 @@ namespace E64{
 
             static uint32_t getWidth();
             static uint32_t  getHeight();
+            static bool getVSync();
+
+            static void toggleVSync();
         private:
             static SDL_Window* window;
             static SDL_GPUDevice* device;
@@ -29,6 +32,7 @@ namespace E64{
             static uint32_t height;
 
             static bool isMouseLocked;
+            static bool VSync;
     };
 }
 

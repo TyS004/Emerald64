@@ -11,15 +11,20 @@ namespace E64{
         constexpr ComponetMask TRANSFORM = 1 << 0; // 0001
         constexpr ComponetMask MESH      = 1 << 1; // 0010
 
-        struct Transform{
+        struct TransformComponet{
             glm::vec3 position = {0, 0, 0};
             glm::vec3 euler = {0, 0, 0};
             glm::vec3 scale = {1, 1 , 1};
+        };
+       
+        struct MeshComponet{
+            uint32_t id;
         };
         
         struct Mesh{
             VBO* vbo;
             IBO* ibo;
+            std::string path;
         };
     }
 }

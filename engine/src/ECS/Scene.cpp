@@ -9,7 +9,7 @@ E64::Scene::Scene(){
 }
 
 E64::Scene::~Scene(){
-    E64::ECS::ComponetManager::clean();
+
 }
 
 void E64::Scene::pushEntity(ECS::Entity* entity){
@@ -45,10 +45,13 @@ void E64::Scene::render(){
     E64::Renderer* renderer = E64::Engine::ctx->renderer;
 
     for(ECS::Entity entity : entites){
-        if(ECS::ComponetManager::hasComponet<ECS::Mesh>(entity) &&
-            ECS::ComponetManager::hasComponet<ECS::Transform>(entity)){
-            ECS::Transform* transform = ECS::ComponetManager::getComponet<ECS::Transform>(entity);
-            ECS::Mesh* mesh = ECS::ComponetManager::getComponet<ECS::Mesh>(entity);
+        if(ECS::ComponetManager::hasComponet<ECS::MeshComponet>(entity) &&
+            ECS::ComponetManager::hasComponet<ECS::TransformComponet>(entity))
+        {
+            ECS::TransformComponet* transform = ECS::ComponetManager::getComponet<ECS::TransformComponet>(entity);
+            ECS::MeshComponet* mesh_componet = ECS::ComponetManager::getComponet<ECS::MeshComponet>(entity);
+           
+            ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->id);
 
             glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position);
             glm::mat4 mvp = camera_data.proj * camera_data.view * model;
