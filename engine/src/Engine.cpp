@@ -27,10 +27,6 @@ void E64::Engine::run(){
             layer->OnUpdate(dt);
         }
 
-        ImGui_ImplSDLGPU3_NewFrame();
-        ImGui_ImplSDL3_NewFrame();
-        ImGui::NewFrame();
-
         for(Layer* layer : E64::Layer::layers){
             layer->OnImGuiRender();
         }

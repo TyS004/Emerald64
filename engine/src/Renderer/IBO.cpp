@@ -3,12 +3,33 @@
 E64::IBO::IBO(){
     //DEFAULT TRIANGLE
     
-    num_indices = 3;
-    
-    indices = new uint32_t[num_indices];
-    indices[0] = 0;
-    indices[1] = 1;
-    indices[2] = 2;
+    num_indices = 36;
+
+    indices = new uint32_t[num_indices]{
+        // Front
+        0, 1, 2,
+        3, 4, 5,
+
+        // Back
+        6, 7, 8,
+        9, 10, 11,
+
+        // Left
+        12, 13, 14,
+        15, 16, 17,
+
+        // Right
+        18, 19, 20,
+        21, 22, 23,
+
+        // Top
+        24, 25, 26,
+        27, 28, 29,
+
+        // Bottom
+        30, 31, 32,
+        33, 34, 35
+    };
 
     sendToGPU();
 }

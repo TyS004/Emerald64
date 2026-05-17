@@ -3,22 +3,63 @@
 
 E64::VBO::VBO(){
     //DEFAULT TRIANGLE
-    
     this->device = E64::Window::getDevice();
-    this->num_vertices = 3;
-    this->vertices = new Vertex[3];
+    this->num_vertices = 36;
+    this->vertices = new Vertex[this->num_vertices];
 
-    glm::vec3 pos1 = {0.0f, 0.5f, 0.0f};
-    glm::vec3 pos2 = {-0.5f, -0.5f, 0.0f};
-    glm::vec3 pos3 = {0.5f, -0.5f, 0.0f};
+    // Front
+    vertices[0] =  {{-0.5f, -0.5f,  0.5f}, {1,0,0,1}};
+    vertices[1] =  {{ 0.5f, -0.5f,  0.5f}, {1,0,0,1}};
+    vertices[2] =  {{ 0.5f,  0.5f,  0.5f}, {1,0,0,1}};
 
-    glm::vec4 color1 = {1.0f, 0.0f, 1.0f, 1.0f};
-    glm::vec4 color2 = {1.0f, 1.0f, 0.0f, 1.0f};
-    glm::vec4 color3 = {1.0f, 0.0f, 0.25f, 1.0f};
+    vertices[3] =  {{-0.5f, -0.5f,  0.5f}, {1,0,0,1}};
+    vertices[4] =  {{ 0.5f,  0.5f,  0.5f}, {1,0,0,1}};
+    vertices[5] =  {{-0.5f,  0.5f,  0.5f}, {1,0,0,1}};
 
-    vertices[0] = Vertex{pos1, color1};
-    vertices[1] = Vertex{pos2, color2}; 
-    vertices[2] = Vertex{pos3, color3};
+    // Back
+    vertices[6] =  {{ 0.5f, -0.5f, -0.5f}, {0,1,0,1}};
+    vertices[7] =  {{-0.5f, -0.5f, -0.5f}, {0,1,0,1}};
+    vertices[8] =  {{-0.5f,  0.5f, -0.5f}, {0,1,0,1}};
+
+    vertices[9] =  {{ 0.5f, -0.5f, -0.5f}, {0,1,0,1}};
+    vertices[10] = {{-0.5f,  0.5f, -0.5f}, {0,1,0,1}};
+    vertices[11] = {{ 0.5f,  0.5f, -0.5f}, {0,1,0,1}};
+
+    // Left
+    vertices[12] = {{-0.5f, -0.5f, -0.5f}, {0,0,1,1}};
+    vertices[13] = {{-0.5f, -0.5f,  0.5f}, {0,0,1,1}};
+    vertices[14] = {{-0.5f,  0.5f,  0.5f}, {0,0,1,1}};
+
+    vertices[15] = {{-0.5f, -0.5f, -0.5f}, {0,0,1,1}};
+    vertices[16] = {{-0.5f,  0.5f,  0.5f}, {0,0,1,1}};
+    vertices[17] = {{-0.5f,  0.5f, -0.5f}, {0,0,1,1}};
+
+    // Right
+    vertices[18] = {{ 0.5f, -0.5f,  0.5f}, {1,1,0,1}};
+    vertices[19] = {{ 0.5f, -0.5f, -0.5f}, {1,1,0,1}};
+    vertices[20] = {{ 0.5f,  0.5f, -0.5f}, {1,1,0,1}};
+
+    vertices[21] = {{ 0.5f, -0.5f,  0.5f}, {1,1,0,1}};
+    vertices[22] = {{ 0.5f,  0.5f, -0.5f}, {1,1,0,1}};
+    vertices[23] = {{ 0.5f,  0.5f,  0.5f}, {1,1,0,1}};
+
+    // Top
+    vertices[24] = {{-0.5f,  0.5f,  0.5f}, {1,0,1,1}};
+    vertices[25] = {{ 0.5f,  0.5f,  0.5f}, {1,0,1,1}};
+    vertices[26] = {{ 0.5f,  0.5f, -0.5f}, {1,0,1,1}};
+
+    vertices[27] = {{-0.5f,  0.5f,  0.5f}, {1,0,1,1}};
+    vertices[28] = {{ 0.5f,  0.5f, -0.5f}, {1,0,1,1}};
+    vertices[29] = {{-0.5f,  0.5f, -0.5f}, {1,0,1,1}};
+
+    // Bottom
+    vertices[30] = {{-0.5f, -0.5f, -0.5f}, {0,1,1,1}};
+    vertices[31] = {{ 0.5f, -0.5f, -0.5f}, {0,1,1,1}};
+    vertices[32] = {{ 0.5f, -0.5f,  0.5f}, {0,1,1,1}};
+
+    vertices[33] = {{-0.5f, -0.5f, -0.5f}, {0,1,1,1}};
+    vertices[34] = {{ 0.5f, -0.5f,  0.5f}, {0,1,1,1}};
+    vertices[35] = {{-0.5f, -0.5f,  0.5f}, {0,1,1,1}};
 
     bind();
 }

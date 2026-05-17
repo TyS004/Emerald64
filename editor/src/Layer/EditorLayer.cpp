@@ -52,6 +52,10 @@ void Editor::EditorLayer::OnUpdate(float dt){
 }
 
 void Editor::EditorLayer::OnImGuiRender(){
+    ImGui_ImplSDLGPU3_NewFrame();
+    ImGui_ImplSDL3_NewFrame();
+    ImGui::NewFrame();
+
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     
