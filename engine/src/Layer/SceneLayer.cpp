@@ -15,16 +15,16 @@ E64::SceneLayer::SceneLayer(){
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(-100, 100);
+    std::uniform_int_distribution<int> dist(-10, 10);
 
-    for(int i = 0; i < 1000; ++i){
+    for(int i = 0; i < 10; ++i){
         ECS::Entity e1 = E64::ECS::EntityManager::createEntity();
         scene->pushEntity(&e1);
     }
 
     //Creating Copies for Same Mesh Need to Fix 
-    ECS::Mesh obj_mesh = ECS::Mesh{ new VBO(), new IBO()};
-    ECS::MeshComponet mesh_comp = { asset_manager->addMesh(obj_mesh) };
+    ECS::Mesh obj_mesh = ECS::Mesh{ new VBO(), new IBO(), new Texture(), "Box.obj"};
+    ECS::MeshComponet mesh_comp = { asset_manager->addMesh(&obj_mesh) };
 
     std::vector<E64::ECS::Entity> entities = scene->getEntites();
     for(ECS::Entity e : entities){

@@ -40,3 +40,9 @@ add_custom_command(TARGET E64 POST_BUILD
         "${FBX_SDK}/lib/clang/release/libfbxsdk.dylib"
         "$<TARGET_FILE_DIR:E64>"
 )
+
+if(APPLE)
+    target_compile_definitions(E64 PRIVATE E64_APPLE)
+elseif(WIN32)
+    target_compile_definitions(E64 PRIVATE E64_WIN32)
+endif()

@@ -24,7 +24,10 @@ void E64::Window::Create(const char* name, int width, int height){
     E64::Window::width = width;
     E64::Window::height = height;
 
-    device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, "metal");
+    if(__APPLE__) device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
+    else          device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, nullptr);
+    if(!device) { E64::Log::error(SDL_GetError()); SDL_Quit(); }
+
     SDL_ClaimWindowForGPUDevice(device, window);
     SDL_SetGPUSwapchainParameters(
         device,
@@ -52,12 +55,10 @@ SDL_Event E64::Window::PollEvent(){
 }
 
 SDL_Window* E64::Window::getWindow(){
-    if(window == nullptr) { E64::Log::error("NO WINDOW CREATED!"); }
     return window;
 }
 
 SDL_GPUDevice* E64::Window::getDevice(){
-    if(device == nullptr) { E64::Log::error("NO DEVICE FOUND!"); }
     return device;
 }
 

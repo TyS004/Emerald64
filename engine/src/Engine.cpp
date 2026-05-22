@@ -45,7 +45,7 @@ void E64::Engine::run(){
         
         renderer->submit();
 
-        SDL_Delay(1);
+        SDL_Delay(0);
 
         auto end = std::chrono::high_resolution_clock::now();
         dt = std::chrono::duration<float>(end - start).count();

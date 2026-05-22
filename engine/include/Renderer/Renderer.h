@@ -23,6 +23,7 @@ namespace E64{
             void bindPipeline(SDL_GPUGraphicsPipeline* pipeline);
             void bindVertexBuffers(E64::ECS::Mesh* mesh);
             void bindIndexBuffers(E64::ECS::Mesh* mesh);
+            void bindFragmentSamplers(E64::ECS::Mesh* mesh);
 
             void sendUniforms(glm::mat4 mvp);
             

@@ -7,6 +7,7 @@ namespace E64{
     struct Vertex{
         glm::vec3 pos;
         glm::vec4 color;
+        glm::vec2 uv;
     };
 
     class VBO{

@@ -53,11 +53,15 @@ void E64::Scene::render(){
            
             ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->id);
 
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position);
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
+                * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
+                * glm::scale(glm::mat4(1.0f), transform->scale);
+
             glm::mat4 mvp = camera_data.proj * camera_data.view * model;
 
             renderer->bindVertexBuffers(mesh);
             renderer->bindIndexBuffers(mesh);
+            renderer->bindFragmentSamplers(mesh);
             renderer->sendUniforms(mvp);
             renderer->draw(mesh);
         }

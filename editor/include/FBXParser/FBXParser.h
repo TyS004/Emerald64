@@ -17,8 +17,8 @@ class FBXParser{
         void PrintAttribute(FbxNodeAttribute* pAttribute);
 
         void parseIndicies();
-        void parseVertices();
-    
+        void parseVertices(E64::Vertex** verticies, int num_vertices);
+
         FbxManager* sdk_manager;
         FbxImporter* importer;
         FbxScene* scene;

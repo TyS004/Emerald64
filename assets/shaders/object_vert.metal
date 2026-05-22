@@ -8,12 +8,14 @@ struct Uniform{
 
 struct VertexIn{
     float3 position [[attribute(0)]];
-    float4 color [[attribute(1)]];
+    float4 color    [[attribute(1)]];
+    float2 uv       [[attribute(2)]];
 };
 
 struct VertexOut {
     float4 position [[position]];
     float4 color;
+    float2 uv;
 };
 
 vertex VertexOut vertex_main(VertexIn in[[stage_in]], constant Uniform& u [[buffer(0)]]) {
@@ -21,6 +23,7 @@ vertex VertexOut vertex_main(VertexIn in[[stage_in]], constant Uniform& u [[buff
 
     out.position = u.mvp * float4(in.position, 1.0f);
     out.color = in.color;
+    out.uv = in.uv;
     
     return out;
 }

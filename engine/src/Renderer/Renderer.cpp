@@ -105,6 +105,16 @@ void E64::Renderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
     SDL_BindGPUIndexBuffer(render_pass, &binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 }
 
+void E64::Renderer::bindFragmentSamplers(E64::ECS::Mesh* mesh){
+    if(mesh->texture == nullptr) return;
+
+    SDL_GPUTextureSamplerBinding binding;
+    binding.sampler = mesh->texture->getSampler();
+    binding.texture= mesh->texture->getTexture();
+
+    SDL_BindGPUFragmentSamplers(render_pass, 0, &binding, 1);
+}
+
 void E64::Renderer::draw(E64::ECS::Mesh* mesh){
     draw_calls++;
     SDL_DrawGPUIndexedPrimitives(render_pass, mesh->ibo->getNumIndices(), 1, 0, 0, 0);

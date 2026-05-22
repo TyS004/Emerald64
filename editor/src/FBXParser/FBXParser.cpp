@@ -94,6 +94,14 @@ FBXParser::~FBXParser(){
     sdk_manager->Destroy();
 }
 
+void truncatePathName(char** path) {
+    char* last = strrchr(*path, '/');
+
+    if (last != NULL) {
+        *path = last + 1;
+    }
+}
+
 E64::ECS::Mesh* FBXParser::getMesh(const char* path){
     importer = FbxImporter::Create(sdk_manager, "");
     if(!importer->Initialize(path, -1, sdk_manager->GetIOSettings())) {
@@ -116,55 +124,51 @@ E64::ECS::Mesh* FBXParser::getMesh(const char* path){
 
     E64::ECS::Mesh* mesh = new E64::ECS::Mesh{};
 
-    int num_indices = raw_mesh->GetPolygonCount() * 3;
+    //Vertex Parsing
     int num_vertices = raw_mesh->GetControlPointsCount();
-
     E64::Vertex* vertices = new E64::Vertex[num_vertices];
+    parseVertices(&vertices, num_vertices);
+    mesh->vbo = new E64::VBO(vertices, num_vertices);
 
+    //Index Parsing
+    int num_indices = raw_mesh->GetPolygonCount() * 3;
     int* poly_verts = raw_mesh->GetPolygonVertices();
-    for(int i = 0; i < raw_mesh->GetPolygonCount() * 3; i += 3){
-        std::cout << "Polygon " << i / 3 << ": \t";
-        std::cout << poly_verts[i] << " " << poly_verts[i + 1]<< " " << poly_verts[i + 2] << std::endl;
-    }
-    std::cout << std::endl;
     mesh->ibo = new E64::IBO((uint32_t*)poly_verts, num_indices);
 
+    //Path Name Truncating 
+    std::string trunc_path = path;
+    char* trunc_path_buf = &trunc_path[0];
+    truncatePathName(&trunc_path_buf);
+    mesh->path = trunc_path_buf;
+
+    E64::Log::info(trunc_path_buf);
+
+    mesh->texture = new E64::Texture();
+    
+    return mesh;
+}
+
+void FBXParser::parseVertices(E64::Vertex** vertices, int num_vertices){
     FbxVector4* raw_vertices = raw_mesh->GetControlPoints();
     for(int i = 0; i < num_vertices; ++i){
         std::cout << "Vertex " << i << ": \t";
         std::cout << raw_vertices[i].mData[0] << " " << raw_vertices[i].mData[1] << " " << raw_vertices[i].mData[2] << std::endl;
 
-        vertices[i].pos.x = raw_vertices[i].mData[0];
-        vertices[i].pos.y = raw_vertices[i].mData[1];
-        vertices[i].pos.z = raw_vertices[i].mData[2];
+        (*vertices)[i].pos.x = raw_vertices[i].mData[0];
+        (*vertices)[i].pos.y = raw_vertices[i].mData[1];
+        (*vertices)[i].pos.z = raw_vertices[i].mData[2];
 
         if((i % 2) == 0){
-            vertices[i].color.r = 1;
-            vertices[i].color.g = .5;
-            vertices[i].color.b = 0;
-            vertices[i].color.a = 1;
+            (*vertices)[i].color.r = 1;
+            (*vertices)[i].color.g = .5;
+            (*vertices)[i].color.b = 0;
+            (*vertices)[i].color.a = 1;
         }
         else{
-            vertices[i].color.r = .2;
-            vertices[i].color.g = 1;
-            vertices[i].color.b = .5;
-            vertices[i].color.a = 1;
+            (*vertices)[i].color.r = .2;
+            (*vertices)[i].color.g = 1;
+            (*vertices)[i].color.b = .5;
+            (*vertices)[i].color.a = 1;
         }
     }
-    mesh->vbo = new E64::VBO(vertices, num_vertices);
-
-    char buf[200];
-    int i = 0;
-    while(*path != '\0'){
-        std::cout << i << std::endl;
-        buf[i] = *path;
-        if(*path == '/') i = 0;
-        i++;
-        path += 1;
-    }
-    buf[i] = '\0';
-    mesh->path = buf;
-    std::cout << buf << std::endl;
-
-    return mesh;
 }

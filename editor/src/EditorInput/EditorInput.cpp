@@ -1,5 +1,6 @@
 #include "EditorInput/EditorInput.h"
 #include <E64.h>
+#include "FBXParser/FBXParser.h"
 
 using namespace E64;
 
@@ -61,7 +62,7 @@ void Editor::EditorInput::OnFileDropped(const char* path){
     FBXParser parser = FBXParser();
     ECS::Mesh* dropped_mesh = parser.getMesh(path);
 
-    uint32_t id = E64::Engine::ctx->asset_manager->addMesh(*dropped_mesh);
+    uint32_t id = E64::Engine::ctx->asset_manager->addMesh(dropped_mesh);
 
     for(ECS::Entity e : E64::Engine::ctx->active_scene->getEntites()){
         ECS::MeshComponet* mesh_componet = ECS::ComponetManager::getComponet<ECS::MeshComponet>(e);

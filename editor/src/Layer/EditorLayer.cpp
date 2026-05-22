@@ -24,6 +24,8 @@ Editor::EditorLayer::EditorLayer(){
 
     SDL_Window* window = E64::Window::getWindow();
     SDL_GPUDevice* device = E64::Window::getDevice();
+    if(!window) E64::Log::error("EDITORLAYER: NO WINDOW FOUND!");
+    if(!device) E64::Log::error("EDITORLAYER: NO DEVICE FOUND!");
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL3_InitForSDLGPU(E64::Window::getWindow());
@@ -34,6 +36,19 @@ Editor::EditorLayer::EditorLayer(){
     init_info.SwapchainComposition = SDL_GPU_SWAPCHAINCOMPOSITION_SDR;  // multi-viewports mode
     init_info.PresentMode = SDL_GPU_PRESENTMODE_IMMEDIATE;
     ImGui_ImplSDLGPU3_Init(&init_info);
+
+    float scale = SDL_GetWindowDisplayScale(E64::Window::getWindow());
+
+    ImFontConfig cfg;
+    cfg.SizePixels = 18.0f * scale;
+    cfg.OversampleH = 4;
+    cfg.OversampleV = 4;
+    cfg.PixelSnapH = true;
+
+    io.ConfigWindowsMoveFromTitleBarOnly = true;
+    
+    font = io.Fonts->AddFontFromFileTTF("../assets/fonts/Inter-Regular.ttf", 18.0f * scale, &cfg);
+    io.FontGlobalScale = 1.0f / scale;
 }
 
 Editor::EditorLayer::~EditorLayer(){
@@ -56,18 +71,40 @@ void Editor::EditorLayer::OnImGuiRender(){
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigWindowsMoveFromTitleBarOnly = true;
-    
-    ImGui::GetStyle().WindowRounding = 0.0f;
-    ImGui::GetStyle().WindowBorderSize = 0.0f;
+    initStyle();
 
     buildDockspace();
-    ImGui::ShowDemoWindow();
     buildViewport();
     buildSceneSelector();
     buildInspector();
     buildFileManager();
+}
+
+void Editor::EditorLayer::initStyle(){
+    ImGui::StyleColorsDark();
+
+    ImGuiStyle& style = ImGui::GetStyle();
+
+    style.WindowPadding = ImVec2(8.0f, 8.0f);
+    style.FramePadding = ImVec2(5.0f, 3.0f);
+    style.CellPadding = ImVec2(6.0f, 4.0f);
+    style.ItemSpacing = ImVec2(6.0f, 4.0f);
+    style.ItemInnerSpacing = ImVec2(6.0f, 4.0f);
+    style.ScrollbarSize = 13.0f;
+    style.GrabMinSize = 10.0f;
+
+    style.WindowBorderSize = 1.0f;
+    style.ChildBorderSize = 1.0f;
+    style.PopupBorderSize = 1.0f;
+    style.FrameBorderSize = 1.0f;
+
+    style.WindowRounding = 4.0f;
+    style.ChildRounding = 3.0f;
+    style.FrameRounding = 3.0f;
+    style.PopupRounding = 3.0f;
+    style.ScrollbarRounding = 9.0f;
+    style.GrabRounding = 3.0f;
+    style.TabRounding = 3.0f;
 }
 
 void Editor::EditorLayer::buildDockspace(){
@@ -167,7 +204,9 @@ void Editor::EditorLayer::buildTransformHeader(){
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if(ImGui::CollapsingHeader("Transform")){
         ECS::TransformComponet* transform = ECS::ComponetManager::getComponet<ECS::TransformComponet>(selected);
-        ImGui::DragFloat3("Position", &transform->position.x);
+        ImGui::DragFloat3("Position", &transform->position.x, 0.05f);
+        ImGui::DragFloat3("Rotation", &transform->euler.x, 0.01f);
+        ImGui::DragFloat3("Scale", &transform->scale.x, 0.05f);
     }
 }
 
@@ -175,10 +214,19 @@ void Editor::EditorLayer::buildMeshHeader(){
     uint32_t mesh_id = ECS::ComponetManager::getComponet<ECS::MeshComponet>(selected)->id;
     ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_id);
 
-    ImGui::CollapsingHeader("Mesh");
-    ImGui::Text("ID: %d", mesh_id);
-    std::string name = mesh->path;
-    ImGui::Text("Name: %s", name.c_str());
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if(ImGui::CollapsingHeader("Mesh"))
+    {
+        ImGui::Text("ID: %d", mesh_id);
+
+        std::string name = mesh->path;
+        ImGui::Text("Name: %s", name.c_str());
+
+        ImGui::Text("Texture");
+        if(ImGui::BeginDragDropTarget()){
+            ImGui::EndDragDropTarget();
+        }
+    }
 }
 
 void Editor::EditorLayer::buildFileManager(){
@@ -187,7 +235,11 @@ void Editor::EditorLayer::buildFileManager(){
     int i = 0;
     for(const ECS::Mesh& mesh : E64::Engine::ctx->asset_manager->getMeshes()){
         ImGui::PushID(i);
-        ImGui::Selectable("Asset");
+        ImGui::Selectable(E64::Engine::ctx->asset_manager->getMeshes()[i].path.c_str());
+        if(ImGui::BeginDragDropSource()){
+            ImGui::SetDragDropPayload("Mesh ID", &i, sizeof(int));
+            ImGui::EndDragDropSource();
+        }
         ImGui::PopID();
         i++;
     }

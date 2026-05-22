@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlgpu3.h>
+#include <misc/freetype/imgui_freetype.h>
 
 namespace Editor{
     class EditorLayer : public E64::Layer{
@@ -21,6 +22,8 @@ namespace Editor{
             E64::Layer::LayerType GetLayerType() { return UI_LAYER; }
         private:
             ImVec2 viewport_size;
+
+            void initStyle();
 
             void buildDockspace();
             void buildViewport();
@@ -40,6 +43,8 @@ namespace Editor{
             float ms;
 
             float debug_pad = 15.0f;
+
+            ImFont* font;
     };
 }
 

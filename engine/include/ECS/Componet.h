@@ -3,6 +3,7 @@
 
 #include "Renderer/VBO.h"
 #include "Renderer/IBO.h"
+#include "Renderer/Texture.h"
 
 namespace E64{
     namespace ECS{
@@ -14,7 +15,7 @@ namespace E64{
         struct TransformComponet{
             glm::vec3 position = {0, 0, 0};
             glm::vec3 euler = {0, 0, 0};
-            glm::vec3 scale = {1, 1 , 1};
+            glm::vec3 scale = {1, 1, 1};
         };
        
         struct MeshComponet{
@@ -24,6 +25,7 @@ namespace E64{
         struct Mesh{
             VBO* vbo;
             IBO* ibo;
+            Texture* texture;
             std::string path;
         };
     }
