@@ -1,7 +1,7 @@
 #include <E64.h>
 #include <SDL3/SDL.h>
 
-#include "Layer/EditorLayer.h"
+#include "EditorLayer/EditorLayer.h"
 
 int main(){
     std::cout << "Starting Editor" << std::endl;
@@ -10,6 +10,7 @@ int main(){
 
     Editor::EditorLayer editor_layer = Editor::EditorLayer();
     E64::SceneLayer scene_layer = E64::SceneLayer();
+
     E64::Layer::Attach(&editor_layer);
     E64::Layer::Attach(&scene_layer);
     

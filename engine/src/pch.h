@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <memory>
 #include <glm/glm.hpp>
 #include <fstream>
 #include <glm/gtc/matrix_transform.hpp>

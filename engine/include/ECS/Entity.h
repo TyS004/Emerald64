@@ -13,7 +13,9 @@ namespace E64{
         class EntityManager{
             public:
                 static Entity createEntity();
+                static Entity createEntity(ECS::Entity e);
                 static void deleteEntity();
+                static void flushEntites();
 
                 static std::unordered_map<Entity, ComponetMask> entity_index;
         };

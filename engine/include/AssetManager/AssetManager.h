@@ -7,8 +7,9 @@ namespace E64{
     class AssetManager{
         public:
             AssetManager();
+            ~AssetManager();
 
-            uint32_t addMesh(ECS::Mesh* mesh);
+            uint32_t addMesh(ECS::Mesh mesh);
             ECS::Mesh* getMesh(uint32_t id);
             std::vector<ECS::Mesh> getMeshes();
 

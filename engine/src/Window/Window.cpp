@@ -35,6 +35,7 @@ void E64::Window::Create(const char* name, int width, int height){
         SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
         SDL_GPU_PRESENTMODE_IMMEDIATE
     );
+    SDL_SetHint(SDL_HINT_WINDOWS_RAW_KEYBOARD, "1");
 }
 
 void E64::Window::Destory(){

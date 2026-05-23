@@ -1,4 +1,4 @@
-#include "Layer/EditorLayer.h"
+#include "EditorLayer/EditorLayer.h"
 #include "EditorInput/EditorInput.h"
 #include <E64.h>
 
@@ -6,13 +6,14 @@ using namespace E64;
 
 Editor::EditorLayer::EditorLayer(){
     Editor::EditorInput::Init();
+
+    E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>();
     
-    E64::Scene* scene = new E64::Scene();
+    E64::Scene* scene = Engine::ctx->active_scene.get();
     Editor::EditorCamera* camera = Editor::EditorInput::getCamera();
     scene->setCameraData({camera->getProj(), camera->getView()});
-    E64::Engine::ctx->active_scene = scene;
 
-    selected = -1;
+    selected = 0;
     
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -56,7 +57,7 @@ Editor::EditorLayer::~EditorLayer(){
 }
 
 void Editor::EditorLayer::OnEvent(SDL_Event* e){
-    ImGui_ImplSDL3_ProcessEvent(e);
+    if(!E64::Window::isMouseLock()) ImGui_ImplSDL3_ProcessEvent(e);
 }
 
 void Editor::EditorLayer::OnUpdate(float dt){
@@ -73,6 +74,7 @@ void Editor::EditorLayer::OnImGuiRender(){
 
     initStyle();
 
+    buildMainMenuBar();
     buildDockspace();
     buildViewport();
     buildSceneSelector();
@@ -105,6 +107,25 @@ void Editor::EditorLayer::initStyle(){
     style.ScrollbarRounding = 9.0f;
     style.GrabRounding = 3.0f;
     style.TabRounding = 3.0f;
+}
+
+void Editor::EditorLayer::buildMainMenuBar(){
+    if(ImGui::BeginMainMenuBar()){
+        if(ImGui::BeginMenu("File"))
+        {
+            if(ImGui::MenuItem("Save Scene", "(CTRL + S)")){
+                E64::SceneSerializer serializer;
+                serializer.serialize();
+            }
+            if(ImGui::MenuItem("Load Scene")){
+                E64::SceneSerializer serializer;
+                serializer.deserialize();
+            }
+
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
 }
 
 void Editor::EditorLayer::buildDockspace(){

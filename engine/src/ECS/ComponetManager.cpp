@@ -51,3 +51,8 @@ void ComponetManager::addComponet<MeshComponet>(Entity e, ECS::MeshComponet comp
     EntityManager::entity_index[e] |= MESH;
     mesh_componets.push_back(comp);
 }
+
+void ComponetManager::flushComponets(){
+    transform_componets.clear();
+    mesh_componets.clear();
+}

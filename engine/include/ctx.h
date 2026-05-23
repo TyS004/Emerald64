@@ -8,9 +8,9 @@
 
 namespace E64{
     struct EngineCtx{
-        E64::Renderer* renderer;
-        E64::Scene* active_scene;
-        E64::AssetManager* asset_manager;
+        std::unique_ptr<E64::Renderer> renderer;
+        std::unique_ptr<E64::Scene> active_scene;
+        std::unique_ptr<E64::AssetManager> asset_manager;
     };
 }
 

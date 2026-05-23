@@ -8,23 +8,22 @@
 #include <random>
 
 E64::SceneLayer::SceneLayer(){
-    scene = E64::Engine::ctx->active_scene;
+    scene = E64::Engine::ctx->active_scene.get();
 
-    AssetManager* asset_manager = new E64::AssetManager();
-    E64::Engine::ctx->asset_manager = asset_manager;
+    E64::Engine::ctx->asset_manager = std::make_unique<E64::AssetManager>();
+    E64::AssetManager* asset_manager = E64::Engine::ctx->asset_manager.get();
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(-10, 10);
+    std::uniform_int_distribution<int> dist(-5, 5);
 
     for(int i = 0; i < 10; ++i){
         ECS::Entity e1 = E64::ECS::EntityManager::createEntity();
-        scene->pushEntity(&e1);
+        scene->pushEntity(e1);
     }
 
-    //Creating Copies for Same Mesh Need to Fix 
     ECS::Mesh obj_mesh = ECS::Mesh{ new VBO(), new IBO(), new Texture(), "Box.obj"};
-    ECS::MeshComponet mesh_comp = { asset_manager->addMesh(&obj_mesh) };
+    ECS::MeshComponet mesh_comp = { asset_manager->addMesh(obj_mesh) };
 
     std::vector<E64::ECS::Entity> entities = scene->getEntites();
     for(ECS::Entity e : entities){
@@ -42,9 +41,11 @@ E64::SceneLayer::SceneLayer(){
 }
 
 E64::SceneLayer::~SceneLayer(){
-    delete scene;
+
 }
 
 void E64::SceneLayer::OnRender(){
+    scene = E64::Engine::ctx->active_scene.get();
+    if(!scene) { E64::Log::error("NO SCENE"); return; }
     scene->render();
 }

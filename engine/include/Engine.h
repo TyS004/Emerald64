@@ -9,8 +9,8 @@
 #include "ECS/Entity.h"
 #include "ECS/ComponetManager.h"
 #include "ECS/Scene.h"
-#include "Layer/EditorLayer.h"
 #include "Layer/SceneLayer.h"
+#include "Serialization/SceneSerializer.h"
 #include "ctx.h"
 
 namespace E64{
@@ -19,7 +19,7 @@ namespace E64{
         static void run();
         static void exit();
 
-        static EngineCtx* ctx;
+        static std::unique_ptr<EngineCtx> ctx;
     private:
         static bool running;
     };

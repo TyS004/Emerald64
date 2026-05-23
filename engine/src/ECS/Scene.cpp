@@ -5,15 +5,32 @@
 #include "Engine.h"
 
 E64::Scene::Scene(){
-
+    name = "Test_Scene";
 }
+
+E64::Scene::Scene(Scene&& other) noexcept
+    : camera_data(std::move(other.camera_data)),
+      entites(std::move(other.entites)),
+      name(std::move(other.name))
+{
+    
+}
+
 
 E64::Scene::~Scene(){
 
 }
 
-void E64::Scene::pushEntity(ECS::Entity* entity){
-    entites.push_back(*entity);
+std::string E64::Scene::getName(){
+    return name;
+}
+
+E64::CameraData E64::Scene::getCameraData(){
+    return camera_data;
+}
+
+void E64::Scene::pushEntity(ECS::Entity entity){
+    entites.push_back(entity);
     return;
 }
 
@@ -42,7 +59,7 @@ void E64::Scene::setCameraData(E64::CameraData camera_data){
 }
 
 void E64::Scene::render(){
-    E64::Renderer* renderer = E64::Engine::ctx->renderer;
+    E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
 
     for(ECS::Entity entity : entites){
         if(ECS::ComponetManager::hasComponet<ECS::MeshComponet>(entity) &&

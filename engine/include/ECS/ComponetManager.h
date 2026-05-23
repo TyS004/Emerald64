@@ -18,6 +18,8 @@ namespace E64{
                 template <typename T>
                 static void addComponet(Entity e, T comp);
 
+                static void flushComponets();
+
                 static void clean();
     
             private:

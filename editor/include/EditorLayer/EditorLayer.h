@@ -21,12 +21,13 @@ namespace Editor{
 
             E64::Layer::LayerType GetLayerType() { return UI_LAYER; }
         private:
-            ImVec2 viewport_size;
-
             void initStyle();
 
             void buildDockspace();
+            void buildMainMenuBar();
+
             void buildViewport();
+            void buildDebug(ImVec2 viewport_tl);
             void buildSceneSelector();
 
             void buildInspector();
@@ -36,14 +37,11 @@ namespace Editor{
             void buildFileManager();
 
             int selected;
-
-            void buildDebug(ImVec2 viewport_tl);
-
             float FPS;
             float ms;
-
             float debug_pad = 15.0f;
 
+            ImVec2 viewport_size;
             ImFont* font;
     };
 }

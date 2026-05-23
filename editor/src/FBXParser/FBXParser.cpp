@@ -91,7 +91,10 @@ FBXParser::FBXParser(){
 }
 
 FBXParser::~FBXParser(){
-    sdk_manager->Destroy();
+    if(sdk_manager) {
+        sdk_manager->Destroy();
+        sdk_manager = nullptr;
+    }
 }
 
 void truncatePathName(char** path) {
@@ -118,22 +121,29 @@ E64::ECS::Mesh* FBXParser::getMesh(const char* path){
     raw_mesh = getRawMesh(rootNode);
     if(!raw_mesh) { return nullptr; }
     else {
-        E64::Log::debug(std::to_string(raw_mesh->GetControlPointsCount()) + " Verticies from " + std::string(path));
-        E64::Log::debug(std::to_string(raw_mesh->GetPolygonCount()) + " Polygon Faces");
+        E64::Log::debug(std::to_string(raw_mesh->GetControlPointsCount()) + " Control Points from " + std::string(path));
+        E64::Log::debug(std::to_string(raw_mesh->GetPolygonCount()) + " Polygon Count");
+        E64::Log::debug(std::to_string(raw_mesh->GetPolygonVertexCount()) + " Polygon Vertex / Index Count");
     }
-
+ 
     E64::ECS::Mesh* mesh = new E64::ECS::Mesh{};
 
     //Vertex Parsing
-    int num_vertices = raw_mesh->GetControlPointsCount();
+    int num_vertices = raw_mesh->GetPolygonVertexCount();
     E64::Vertex* vertices = new E64::Vertex[num_vertices];
     parseVertices(&vertices, num_vertices);
     mesh->vbo = new E64::VBO(vertices, num_vertices);
 
     //Index Parsing
-    int num_indices = raw_mesh->GetPolygonCount() * 3;
+    int num_indices = raw_mesh->GetPolygonVertexCount();
     int* poly_verts = raw_mesh->GetPolygonVertices();
-    mesh->ibo = new E64::IBO((uint32_t*)poly_verts, num_indices);
+    uint32_t indicies[num_indices];
+    for(int i = 0; i < num_indices; ++i){
+        std::cout << "Index: " << i << ": " << poly_verts[i] << std::endl;
+        indicies[i] = i;
+    }
+    mesh->ibo = new E64::IBO(indicies, num_indices);
+    E64::Log::info(std::to_string(num_indices));
 
     //Path Name Truncating 
     std::string trunc_path = path;
@@ -141,22 +151,35 @@ E64::ECS::Mesh* FBXParser::getMesh(const char* path){
     truncatePathName(&trunc_path_buf);
     mesh->path = trunc_path_buf;
 
-    E64::Log::info(trunc_path_buf);
-
     mesh->texture = new E64::Texture();
-    
+
     return mesh;
 }
 
 void FBXParser::parseVertices(E64::Vertex** vertices, int num_vertices){
-    FbxVector4* raw_vertices = raw_mesh->GetControlPoints();
-    for(int i = 0; i < num_vertices; ++i){
-        std::cout << "Vertex " << i << ": \t";
-        std::cout << raw_vertices[i].mData[0] << " " << raw_vertices[i].mData[1] << " " << raw_vertices[i].mData[2] << std::endl;
+    int* poly_verts = raw_mesh->GetPolygonVertices();
+    FbxVector4* ctrl_pts = raw_mesh->GetControlPoints();
+    
+    FbxGeometryElementUV* uv_element = raw_mesh->GetElementUV(0);
+    FbxLayerElementArrayTemplate<FbxVector2>* arr = nullptr;
+    if(uv_element) arr = &uv_element->GetDirectArray();
+    else E64::Log::error("No UVs Found in Mesh");
 
-        (*vertices)[i].pos.x = raw_vertices[i].mData[0];
-        (*vertices)[i].pos.y = raw_vertices[i].mData[1];
-        (*vertices)[i].pos.z = raw_vertices[i].mData[2];
+    for(int i = 0; i < num_vertices; ++i){
+        (*vertices)[i].pos.x = ctrl_pts[poly_verts[i]].mData[0];
+        (*vertices)[i].pos.y = ctrl_pts[poly_verts[i]].mData[1];
+        (*vertices)[i].pos.z = ctrl_pts[poly_verts[i]].mData[2];
+
+        if(arr != nullptr){
+            (*vertices)[i].uv.x = arr->GetAt(i).mData[0];
+            (*vertices)[i].uv.y = arr->GetAt(i).mData[1];
+        }
+        else{
+            (*vertices)[i].uv.x = 0;
+            (*vertices)[i].uv.y = 0;
+        }
+
+        std::cout << ctrl_pts[poly_verts[i]].mData[0] << ", " << ctrl_pts[poly_verts[i]].mData[1] << ", " << ctrl_pts[poly_verts[i]].mData[1] << std::endl;
 
         if((i % 2) == 0){
             (*vertices)[i].color.r = 1;

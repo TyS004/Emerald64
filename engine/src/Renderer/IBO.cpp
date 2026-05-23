@@ -76,7 +76,6 @@ void E64::IBO::sendToGPU(){
 }
 
 E64::IBO::~IBO(){
-    delete[] indices;
 }
 
 SDL_GPUBuffer* E64::IBO::getIndexBuffer(){

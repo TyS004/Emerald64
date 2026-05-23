@@ -1,8 +1,8 @@
 #include "Input/Input.h"
 #include "Window/Window.h"
 
-bool* E64::Input::pressed_keys = new bool[SDL_SCANCODE_COUNT];
 bool E64::Input::running = true;
+
 float E64::Input::xrel = 0.0f;
 float E64::Input::yrel = 0.0f;
 
@@ -15,17 +15,15 @@ std::function<void(const char*)>            E64::Input::OnFileDroppedBind  = E64
 void E64::Input::processEvent(SDL_Event e){
     switch(e.type){
         case SDL_EVENT_KEY_DOWN:
-            pressed_keys[e.key.scancode] = true;
             OnKeyPressedBind(e.key.scancode);
             OnKeyDownBind(e.key.scancode);
             break;
         case SDL_EVENT_KEY_UP:
-            pressed_keys[e.key.scancode] = false;
             break;
         case SDL_EVENT_MOUSE_MOTION:
-            OnMouseMoveBind(e.motion);
             xrel = e.motion.xrel;
             yrel = e.motion.yrel;
+            OnMouseMoveBind(e.motion);
             break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
             break;
@@ -37,17 +35,20 @@ void E64::Input::processEvent(SDL_Event e){
             break;
         case SDL_EVENT_DROP_FILE:
             OnFileDroppedBind(e.drop.data);
+            break;
         default:
             break;
     }
 }
 
 bool E64::Input::isKeyPressed(SDL_Scancode scancode){
-    return pressed_keys[scancode] ? true : false;
+    const bool* state = SDL_GetKeyboardState(nullptr);
+    return state[scancode];
 }
 
 bool E64::Input::isKeyDown(SDL_Scancode scancode){
-    return pressed_keys[scancode] ? true : false;
+    const bool* state = SDL_GetKeyboardState(nullptr);
+    return state[scancode];
 }
 
 bool E64::Input::isRunning(){
@@ -64,8 +65,4 @@ float E64::Input::getYRel(){
     float y = yrel;
     yrel = 0.0f;
     return y;
-}
-
-void E64::Input::clean(){
-    delete[] pressed_keys;
 }

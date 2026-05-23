@@ -18,7 +18,7 @@ E64::Pipeline::Pipeline(const char* shaderPath){
     pipelineInfo.fragment_shader = frag_shader->getShader();
 
     //BUG WHEN NO CULLING
-    pipelineInfo.rasterizer_state.cull_mode = SDL_GPU_CULLMODE_BACK;
+    pipelineInfo.rasterizer_state.cull_mode = SDL_GPU_CULLMODE_NONE;
 
     SDL_GPUDepthStencilState stencil_state = {};
     stencil_state.enable_depth_test = true;

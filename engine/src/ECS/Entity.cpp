@@ -15,6 +15,18 @@ Entity E64::ECS::EntityManager::createEntity(){
     return e;
 }
 
+Entity E64::ECS::EntityManager::createEntity(ECS::Entity e){
+    ComponetMask mask = 0;
+
+    entity_index[e] = mask;
+    return e;
+}
+
 void E64::ECS::EntityManager::deleteEntity(){
 
+}
+
+void E64::ECS::EntityManager::flushEntites(){
+    entity_index.clear();
+    id = 0;
 }

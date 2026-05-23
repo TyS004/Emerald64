@@ -1,6 +1,7 @@
 #include "EditorInput/EditorInput.h"
 #include <E64.h>
 #include "FBXParser/FBXParser.h"
+#include <filesystem>
 
 using namespace E64;
 
@@ -45,8 +46,6 @@ void Editor::EditorInput::OnKeyDown(SDL_Scancode scancode){
 }
 
 void Editor::EditorInput::OnMouseMove(SDL_MouseMotionEvent e){
-    E64::ECS::TransformComponet* transform = camera->getTransform();
-    
     // std::string msg =  "UI Layer Mouse Move Event: " + std::to_string(e.x) + ", " + std::to_string(e.y);
     // E64::Log::debug(msg);
 }
@@ -59,17 +58,29 @@ void Editor::EditorInput::OnWindowResize(float width, float height){
 }
 
 void Editor::EditorInput::OnFileDropped(const char* path){
-    FBXParser parser = FBXParser();
-    ECS::Mesh* dropped_mesh = parser.getMesh(path);
+    std::filesystem::path ext = std::filesystem::path(path).extension();
 
-    uint32_t id = E64::Engine::ctx->asset_manager->addMesh(dropped_mesh);
+    if(ext == ".obj"){
+        FBXParser parser = FBXParser();
+        ECS::Mesh* dropped_mesh = parser.getMesh(path);
 
-    for(ECS::Entity e : E64::Engine::ctx->active_scene->getEntites()){
-        ECS::MeshComponet* mesh_componet = ECS::ComponetManager::getComponet<ECS::MeshComponet>(e);
-        mesh_componet->id = id;
+        uint32_t id = E64::Engine::ctx->asset_manager->addMesh(*dropped_mesh);
+        for(ECS::Entity e : E64::Engine::ctx->active_scene->getEntites()){
+            ECS::MeshComponet* mesh_componet = ECS::ComponetManager::getComponet<ECS::MeshComponet>(e);
+            mesh_componet->id = id;
+        }
+
+        delete dropped_mesh;
     }
-    
-    delete dropped_mesh;
+
+    else if(ext == ".png" || ext == ".jpg" || ext == ".bmp"){
+        for(ECS::Entity e : E64::Engine::ctx->active_scene->getEntites()){
+            ECS::MeshComponet* mesh_componet = ECS::ComponetManager::getComponet<ECS::MeshComponet>(e);
+            ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->id);
+
+            //mesh->texture = new Texture();
+        }
+    }
 }
 
 Editor::EditorCamera* Editor::EditorInput::getCamera(){

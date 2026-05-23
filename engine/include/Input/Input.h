@@ -22,15 +22,12 @@ namespace E64{
 
             static void OnFileDropped(const char* data) {};
 
-            static void clean();
-
             static std::function<void(SDL_Scancode)>           OnKeyPressedBind;
             static std::function<void(SDL_Scancode)>           OnKeyDownBind;
             static std::function<void(SDL_MouseMotionEvent)>   OnMouseMoveBind;
             static std::function<void(SDL_WindowEvent)>        OnWindowResizeBind;
             static std::function<void(const char*)>            OnFileDroppedBind;
         private:
-            static bool* pressed_keys;
             static float xrel;
             static float yrel;
             static bool running;
