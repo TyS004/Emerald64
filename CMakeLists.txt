@@ -27,13 +27,14 @@ file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS editor/src/*.cpp)
 target_include_directories(E64 PUBLIC ./editor/include)
 add_executable(E64Editor ${EDITOR_SOURCES})
 target_link_libraries(E64Editor PRIVATE E64)
+target_compile_definitions(E64Editor PRIVATE E64_EDITOR)
 target_precompile_headers(E64Editor REUSE_FROM E64)
 
 # ── Sandbox (EXE) ──────────────────────────────
-file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS sandbox/*.cpp)
-add_executable(E64Sandbox ${EDITOR_SOURCES})
-target_link_libraries(E64Sandbox PRIVATE E64)
-target_precompile_headers(E64Sandbox REUSE_FROM E64)
+file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS n64/*.cpp)
+add_executable(E64Runtime ${EDITOR_SOURCES})
+target_link_libraries(E64Runtime PRIVATE E64)
+target_precompile_headers(E64Runtime REUSE_FROM E64)
 
 
 add_custom_command(TARGET E64 POST_BUILD

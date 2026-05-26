@@ -12,7 +12,7 @@ namespace E64{
             static bool isKeyPressed(SDL_Scancode code);
             static bool isKeyDown(SDL_Scancode code);
             static void OnKeyPressed(SDL_Scancode scancode) {};
-            static void OnKeyDown(SDL_Scancode scancode) {};
+            static void OnKeyDown(SDL_Scancode scancode);
 
             static void OnMouseMove(SDL_MouseMotionEvent e) {};
             static float getXRel();

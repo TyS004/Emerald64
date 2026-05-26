@@ -8,17 +8,17 @@ namespace E64{
     class IBO{
         public:
             IBO();
-            IBO(uint32_t* indicies, int num_indices);
+            IBO(std::vector<uint32_t> indicies);
             ~IBO();
 
-            void sendToGPU();
+            void upload();
 
             SDL_GPUBuffer* getIndexBuffer();
 
             int getNumIndices();
         private:
             int num_indices;
-            uint32_t* indices;
+            std::vector<uint32_t> indices;
 
             SDL_GPUBuffer* index_buffer;
     };

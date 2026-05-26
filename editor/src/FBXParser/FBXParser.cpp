@@ -110,7 +110,7 @@ E64::ECS::Mesh* FBXParser::getMesh(const char* path){
     if(!importer->Initialize(path, -1, sdk_manager->GetIOSettings())) {
         printf("Call to FbxImporter::Initialize() failed.\n");
         printf("Error returned: %s\n\n", importer->GetStatus().GetErrorString());
-        exit(-1);
+        return nullptr;
     }
 
     scene = FbxScene::Create(sdk_manager, "myScene");
@@ -130,19 +130,19 @@ E64::ECS::Mesh* FBXParser::getMesh(const char* path){
 
     //Vertex Parsing
     int num_vertices = raw_mesh->GetPolygonVertexCount();
-    E64::Vertex* vertices = new E64::Vertex[num_vertices];
-    parseVertices(&vertices, num_vertices);
-    mesh->vbo = new E64::VBO(vertices, num_vertices);
+    std::vector<E64::Vertex> vertices = std::vector<E64::Vertex>(num_vertices);
+    parseVertices(&vertices);
+    mesh->vbo = new E64::VBO(vertices);
 
     //Index Parsing
     int num_indices = raw_mesh->GetPolygonVertexCount();
     int* poly_verts = raw_mesh->GetPolygonVertices();
-    uint32_t indicies[num_indices];
+    std::vector<uint32_t> indicies(num_indices);
     for(int i = 0; i < num_indices; ++i){
-        std::cout << "Index: " << i << ": " << poly_verts[i] << std::endl;
+        //std::cout << "Index: " << i << ": " << poly_verts[i] << std::endl;
         indicies[i] = i;
     }
-    mesh->ibo = new E64::IBO(indicies, num_indices);
+    mesh->ibo = new E64::IBO(indicies);
     E64::Log::info(std::to_string(num_indices));
 
     //Path Name Truncating 
@@ -156,7 +156,7 @@ E64::ECS::Mesh* FBXParser::getMesh(const char* path){
     return mesh;
 }
 
-void FBXParser::parseVertices(E64::Vertex** vertices, int num_vertices){
+void FBXParser::parseVertices(std::vector<E64::Vertex>* vertices){
     int* poly_verts = raw_mesh->GetPolygonVertices();
     FbxVector4* ctrl_pts = raw_mesh->GetControlPoints();
     
@@ -165,7 +165,7 @@ void FBXParser::parseVertices(E64::Vertex** vertices, int num_vertices){
     if(uv_element) arr = &uv_element->GetDirectArray();
     else E64::Log::error("No UVs Found in Mesh");
 
-    for(int i = 0; i < num_vertices; ++i){
+    for(int i = 0; i < (*vertices).size(); ++i){
         (*vertices)[i].pos.x = ctrl_pts[poly_verts[i]].mData[0];
         (*vertices)[i].pos.y = ctrl_pts[poly_verts[i]].mData[1];
         (*vertices)[i].pos.z = ctrl_pts[poly_verts[i]].mData[2];
@@ -179,7 +179,7 @@ void FBXParser::parseVertices(E64::Vertex** vertices, int num_vertices){
             (*vertices)[i].uv.y = 0;
         }
 
-        std::cout << ctrl_pts[poly_verts[i]].mData[0] << ", " << ctrl_pts[poly_verts[i]].mData[1] << ", " << ctrl_pts[poly_verts[i]].mData[1] << std::endl;
+        //std::cout << ctrl_pts[poly_verts[i]].mData[0] << ", " << ctrl_pts[poly_verts[i]].mData[1] << ", " << ctrl_pts[poly_verts[i]].mData[1] << std::endl;
 
         if((i % 2) == 0){
             (*vertices)[i].color.r = 1;

@@ -1,5 +1,7 @@
 #include "EditorLayer/EditorLayer.h"
 #include "EditorInput/EditorInput.h"
+#include <filesystem>
+#include "FBXParser/FBXParser.h"
 #include <E64.h>
 
 using namespace E64;
@@ -8,10 +10,6 @@ Editor::EditorLayer::EditorLayer(){
     Editor::EditorInput::Init();
 
     E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>();
-    
-    E64::Scene* scene = Engine::ctx->active_scene.get();
-    Editor::EditorCamera* camera = Editor::EditorInput::getCamera();
-    scene->setCameraData({camera->getProj(), camera->getView()});
 
     selected = 0;
     
@@ -56,6 +54,25 @@ Editor::EditorLayer::~EditorLayer(){
 
 }
 
+void Editor::EditorLayer::OnAttach(){
+    E64::Scene* scene = Engine::ctx->active_scene.get();
+    Editor::EditorCamera* camera = Editor::EditorInput::getCamera();
+    ECS::CameraData camera_comp = { camera->getProj(), camera->getView() };
+    scene->setCameraData(camera_comp);
+
+    std::string path = "../assets/meshes/";
+    FBXParser parser;
+    for (const auto& entry : std::filesystem::directory_iterator(path)) {
+        if(entry.path().extension() == ".obj")
+        {
+            E64::Log::info(path);
+            ECS::Mesh* mesh = parser.getMesh(entry.path().c_str());
+            if(mesh != nullptr) E64::Engine::ctx->asset_manager->addMesh(*parser.getMesh(entry.path().c_str()));
+            else E64::Log::error("Failed To Import " + path);
+        }
+    }
+}
+
 void Editor::EditorLayer::OnEvent(SDL_Event* e){
     if(!E64::Window::isMouseLock()) ImGui_ImplSDL3_ProcessEvent(e);
 }
@@ -80,6 +97,14 @@ void Editor::EditorLayer::OnImGuiRender(){
     buildSceneSelector();
     buildInspector();
     buildFileManager();
+    
+    ImGui::Render();
+
+    E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
+    ImGui_ImplSDLGPU3_PrepareDrawData(ImGui::GetDrawData(), renderer->getCommandBuffer());
+    renderer->beginRenderPass(SWAPCHAIN);
+    renderer->drawUI();
+    renderer->endRenderPass();
 }
 
 void Editor::EditorLayer::initStyle(){
@@ -107,6 +132,8 @@ void Editor::EditorLayer::initStyle(){
     style.ScrollbarRounding = 9.0f;
     style.GrabRounding = 3.0f;
     style.TabRounding = 3.0f;
+
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.00f);
 }
 
 void Editor::EditorLayer::buildMainMenuBar(){
@@ -121,7 +148,6 @@ void Editor::EditorLayer::buildMainMenuBar(){
                 E64::SceneSerializer serializer;
                 serializer.deserialize();
             }
-
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
@@ -176,9 +202,9 @@ void Editor::EditorLayer::buildDebug(ImVec2 viewport_tl){
     std::string MS_UI = "ms: " + std::to_string(ms);
     std::string VSYNC_UI = "VSync: " + (E64::Window::getVSync() ? std::string("ON") : std::string("OFF"));
     std::string draw_calls = "E64::Renderer::DrawIndexedPrimitves(): " + std::to_string(E64::Engine::ctx->renderer->getDrawCalls());
-
+    
     ImGui::GetWindowDrawList()->AddText(viewport_tl, IM_COL32(255, 255, 255, 255), FPS_UI.c_str());
-    ImGui::GetWindowDrawList()->AddText(ImVec2(viewport_tl.x, viewport_tl.y + debug_pad), IM_COL32(255, 255, 255, 255), MS_UI.c_str());
+    ImGui::GetWindowDrawList()->AddText(ImVec2(viewport_tl.x, viewport_tl.y + debug_pad),     IM_COL32(255, 255, 255, 255), MS_UI.c_str());
     ImGui::GetWindowDrawList()->AddText(ImVec2(viewport_tl.x, viewport_tl.y + debug_pad * 2), IM_COL32(255, 255, 255, 255), VSYNC_UI.c_str());
     ImGui::GetWindowDrawList()->AddText(ImVec2(viewport_tl.x, viewport_tl.y + debug_pad * 3), IM_COL32(255, 255, 255, 255), draw_calls.c_str());
 }
@@ -195,6 +221,7 @@ void Editor::EditorLayer::buildSceneSelector(){
         bool is_selected = (selected == e);
         if(ImGui::Selectable(std::string("Entity: " + std::to_string(e)).c_str(), &is_selected)){
             selected = e;
+            EditorInput::selected_entity = selected;
         }
         ImGui::PopID();
 
@@ -214,9 +241,9 @@ void Editor::EditorLayer::buildInspector(){
     ImGui::InputText("Name", name, 50);
     ImGui::InputInt("ID", &selected);
 
-    ECS::ComponetMask mask = ECS::EntityManager::entity_index[selected];
-    if(mask & ECS::TRANSFORM) buildTransformHeader();
-    if(mask & ECS::MESH)      buildMeshHeader();
+    if(ECS::ComponentManager::hasComponent<ECS::TransformComponent>(selected)) buildTransformHeader();
+    if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(selected))      buildMeshHeader();
+    if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(selected))    buildCameraHeader();
 
     ImGui::End();
 }   
@@ -224,29 +251,60 @@ void Editor::EditorLayer::buildInspector(){
 void Editor::EditorLayer::buildTransformHeader(){
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if(ImGui::CollapsingHeader("Transform")){
-        ECS::TransformComponet* transform = ECS::ComponetManager::getComponet<ECS::TransformComponet>(selected);
+        ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(selected);
         ImGui::DragFloat3("Position", &transform->position.x, 0.05f);
         ImGui::DragFloat3("Rotation", &transform->euler.x, 0.01f);
         ImGui::DragFloat3("Scale", &transform->scale.x, 0.05f);
+
+        ImGui::PushID(0);
+        if(ImGui::SmallButton("-"))
+        {
+            ECS::ComponentManager::removeComponent<ECS::TransformComponent>(selected);
+        }
+        if(ImGui::Button("+", ImVec2{ImGui::GetContentRegionAvail().x, 50.0f})){
+            ECS::ComponentManager::addComponent<ECS::TransformComponent>(selected);
+        }
+        ImGui::PopID();
     }
 }
 
 void Editor::EditorLayer::buildMeshHeader(){
-    uint32_t mesh_id = ECS::ComponetManager::getComponet<ECS::MeshComponet>(selected)->id;
-    ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_id);
+    ECS::MeshComponent* mesh = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected);
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if(ImGui::CollapsingHeader("Mesh"))
     {
-        ImGui::Text("ID: %d", mesh_id);
+        ImGui::Text("Mesh ID: %d", mesh->handle.id);
 
-        std::string name = mesh->path;
+        std::string name = mesh->handle.path;
         ImGui::Text("Name: %s", name.c_str());
 
         ImGui::Text("Texture");
         if(ImGui::BeginDragDropTarget()){
             ImGui::EndDragDropTarget();
         }
+
+        ImGui::PushID(1);
+        if(ImGui::SmallButton("-"))
+        {
+            ECS::ComponentManager::removeComponent<ECS::MeshComponent>(selected);
+        }
+        if(ImGui::Button("+", ImVec2{ImGui::GetContentRegionAvail().x, 50.0f})){
+            ECS::ComponentManager::addComponent<ECS::MeshComponent>(selected);
+        }
+        ImGui::PopID();
+    }
+}
+
+void Editor::EditorLayer::buildCameraHeader(){
+    ECS::CameraComponent* camera = ECS::ComponentManager::getComponent<ECS::CameraComponent>(selected);
+
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if(ImGui::CollapsingHeader("Camera")){
+        ImGui::Text("FOV: %f", camera->fov);
+        ImGui::Text("Aspect Ratio: %f", camera->aspect_ratio);
+        ImGui::Text("Near Plane: %f", camera->near_plane);
+        ImGui::Text("Far Plane: %f", camera->far_plane);
     }
 }
 

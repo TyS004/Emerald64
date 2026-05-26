@@ -18,7 +18,7 @@ E64::Pipeline::Pipeline(const char* shaderPath){
     pipelineInfo.fragment_shader = frag_shader->getShader();
 
     //BUG WHEN NO CULLING
-    pipelineInfo.rasterizer_state.cull_mode = SDL_GPU_CULLMODE_NONE;
+    pipelineInfo.rasterizer_state.cull_mode = SDL_GPU_CULLMODE_BACK;
 
     SDL_GPUDepthStencilState stencil_state = {};
     stencil_state.enable_depth_test = true;
@@ -42,7 +42,7 @@ E64::Pipeline::Pipeline(const char* shaderPath){
     // a_position
     vertexAttributes[0].buffer_slot = 0; // fetch data from the buffer at slot 0
     vertexAttributes[0].location = 0; // layout (location = 0) in shader
-    vertexAttributes[0].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3; //vec3
+    vertexAttributes[0].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3; // vec3
     vertexAttributes[0].offset = 0; // start from the first byte from current buffer position
 
     // a_color
@@ -55,7 +55,7 @@ E64::Pipeline::Pipeline(const char* shaderPath){
     vertexAttributes[2].buffer_slot = 0;
     vertexAttributes[2].location = 2; // layout (location = 2) in shader
     vertexAttributes[2].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2; // vec2
-    vertexAttributes[2].offset = offsetof(Vertex, uv); // 4th float from current buffer position
+    vertexAttributes[2].offset = offsetof(Vertex, uv);    // 4th float from current buffer position
 
     pipelineInfo.vertex_input_state.num_vertex_attributes = 3;
     pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;
@@ -72,7 +72,7 @@ E64::Pipeline::Pipeline(const char* shaderPath){
 }
 
 E64::Pipeline::~Pipeline(){
-    SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
+    //SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
 }
 
 SDL_GPUGraphicsPipeline* E64::Pipeline::getPipeline(){

@@ -17,6 +17,7 @@ namespace Editor{
             static EditorCamera* getCamera();
 
             static bool debug_mode;
+            static int selected_entity;
         private:
             static EditorCamera* camera;
     };

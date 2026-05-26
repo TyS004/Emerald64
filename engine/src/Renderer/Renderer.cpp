@@ -1,12 +1,13 @@
 #include "Renderer/Renderer.h"
+#include "Layer/Layer.h"
 
 E64::Renderer::Renderer(){
     depth_texture_info = {};
     depth_texture_info.type   = SDL_GPU_TEXTURETYPE_2D;
     depth_texture_info.format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT;
     depth_texture_info.usage  = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET;
-    depth_texture_info.width  = 800;
-    depth_texture_info.height = 600;
+    depth_texture_info.width  = E64::Window::getWidth();
+    depth_texture_info.height = E64::Window::getHeight();
     depth_texture_info.layer_count_or_depth = 1;
     depth_texture_info.num_levels = 1;
     depth_texture_info.sample_count = SDL_GPU_SAMPLECOUNT_1;
@@ -16,8 +17,8 @@ E64::Renderer::Renderer(){
     scene_texture_info.type   = SDL_GPU_TEXTURETYPE_2D;
     scene_texture_info.format = SDL_GetGPUSwapchainTextureFormat(E64::Window::getDevice(), E64::Window::getWindow());
     scene_texture_info.usage  = SDL_GPU_TEXTUREUSAGE_COLOR_TARGET | SDL_GPU_TEXTUREUSAGE_SAMPLER;
-    scene_texture_info.width  = 800;
-    scene_texture_info.height = 600;
+    scene_texture_info.width  = E64::Window::getWidth();
+    scene_texture_info.height = E64::Window::getHeight();
     scene_texture_info.layer_count_or_depth = 1;
     scene_texture_info.num_levels = 1;
     scene_texture = SDL_CreateGPUTexture(E64::Window::getDevice(), &scene_texture_info);
@@ -25,23 +26,41 @@ E64::Renderer::Renderer(){
     depth_target_info = {};
     color_target_info = {};
 
-    width = 800;
-    height = 600;
+    width = E64::Window::getWidth();
+    height = E64::Window::getHeight();
 
     draw_calls = 0;
+
+    pipeline = std::make_unique<Pipeline>("../assets/shaders/object");
 }
 
 E64::Renderer::~Renderer(){
 
 }
 
-void E64::Renderer::OnResize(float width, float height){
+void E64::Renderer::aquireCmdBufferandSwapChain(){
+    cmd_buf = SDL_AcquireGPUCommandBuffer(E64::Window::getDevice());
+    SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buf, E64::Window::getWindow(), &swapchain, &width, &height);
+    if (!swapchain) {
+        SDL_CancelGPUCommandBuffer(cmd_buf);
+        cmd_buf = nullptr;
+    }
+}
+
+void E64::Renderer::OnImGuiResize(float width, float height){
+    pending_resize = true;
+    this->width = width;
+    this->height = height;
+}
+
+void E64::Renderer::ResizeViewport(){
     if(width == 0 || height == 0) return;
+
     if (depth_texture)
         SDL_ReleaseGPUTexture(E64::Window::getDevice(), depth_texture);
     if (scene_texture)
         SDL_ReleaseGPUTexture(E64::Window::getDevice(), scene_texture);
-        
+
     depth_texture_info.width  = width;
     depth_texture_info.height = height; 
     depth_texture = SDL_CreateGPUTexture(E64::Window::getDevice(), &depth_texture_info);
@@ -51,45 +70,36 @@ void E64::Renderer::OnResize(float width, float height){
     scene_texture = SDL_CreateGPUTexture(E64::Window::getDevice(), &scene_texture_info);
 }
 
-void E64::Renderer::beginSceneRenderPass(){
+void E64::Renderer::beginRenderPass(RenderTarget target){
     draw_calls = 0;
 
-    cmd_buf = SDL_AcquireGPUCommandBuffer(E64::Window::getDevice());
-
     color_target_info.clear_color = {75/255.0f, 75/255.0f, 75/255.0f, 255/255.0f};
-    color_target_info.texture = scene_texture;
     color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
     color_target_info.store_op = SDL_GPU_STOREOP_STORE;
-
+    
     depth_target_info.clear_depth = 1.0f;
     depth_target_info.texture = depth_texture;
     depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
     depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
 
-    render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, &depth_target_info);
-}
-
-void E64::Renderer::beginUIRenderPass(){
-    ImGui::Render();
-    SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buf, E64::Window::getWindow(), &swapchain, &width, &height);
-
-    ImGui_ImplSDLGPU3_PrepareDrawData(ImGui::GetDrawData(), cmd_buf);
-
-    color_target_info = {};
-    color_target_info.clear_color = {0/255.0f, 0/255.0f, 0/255.0f, 255/255.0f};
-    color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
-    color_target_info.store_op = SDL_GPU_STOREOP_STORE;
-    color_target_info.texture = swapchain;
-
-    render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, nullptr);
+    switch(target){ 
+        case SWAPCHAIN:
+            color_target_info.texture = swapchain;
+            render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, nullptr);
+            break;
+        case TEXTURE:
+            color_target_info.texture = scene_texture;
+            render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, &depth_target_info);
+            break;
+    }
 }
 
 void E64::Renderer::endRenderPass(){
     SDL_EndGPURenderPass(render_pass);
 }
 
-void E64::Renderer::bindPipeline(SDL_GPUGraphicsPipeline* pipeline){
-    SDL_BindGPUGraphicsPipeline(render_pass, pipeline);
+void E64::Renderer::bindPipeline(){
+    SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
 void E64::Renderer::bindVertexBuffers(E64::ECS::Mesh* mesh){
@@ -136,6 +146,10 @@ SDL_GPURenderPass* E64::Renderer::getRenderPass(){
     return render_pass;
 }
 
+SDL_GPUCommandBuffer* E64::Renderer::getCommandBuffer(){
+    return cmd_buf;
+}
+
 SDL_GPUTexture* E64::Renderer::getDepthTexture(){
     return depth_texture;
 }
@@ -146,4 +160,8 @@ SDL_GPUTexture* E64::Renderer::getSceneTexture(){
 
 int E64::Renderer::getDrawCalls(){
     return draw_calls;
+}
+
+bool E64::Renderer::isPendingResize(){
+    return pending_resize;
 }

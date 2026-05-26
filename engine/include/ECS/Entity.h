@@ -4,7 +4,7 @@
 #include <uuid/uuid.h>
 #include <unordered_map>
 
-#include "ECS/Componet.h"
+#include "ECS/Component.h"
 
 namespace E64{
     namespace ECS{
@@ -13,11 +13,11 @@ namespace E64{
         class EntityManager{
             public:
                 static Entity createEntity();
-                static Entity createEntity(ECS::Entity e);
+                static void registerEntity(ECS::Entity e);
                 static void deleteEntity();
                 static void flushEntites();
 
-                static std::unordered_map<Entity, ComponetMask> entity_index;
+                static std::unordered_map<Entity, ComponentMask> entity_index;
         };
     }
 }

@@ -10,6 +10,7 @@ int mouse_offset_y = 0;
 
 Editor::EditorCamera* Editor::EditorInput::camera = new Editor::EditorCamera();
 bool Editor::EditorInput::debug_mode = true;
+int Editor::EditorInput::selected_entity = 0;
 
 void Editor::EditorInput::Init(){
     E64::Input::OnKeyPressedBind  = Editor::EditorInput::OnKeyPressed;
@@ -25,8 +26,7 @@ void Editor::EditorInput::OnKeyPressed(SDL_Scancode scancode){
 void Editor::EditorInput::OnKeyDown(SDL_Scancode scancode){
     switch(scancode){
         case SDL_SCANCODE_Z:
-            if(E64::Window::isMouseLock())
-            {
+            if(E64::Window::isMouseLock()){
                 E64::Window::setMouseLock(false);
             }
             else{
@@ -51,7 +51,7 @@ void Editor::EditorInput::OnMouseMove(SDL_MouseMotionEvent e){
 }
 
 void Editor::EditorInput::OnWindowResize(float width, float height){
-    E64::Engine::ctx->renderer->OnResize(width, height);
+    E64::Engine::ctx->renderer->OnImGuiResize(width, height);
 
     std::string msg =  "UI Layer Window Resize Event: " + std::to_string(width) + ", " + std::to_string(height);
     E64::Log::debug(msg);
@@ -59,27 +59,23 @@ void Editor::EditorInput::OnWindowResize(float width, float height){
 
 void Editor::EditorInput::OnFileDropped(const char* path){
     std::filesystem::path ext = std::filesystem::path(path).extension();
+    E64::Log::debug(std::string(path));
 
     if(ext == ".obj"){
         FBXParser parser = FBXParser();
-        ECS::Mesh* dropped_mesh = parser.getMesh(path);
-
-        uint32_t id = E64::Engine::ctx->asset_manager->addMesh(*dropped_mesh);
-        for(ECS::Entity e : E64::Engine::ctx->active_scene->getEntites()){
-            ECS::MeshComponet* mesh_componet = ECS::ComponetManager::getComponet<ECS::MeshComponet>(e);
-            mesh_componet->id = id;
+        AssetHandle handle = E64::Engine::ctx->asset_manager->addMesh(*parser.getMesh(path));
+        ECS::MeshComponent* mesh = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected_entity);
+        if(mesh) mesh->handle = handle;
+        else {
+            E64::Log::error("Entity Has No Mesh Component! \nCreate a Mesh Component for this Entity to Assign a Mesh to it.");
         }
-
-        delete dropped_mesh;
     }
-
+    
     else if(ext == ".png" || ext == ".jpg" || ext == ".bmp"){
-        for(ECS::Entity e : E64::Engine::ctx->active_scene->getEntites()){
-            ECS::MeshComponet* mesh_componet = ECS::ComponetManager::getComponet<ECS::MeshComponet>(e);
-            ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->id);
-
-            //mesh->texture = new Texture();
-        }
+        ECS::MeshComponent* mesh_componet = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected_entity);
+        ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->handle);
+        mesh->texture = new Texture(path);
+        mesh->texture->upload();
     }
 }
 

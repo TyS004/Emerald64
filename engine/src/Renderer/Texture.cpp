@@ -7,7 +7,18 @@ E64::Texture::Texture(){
         E64::Log::error("Could Not Load Image Data");
     }
     img_size = width * height * 4;
+}
 
+E64::Texture::Texture(std::string path){
+    stbi_set_flip_vertically_on_load(true);
+    img_data = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+    if(!img_data){
+        E64::Log::error("Could Not Load Image Data");
+    }
+    img_size = width * height * 4;
+}
+
+void E64::Texture::upload(){
     SDL_Window* window = E64::Window::getWindow();
     SDL_GPUDevice* device = E64::Window::getDevice();
 
@@ -21,9 +32,9 @@ E64::Texture::Texture(){
     info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER;
     texture = SDL_CreateGPUTexture(device, &info);
 
-    E64::Log::debug("Texture pointer: " + std::to_string((uintptr_t)texture));
-    E64::Log::debug("Image size: " + std::to_string(img_size));
-    E64::Log::debug("Width: " + std::to_string(width) + " Height: " + std::to_string(height));
+    // E64::Log::debug("Texture pointer: " + std::to_string((uintptr_t)texture));
+    // E64::Log::debug("Image size: " + std::to_string(img_size));
+    // E64::Log::debug("Width: " + std::to_string(width) + " Height: " + std::to_string(height));
 
     SDL_GPUSamplerCreateInfo sampler_info{};
     sampler_info.min_filter = SDL_GPU_FILTER_LINEAR;         // For minification

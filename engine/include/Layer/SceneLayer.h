@@ -13,6 +13,7 @@ namespace E64{
             void OnImGuiRender() {};
             void OnEvent(SDL_Event e) {};
             void OnRender();
+            void OnAttach() {};
 
             LayerType GetLayerType() { return SCENE_LAYER; }
         private:

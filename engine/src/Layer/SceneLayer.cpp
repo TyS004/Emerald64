@@ -2,42 +2,34 @@
 #include "Engine.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "AssetManager/AssetManager.h"
+#include "Serialization/SceneSerializer.h"
 
 #include <cstdlib>
 #include <ctime>
 #include <random>
 
 E64::SceneLayer::SceneLayer(){
-    scene = E64::Engine::ctx->active_scene.get();
+    ECS::ComponentRegistry<ECS::TransformComponent>::registerComponent("Transform");
+    ECS::ComponentRegistry<ECS::MeshComponent>::registerComponent("Mesh");
+    ECS::ComponentRegistry<ECS::CameraComponent>::registerComponent("Camera");
 
     E64::Engine::ctx->asset_manager = std::make_unique<E64::AssetManager>();
-    E64::AssetManager* asset_manager = E64::Engine::ctx->asset_manager.get();
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(-5, 5);
-
-    for(int i = 0; i < 10; ++i){
-        ECS::Entity e1 = E64::ECS::EntityManager::createEntity();
-        scene->pushEntity(e1);
+    scene = E64::Engine::ctx->active_scene.get();
+    if(scene == nullptr){
+        SceneSerializer serializer;
+        serializer.deserialize();
+        scene = E64::Engine::ctx->active_scene.get();
+    }
+    else{
+        std::cout << "RANDOM SCENE" << std::endl;
+        scene->createDefaultScene();
     }
 
-    ECS::Mesh obj_mesh = ECS::Mesh{ new VBO(), new IBO(), new Texture(), "Box.obj"};
-    ECS::MeshComponet mesh_comp = { asset_manager->addMesh(obj_mesh) };
-
-    std::vector<E64::ECS::Entity> entities = scene->getEntites();
-    for(ECS::Entity e : entities){
-        float x = dist(gen);
-        float y = dist(gen);
-        float z = dist(gen);
-
-        ECS::TransformComponet transform = ECS::TransformComponet{ glm::vec3(x, y, z) };
-
-        ECS::ComponetManager::addComponet<ECS::TransformComponet>(e, transform);
-        ECS::ComponetManager::addComponet<ECS::MeshComponet>(e, mesh_comp);
-    }
+    std::unique_ptr<Pipeline> pipeline = std::make_unique<Pipeline>("../assets/shaders/object");
 
     std::cout << "\tScene: " << scene << std::endl;
+    scene->printScene();
 }
 
 E64::SceneLayer::~SceneLayer(){
@@ -47,5 +39,17 @@ E64::SceneLayer::~SceneLayer(){
 void E64::SceneLayer::OnRender(){
     scene = E64::Engine::ctx->active_scene.get();
     if(!scene) { E64::Log::error("NO SCENE"); return; }
+
+    E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
+
+    if(E64::Engine::ctx->editor_mode)
+    {
+        renderer->beginRenderPass(RenderTarget::TEXTURE);
+    }
+    else{
+        renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
+    }
+    renderer->bindPipeline();
     scene->render();
+    renderer->endRenderPass();
 }

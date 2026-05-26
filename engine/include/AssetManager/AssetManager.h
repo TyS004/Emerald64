@@ -1,7 +1,8 @@
 #ifndef ASSETMANAGER_H
 #define ASSETMANAGER_H
 
-#include "ECS/Componet.h"
+#include "AssetHandle.h"
+#include "ECS/Component.h"
 
 namespace E64{
     class AssetManager{
@@ -9,12 +10,13 @@ namespace E64{
             AssetManager();
             ~AssetManager();
 
-            uint32_t addMesh(ECS::Mesh mesh);
-            ECS::Mesh* getMesh(uint32_t id);
+            AssetHandle addMesh(ECS::Mesh mesh);
+            ECS::Mesh* getMesh(AssetHandle handle);
             std::vector<ECS::Mesh> getMeshes();
 
         private:
-            std::vector<ECS::Mesh> mesh_repository;
+            std::unordered_map<std::string, ECS::Mesh> mesh_repository;
+            std::string path;
     };
 }
 

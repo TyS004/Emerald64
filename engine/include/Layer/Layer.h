@@ -8,17 +8,18 @@ namespace E64{
         public: 
             enum LayerType{
                 SCENE_LAYER,
-                UI_LAYER,
+                EDITOR_LAYER,
                 LAYER
             };
             virtual ~Layer() = default;
 
-            static void Attach(Layer* layer) { layers.push_back(layer); };
+            static void Attach(Layer* layer) { layers.push_back(layer); layer->OnAttach(); };
 
             virtual void OnUpdate(float dt) {};
             virtual void OnEvent(SDL_Event* e) {};
             virtual void OnImGuiRender() {};
             virtual void OnRender() {};
+            virtual void OnAttach() {};
 
             virtual LayerType GetLayerType() { return LAYER; };
 

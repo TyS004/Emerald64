@@ -6,7 +6,7 @@ Editor::EditorCamera::EditorCamera(){
     cam_sens = 0.25f;
     cam_vel = 15.0f;
 
-    this->transform = new E64::ECS::TransformComponet{};
+    this->transform = new E64::ECS::TransformComponent{};
     transform->position = glm::vec3(0.0, 0.0, -5.0);
     transform->euler = glm::vec3(90.0f, 0.0f, 0.0f);
     
@@ -65,7 +65,8 @@ void Editor::EditorCamera::OnUpdate(float dt){
             camera_up
         );
     }
-    E64::Engine::ctx->active_scene->setCameraData({proj, view});
+    E64::ECS::CameraData camera = {proj, view};
+    E64::Engine::ctx->active_scene->setCameraData(camera);
 }
 
 void Editor::EditorCamera::OnResize(float width, float height){
@@ -77,11 +78,11 @@ void Editor::EditorCamera::OnResize(float width, float height){
     );
 }
 
-E64::ECS::TransformComponet* Editor::EditorCamera::getTransform(){
+E64::ECS::TransformComponent* Editor::EditorCamera::getTransform(){
     return this->transform;
 }
 
-void Editor::EditorCamera::setTransform(E64::ECS::TransformComponet* transform){
+void Editor::EditorCamera::setTransform(E64::ECS::TransformComponent* transform){
     this->transform = transform;
 }
 

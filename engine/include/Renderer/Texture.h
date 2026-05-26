@@ -9,8 +9,11 @@ namespace E64{
     class Texture{
         public:
             Texture();
+            Texture(std::string path);
             Texture(const char* path);
             ~Texture();
+
+            void upload();
 
             SDL_GPUTexture* getTexture();
             SDL_GPUSampler* getSampler();

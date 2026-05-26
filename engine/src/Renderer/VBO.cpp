@@ -5,7 +5,7 @@ E64::VBO::VBO(){
     //DEFAULT TRIANGLE
     this->device = E64::Window::getDevice();
     this->num_vertices = 36;
-    this->vertices = new Vertex[this->num_vertices];
+    this->vertices = std::vector<Vertex>(this->num_vertices);
 
     // Front (red)
     vertices[0]  = {{-0.5f, -0.5f,  0.5f}, {1,0,0,1}, {0,0}};
@@ -54,24 +54,19 @@ E64::VBO::VBO(){
     vertices[33] = {{-0.5f, -0.5f, -0.5f}, {0,1,1,1}, {0,0}};
     vertices[34] = {{ 0.5f, -0.5f,  0.5f}, {0,1,1,1}, {1,1}};
     vertices[35] = {{-0.5f, -0.5f,  0.5f}, {0,1,1,1}, {0,1}};
-    bind();
 }
 
-E64::VBO::VBO(Vertex* vertices, int num_vertices){
+E64::VBO::VBO(std::vector<Vertex> vertices){
     this->device = E64::Window::getDevice();
-    this->num_vertices = num_vertices;
+    this->num_vertices = vertices.size();
     this->vertices = vertices;
-
-    bind();
 }   
 
 E64::VBO::~VBO(){
-    delete[] vertices;
-    SDL_ReleaseGPUBuffer(device, vertex_buffer); 
-    SDL_ReleaseGPUTransferBuffer(device, transfer_buffer);
+
 }
 
-void E64::VBO::bind(){
+void E64::VBO::upload(){
     SDL_GPUBufferCreateInfo bufferInfo{};
     bufferInfo.size = sizeof(Vertex) * num_vertices;
     bufferInfo.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
@@ -83,7 +78,7 @@ void E64::VBO::bind(){
     transfer_buffer = SDL_CreateGPUTransferBuffer(device, &transferInfo);
 
     Vertex* data = (Vertex*)SDL_MapGPUTransferBuffer(device, transfer_buffer, false);
-    memcpy(data, vertices, sizeof(Vertex) * num_vertices);
+    memcpy(data, vertices.data(), sizeof(Vertex) * num_vertices);
     SDL_UnmapGPUTransferBuffer(device, transfer_buffer);
 
     SDL_GPUCommandBuffer* cmdBuffer = SDL_AcquireGPUCommandBuffer(device);

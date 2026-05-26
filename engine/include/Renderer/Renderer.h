@@ -2,25 +2,34 @@
 #define Renderer_H
 
 #include "SDL3/SDL.h"
-#include "ECS/Componet.h"
+#include "ECS/Component.h"
+#include "Pipeline.h"
 
 #include <imgui.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlgpu3.h>
 
 namespace E64{
+    enum RenderTarget{
+        SWAPCHAIN,
+        TEXTURE
+    };
+
     class Renderer{
         public:
             Renderer();
             ~Renderer();
 
+            void OnImGuiResize(float width, float height);
+            void ResizeViewport();
             void OnResize(float width, float height);
 
-            void beginSceneRenderPass();
-            void beginUIRenderPass();
+            void aquireCmdBufferandSwapChain();
+
+            void beginRenderPass(RenderTarget target);
             void endRenderPass();
 
-            void bindPipeline(SDL_GPUGraphicsPipeline* pipeline);
+            void bindPipeline();
             void bindVertexBuffers(E64::ECS::Mesh* mesh);
             void bindIndexBuffers(E64::ECS::Mesh* mesh);
             void bindFragmentSamplers(E64::ECS::Mesh* mesh);
@@ -31,11 +40,16 @@ namespace E64{
             void drawUI();
             void submit();
 
+            bool isPendingResize();
+
             SDL_GPURenderPass* getRenderPass();
+            SDL_GPUCommandBuffer* getCommandBuffer();
             SDL_GPUTexture* getDepthTexture();
             SDL_GPUTexture* getSceneTexture();
             int getDrawCalls();
         private:
+            std::unique_ptr<E64::Pipeline> pipeline;
+
             SDL_GPURenderPass* render_pass;
             SDL_GPUCommandBuffer* cmd_buf;
             SDL_GPUTexture* depth_texture;
@@ -51,6 +65,7 @@ namespace E64{
             uint32_t width, height;
 
             int draw_calls;
+            bool pending_resize;
     };
 }
 

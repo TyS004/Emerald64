@@ -1,5 +1,6 @@
 #include "Input/Input.h"
 #include "Window/Window.h"
+#include "Layer/PhysicsLayer.h"
 
 bool E64::Input::running = true;
 
@@ -17,6 +18,7 @@ void E64::Input::processEvent(SDL_Event e){
         case SDL_EVENT_KEY_DOWN:
             OnKeyPressedBind(e.key.scancode);
             OnKeyDownBind(e.key.scancode);
+            OnKeyDown(e.key.scancode);
             break;
         case SDL_EVENT_KEY_UP:
             break;
@@ -39,6 +41,10 @@ void E64::Input::processEvent(SDL_Event e){
         default:
             break;
     }
+}
+
+void E64::Input::OnKeyDown(SDL_Scancode scancode){
+    if(scancode == SDL_SCANCODE_R) E64::PhysicsLayer::running = !E64::PhysicsLayer::running;
 }
 
 bool E64::Input::isKeyPressed(SDL_Scancode scancode){

@@ -3,8 +3,8 @@
 
 #include <json.hpp>
 #include "Engine.h"
-#include "ECS/ComponetManager.h"
-#include "ECS/Componet.h"
+#include "ECS/ComponentManager.h"
+#include "ECS/Component.h"
 
 namespace E64{
     class SceneSerializer{

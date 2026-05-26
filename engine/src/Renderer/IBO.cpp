@@ -5,7 +5,7 @@ E64::IBO::IBO(){
     
     num_indices = 36;
 
-    indices = new uint32_t[num_indices]{
+    indices = std::vector<uint32_t>{
         // Front
         0, 1, 2,
         3, 4, 5,
@@ -30,18 +30,14 @@ E64::IBO::IBO(){
         30, 31, 32,
         33, 34, 35
     };
-
-    sendToGPU();
 }
 
-E64::IBO::IBO(uint32_t* indices, int num_indices){
-    this->num_indices = num_indices;
+E64::IBO::IBO(std::vector<uint32_t> indices){
     this->indices = indices;
-
-    sendToGPU();
+    this->num_indices = indices.size();
 }
 
-void E64::IBO::sendToGPU(){
+void E64::IBO::upload(){
     SDL_GPUDevice* device = E64::Window::getDevice();
     SDL_GPUCommandBuffer* cmd_buffer = SDL_AcquireGPUCommandBuffer(device);
 
@@ -56,7 +52,7 @@ void E64::IBO::sendToGPU(){
     SDL_GPUTransferBuffer* transfer_buffer = SDL_CreateGPUTransferBuffer(device, &transferInfo);
 
     uint32_t* data = (uint32_t*)SDL_MapGPUTransferBuffer(device, transfer_buffer, false);
-    memcpy(data, indices, sizeof(uint32_t) * num_indices);
+    memcpy(data, indices.data(), sizeof(uint32_t) * num_indices);
     SDL_UnmapGPUTransferBuffer(device, transfer_buffer);
 
     SDL_GPUCopyPass* copy_pass = SDL_BeginGPUCopyPass(cmd_buffer);

@@ -18,8 +18,9 @@ namespace Editor{
             void OnEvent(SDL_Event* e);
             void OnImGuiRender();
             void OnRender() {};
+            void OnAttach();
 
-            E64::Layer::LayerType GetLayerType() { return UI_LAYER; }
+            E64::Layer::LayerType GetLayerType() { return EDITOR_LAYER; }
         private:
             void initStyle();
 
@@ -31,8 +32,9 @@ namespace Editor{
             void buildSceneSelector();
 
             void buildInspector();
-            void buildTransformHeader();
-            void buildMeshHeader();
+                void buildTransformHeader();
+                void buildMeshHeader();
+                void buildCameraHeader();
 
             void buildFileManager();
 

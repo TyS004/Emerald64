@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "ECS/Componet.h"
+#include "ECS/Component.h"
 #include "ECS/Entity.h"
 
 namespace Editor{
@@ -16,8 +16,8 @@ namespace Editor{
             void OnUpdate(float dt);
             void OnResize(float width, float height);
 
-            E64::ECS::TransformComponet* getTransform();
-            void setTransform(E64::ECS::TransformComponet* transform);
+            E64::ECS::TransformComponent* getTransform();
+            void setTransform(E64::ECS::TransformComponent* transform);
 
             glm::mat4 getView();
             glm::mat4 getProj();
@@ -30,7 +30,7 @@ namespace Editor{
             
             glm::vec3 camera_front;
 
-            E64::ECS::TransformComponet* transform;
+            E64::ECS::TransformComponent* transform;
 
             float cam_sens;
             float cam_vel;
