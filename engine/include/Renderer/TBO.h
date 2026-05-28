@@ -3,15 +3,14 @@
 
 #include <SDL3/SDL.h>
 #include "Window/Window.h"
-#include "Utils/stb_image.h"
+#include <stb_image.h>
 
 namespace E64{
-    class Texture{
+    class TBO{
         public:
-            Texture();
-            Texture(std::string path);
-            Texture(const char* path);
-            ~Texture();
+            TBO();
+            TBO(std::string path);
+            ~TBO();
 
             void upload();
 

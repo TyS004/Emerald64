@@ -103,11 +103,18 @@ void E64::Renderer::bindPipeline(){
 }
 
 void E64::Renderer::bindVertexBuffers(E64::ECS::Mesh* mesh){
-    SDL_BindGPUVertexBuffers(render_pass, 0, mesh->vbo->getBufferBinding(), 1);
+    if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
+
+    SDL_GPUBufferBinding buffer_binding = {};
+    buffer_binding.buffer = mesh->vbo.getVertexBuffer();
+    buffer_binding.offset = 0;
+    SDL_BindGPUVertexBuffers(render_pass, 0, &buffer_binding, 1);
 }
 
 void E64::Renderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
-    SDL_GPUBuffer* index_buffer = mesh->ibo->getIndexBuffer();
+    if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
+
+    SDL_GPUBuffer* index_buffer = mesh->ibo.getIndexBuffer();
     SDL_GPUBufferBinding binding;
     binding.buffer = index_buffer;
     binding.offset = 0;
@@ -116,18 +123,20 @@ void E64::Renderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
 }
 
 void E64::Renderer::bindFragmentSamplers(E64::ECS::Mesh* mesh){
-    if(mesh->texture == nullptr) return;
+    if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     SDL_GPUTextureSamplerBinding binding;
-    binding.sampler = mesh->texture->getSampler();
-    binding.texture= mesh->texture->getTexture();
+    binding.sampler = mesh->texture.getSampler();
+    binding.texture= mesh->texture.getTexture();
 
     SDL_BindGPUFragmentSamplers(render_pass, 0, &binding, 1);
 }
 
 void E64::Renderer::draw(E64::ECS::Mesh* mesh){
+    if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
+
     draw_calls++;
-    SDL_DrawGPUIndexedPrimitives(render_pass, mesh->ibo->getNumIndices(), 1, 0, 0, 0);
+    SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
 }
 
 void E64::Renderer::sendUniforms(glm::mat4 mvp){

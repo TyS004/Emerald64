@@ -10,12 +10,12 @@ namespace E64{
             AssetManager();
             ~AssetManager();
 
-            AssetHandle addMesh(ECS::Mesh mesh);
+            AssetHandle addMesh(ECS::Mesh& mesh);
             ECS::Mesh* getMesh(AssetHandle handle);
-            std::vector<ECS::Mesh> getMeshes();
+            std::vector<ECS::Mesh*> getMeshes();
 
         private:
-            std::unordered_map<std::string, ECS::Mesh> mesh_repository;
+            std::unordered_map<std::string, std::unique_ptr<ECS::Mesh>> mesh_repository;
             std::string path;
     };
 }

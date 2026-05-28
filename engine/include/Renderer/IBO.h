@@ -8,18 +8,12 @@ namespace E64{
     class IBO{
         public:
             IBO();
-            IBO(std::vector<uint32_t> indicies);
             ~IBO();
 
-            void upload();
+            void upload(std::vector<uint32_t> indicies);
 
             SDL_GPUBuffer* getIndexBuffer();
-
-            int getNumIndices();
         private:
-            int num_indices;
-            std::vector<uint32_t> indices;
-
             SDL_GPUBuffer* index_buffer;
     };
 }

@@ -1,58 +1,28 @@
 #include "Renderer/IBO.h"
 
 E64::IBO::IBO(){
-    //DEFAULT TRIANGLE
-    
-    num_indices = 36;
 
-    indices = std::vector<uint32_t>{
-        // Front
-        0, 1, 2,
-        3, 4, 5,
-
-        // Back
-        6, 7, 8,
-        9, 10, 11,
-
-        // Left
-        12, 13, 14,
-        15, 16, 17,
-
-        // Right
-        18, 19, 20,
-        21, 22, 23,
-
-        // Top
-        24, 25, 26,
-        27, 28, 29,
-
-        // Bottom
-        30, 31, 32,
-        33, 34, 35
-    };
 }
 
-E64::IBO::IBO(std::vector<uint32_t> indices){
-    this->indices = indices;
-    this->num_indices = indices.size();
+E64::IBO::~IBO(){
 }
 
-void E64::IBO::upload(){
+void E64::IBO::upload(std::vector<uint32_t> indices){
     SDL_GPUDevice* device = E64::Window::getDevice();
     SDL_GPUCommandBuffer* cmd_buffer = SDL_AcquireGPUCommandBuffer(device);
 
     SDL_GPUBufferCreateInfo buffer_info{};
     buffer_info.usage = SDL_GPU_BUFFERUSAGE_INDEX;
-    buffer_info.size = sizeof(uint32_t) * num_indices;
+    buffer_info.size = sizeof(uint32_t) * indices.size();
     index_buffer = SDL_CreateGPUBuffer(device, &buffer_info);
 
     SDL_GPUTransferBufferCreateInfo transferInfo{};
-    transferInfo.size = sizeof(uint32_t) * num_indices;
+    transferInfo.size = sizeof(uint32_t) * indices.size();
     transferInfo.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
     SDL_GPUTransferBuffer* transfer_buffer = SDL_CreateGPUTransferBuffer(device, &transferInfo);
 
     uint32_t* data = (uint32_t*)SDL_MapGPUTransferBuffer(device, transfer_buffer, false);
-    memcpy(data, indices.data(), sizeof(uint32_t) * num_indices);
+    memcpy(data, indices.data(), sizeof(uint32_t) * indices.size());
     SDL_UnmapGPUTransferBuffer(device, transfer_buffer);
 
     SDL_GPUCopyPass* copy_pass = SDL_BeginGPUCopyPass(cmd_buffer);
@@ -63,7 +33,7 @@ void E64::IBO::upload(){
 
     SDL_GPUBufferRegion region;
     region.buffer = index_buffer;
-    region.size = sizeof(uint32_t) * num_indices;
+    region.size = sizeof(uint32_t) * indices.size();
     region.offset = 0;
 
     SDL_UploadToGPUBuffer(copy_pass, &location, &region, true);
@@ -71,13 +41,6 @@ void E64::IBO::upload(){
     SDL_SubmitGPUCommandBuffer(cmd_buffer);
 }
 
-E64::IBO::~IBO(){
-}
-
 SDL_GPUBuffer* E64::IBO::getIndexBuffer(){
     return index_buffer;
-}
-
-int E64::IBO::getNumIndices(){
-    return num_indices;
 }

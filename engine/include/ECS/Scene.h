@@ -19,15 +19,13 @@ namespace E64{
             std::string getName();
             glm::mat4 getMVP();
             ECS::CameraData getCameraData();
-            void setCamera(ECS::Entity camera);
             void setCameraData(ECS::CameraData camera);
             
             void printScene();
             void render();
         private:
             std::string name;
-            ECS::Entity runtime_camera;
-            ECS::CameraData camera_data;
+            ECS::CameraData active_camera_data;
             std::vector<ECS::Entity> entites;
     };
 }

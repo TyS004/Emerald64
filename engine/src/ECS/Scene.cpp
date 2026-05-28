@@ -20,21 +20,19 @@ E64::Scene::Scene(){
         glm::vec3(0, 0, 0),         // Looking at Origin
         glm::vec3(0, 1, 0)          // Up Vector 
     );
-
     glm::mat4 proj = glm::perspective(
         glm::radians(45.0f), // FOV
         800.0f / 600.0f,     // Aspect Ratio
         0.1f,                // Near plane
         100.0f               // Far Plane
     );
-    camera_data = ECS::CameraData{proj, view};
+    active_camera_data = ECS::CameraData{proj, view};
 
     entites = {};
 }
 
 E64::Scene::Scene(Scene&& other) noexcept
-    : runtime_camera(std::move(other.runtime_camera)),
-      entites(std::move(other.entites)),
+    : entites(std::move(other.entites)),
       name(std::move(other.name))
 {
     
@@ -45,7 +43,7 @@ void E64::Scene::createDefaultScene(){
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(-10, 10);
 
-    for(int i = 0; i < 10; ++i){
+    for(int i = 0; i < 100; ++i){
         pushEntity();
     }
 
@@ -87,7 +85,7 @@ std::string E64::Scene::getName(){
 }
 
 E64::ECS::CameraData E64::Scene::getCameraData(){
-    return camera_data;
+    return active_camera_data;
 }
 
 void E64::Scene::pushEntity(){
@@ -122,12 +120,8 @@ void E64::Scene::printScene(){
     }
 }
 
-void E64::Scene::setCamera(E64::ECS::Entity camera){
-    this->runtime_camera = camera;
-}
-
 void E64::Scene::setCameraData(E64::ECS::CameraData camera_data){
-    this->camera_data = camera_data;
+    this->active_camera_data = camera_data;
 }
 
 void E64::Scene::render(){
@@ -153,7 +147,7 @@ void E64::Scene::render(){
                 camera->near_plane,         // Near plane
                 camera->far_plane           // Far Plane
             );
-            camera_data = {proj, view};
+            active_camera_data = {proj, view};
         }
 
         if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(entity) &&
@@ -161,18 +155,22 @@ void E64::Scene::render(){
         {
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
             ECS::MeshComponent* mesh_componet  = ECS::ComponentManager::getComponent<ECS::MeshComponent>(entity);
-           
+            
             ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->handle);
             if(mesh == nullptr) { 
                 E64::Log::error("MESH NOT FOUND FOR Component IN ENTITY: " + std::to_string(entity)); 
-                mesh = E64::Engine::ctx->asset_manager->getMesh({0, "default"}); // MESH FOR MISSING MESH
+
+                AssetHandle handle;
+                handle.id = 0;
+                handle.path = "default";
+                mesh = E64::Engine::ctx->asset_manager->getMesh(handle); // MESH FOR MISSING MESH
             }
 
             glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
                 * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
                 * glm::scale(glm::mat4(1.0f), transform->scale);
 
-            glm::mat4 mvp = camera_data.proj * camera_data.view * model;
+            glm::mat4 mvp = active_camera_data.proj * active_camera_data.view * model;
 
             renderer->bindVertexBuffers(mesh);
             renderer->bindIndexBuffers(mesh);

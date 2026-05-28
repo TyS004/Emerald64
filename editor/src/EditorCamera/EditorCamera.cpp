@@ -32,7 +32,7 @@ Editor::EditorCamera::~EditorCamera(){
 }
 
 void Editor::EditorCamera::OnUpdate(float dt){
-   if(E64::Window::isMouseLock()){
+    if(E64::Window::isMouseLock()){
         glm::vec3 direction;
         direction.x = cos(glm::radians(transform->euler.x)) * cos(glm::radians(transform->euler.y));
         direction.y = sin(glm::radians(transform->euler.y));

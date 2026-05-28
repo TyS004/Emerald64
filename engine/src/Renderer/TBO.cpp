@@ -1,6 +1,6 @@
-#include "Renderer/Texture.h"
+#include "Renderer/TBO.h"
 
-E64::Texture::Texture(){
+E64::TBO::TBO(){
     stbi_set_flip_vertically_on_load(true);
     img_data = stbi_load("../assets/textures/test.png", &width, &height, &channels, STBI_rgb_alpha);
     if(!img_data){
@@ -9,7 +9,7 @@ E64::Texture::Texture(){
     img_size = width * height * 4;
 }
 
-E64::Texture::Texture(std::string path){
+E64::TBO::TBO(std::string path){
     stbi_set_flip_vertically_on_load(true);
     img_data = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb_alpha);
     if(!img_data){
@@ -18,7 +18,11 @@ E64::Texture::Texture(std::string path){
     img_size = width * height * 4;
 }
 
-void E64::Texture::upload(){
+E64::TBO::~TBO(){
+
+}
+
+void E64::TBO::upload(){
     SDL_Window* window = E64::Window::getWindow();
     SDL_GPUDevice* device = E64::Window::getDevice();
 
@@ -32,7 +36,7 @@ void E64::Texture::upload(){
     info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER;
     texture = SDL_CreateGPUTexture(device, &info);
 
-    // E64::Log::debug("Texture pointer: " + std::to_string((uintptr_t)texture));
+    // E64::Log::debug("TBO pointer: " + std::to_string((uintptr_t)texture));
     // E64::Log::debug("Image size: " + std::to_string(img_size));
     // E64::Log::debug("Width: " + std::to_string(width) + " Height: " + std::to_string(height));
 
@@ -74,7 +78,7 @@ void E64::Texture::upload(){
     region.z = 0;
     
     SDL_UploadToGPUTexture(copy_pass, &textureTransferInfo, &region, true);
-    E64::Log::debug("Sent Texture to GPU");
+    E64::Log::debug("Sent TBO to GPU");
 
     SDL_EndGPUCopyPass(copy_pass);
     SDL_SubmitGPUCommandBuffer(cmd_buffer);
@@ -85,19 +89,11 @@ void E64::Texture::upload(){
     if (!transfer_buffer) { E64::Log::error(SDL_GetError()); }
 }
 
-E64::Texture::Texture(const char* path){
-    img_data = stbi_load(path, &width, &height, &channels, 0);
-    img_size = width * height * 4;
-}
 
-E64::Texture::~Texture(){
-
-}
-
-SDL_GPUTexture* E64::Texture::getTexture(){
+SDL_GPUTexture* E64::TBO::getTexture(){
     return texture;
 }
 
-SDL_GPUSampler* E64::Texture::getSampler(){
+SDL_GPUSampler* E64::TBO::getSampler(){
     return sampler;
 }

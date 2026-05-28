@@ -13,23 +13,13 @@ namespace E64{
     class VBO{
         public:
             VBO();
-            VBO(std::vector<Vertex> vertices);
             ~VBO();
 
-            void upload();
-            SDL_GPUBufferBinding* getBufferBinding();
+            void upload(std::vector<Vertex> vertices);
 
-            int getNumVertices();
+            SDL_GPUBuffer* getVertexBuffer();
         private:
-            void setTriangle();
-
-            uint16_t num_vertices;
-            std::vector<Vertex> vertices;
-
-            SDL_GPUDevice* device;
             SDL_GPUBuffer* vertex_buffer;
-            SDL_GPUTransferBuffer* transfer_buffer;
-            SDL_GPUBufferBinding buffer_binding;
     };
 }
 

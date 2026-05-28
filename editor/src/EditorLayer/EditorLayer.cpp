@@ -1,7 +1,10 @@
 #include "EditorLayer/EditorLayer.h"
 #include "EditorInput/EditorInput.h"
+
+#include "AssetImporter/AssetImporter.h"
+#include "AssetSerialization/MeshSerializer.h"
+
 #include <filesystem>
-#include "FBXParser/FBXParser.h"
 #include <E64.h>
 
 using namespace E64;
@@ -60,15 +63,17 @@ void Editor::EditorLayer::OnAttach(){
     ECS::CameraData camera_comp = { camera->getProj(), camera->getView() };
     scene->setCameraData(camera_comp);
 
-    std::string path = "../assets/meshes/";
-    FBXParser parser;
+    std::string path = "/Users/tylerstier/Desktop/Emerald64/assets/meshes/";
+    //FBXParser parser;
+    AssetImporter importer;
+    MeshSerializer serializer;
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
         if(entry.path().extension() == ".obj")
         {
-            E64::Log::info(path);
-            ECS::Mesh* mesh = parser.getMesh(entry.path().c_str());
-            if(mesh != nullptr) E64::Engine::ctx->asset_manager->addMesh(*parser.getMesh(entry.path().c_str()));
-            else E64::Log::error("Failed To Import " + path);
+            ECS::Mesh mesh = importer.importMesh(entry.path());
+            E64::Engine::ctx->asset_manager->addMesh(mesh);
+
+            serializer.serialize(&mesh);
         }
     }
 }
@@ -312,9 +317,10 @@ void Editor::EditorLayer::buildFileManager(){
     ImGui::Begin("Files");
 
     int i = 0;
-    for(const ECS::Mesh& mesh : E64::Engine::ctx->asset_manager->getMeshes()){
+    for(const ECS::Mesh* mesh : E64::Engine::ctx->asset_manager->getMeshes()){
+        std::filesystem::path path = E64::Engine::ctx->asset_manager->getMeshes()[i]->path;
         ImGui::PushID(i);
-        ImGui::Selectable(E64::Engine::ctx->asset_manager->getMeshes()[i].path.c_str());
+        ImGui::Selectable(path.c_str());
         if(ImGui::BeginDragDropSource()){
             ImGui::SetDragDropPayload("Mesh ID", &i, sizeof(int));
             ImGui::EndDragDropSource();

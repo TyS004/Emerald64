@@ -1,6 +1,6 @@
 #include "EditorInput/EditorInput.h"
+#include "AssetImporter/AssetImporter.h"
 #include <E64.h>
-#include "FBXParser/FBXParser.h"
 #include <filesystem>
 
 using namespace E64;
@@ -58,24 +58,27 @@ void Editor::EditorInput::OnWindowResize(float width, float height){
 }
 
 void Editor::EditorInput::OnFileDropped(const char* path){
+    std::filesystem::path fs_path = path;
     std::filesystem::path ext = std::filesystem::path(path).extension();
     E64::Log::debug(std::string(path));
 
     if(ext == ".obj"){
-        FBXParser parser = FBXParser();
-        AssetHandle handle = E64::Engine::ctx->asset_manager->addMesh(*parser.getMesh(path));
-        ECS::MeshComponent* mesh = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected_entity);
-        if(mesh) mesh->handle = handle;
+        // FBXParser parser = FBXParser();
+        AssetImporter importer;
+        ECS::Mesh mesh = importer.importMesh(fs_path);
+        AssetHandle handle = E64::Engine::ctx->asset_manager->addMesh(mesh);
+        ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected_entity);
+        if(mesh_comp) mesh_comp->handle = handle;
         else {
             E64::Log::error("Entity Has No Mesh Component! \nCreate a Mesh Component for this Entity to Assign a Mesh to it.");
         }
     }
-    
+
     else if(ext == ".png" || ext == ".jpg" || ext == ".bmp"){
         ECS::MeshComponent* mesh_componet = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected_entity);
         ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->handle);
-        mesh->texture = new Texture(path);
-        mesh->texture->upload();
+        mesh->texture = TBO(fs_path);
+        mesh->texture.upload();
     }
 }
 
