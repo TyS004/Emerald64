@@ -15,17 +15,17 @@ E64::AssetManager::~AssetManager(){
     
 }
 
-E64::AssetHandle E64::AssetManager::addMesh(E64::ECS::Mesh& mesh){
+E64::ECS::MeshComponent E64::AssetManager::addMesh(E64::ECS::Mesh mesh){
     mesh.upload();
 
-    E64::AssetHandle handle;
-    handle.path = mesh.path;
-    handle.id = mesh_id++;
+    ECS::MeshComponent comp;
+    comp.mesh_handle.path = mesh.path;
+    comp.mesh_handle.id = mesh_id++;
 
-    mesh_repository[handle.path] = std::make_unique<ECS::Mesh>(std::move(mesh));
-    E64::Log::debug("Registerd Mesh: " + mesh.path.string() + " To AssetManager");
+    E64::Log::debug("Registerd Mesh: " + mesh.path + " To AssetManager");
+    mesh_repository[comp.mesh_handle.path] = std::make_unique<ECS::Mesh>(std::move(mesh));
 
-    return handle;
+    return comp;
 }
 
 E64::ECS::Mesh* E64::AssetManager::getMesh(E64::AssetHandle handle){

@@ -2,7 +2,9 @@
 #include "Engine.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "AssetManager/AssetManager.h"
+
 #include "Serialization/SceneSerializer.h"
+#include "Serialization/MeshSerializer.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -14,22 +16,30 @@ E64::SceneLayer::SceneLayer(){
     ECS::ComponentRegistry<ECS::CameraComponent>::registerComponent("Camera");
 
     E64::Engine::ctx->asset_manager = std::make_unique<E64::AssetManager>();
+    E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>();
 
-    scene = E64::Engine::ctx->active_scene.get();
-    if(scene == nullptr){
-        SceneSerializer serializer;
-        serializer.deserialize();
+    if(E64::Engine::ctx->Editor){
         scene = E64::Engine::ctx->active_scene.get();
-    }
-    else{
-        std::cout << "RANDOM SCENE" << std::endl;
         scene->createDefaultScene();
     }
+    else{
+        //Deserialize at Runtime
 
-    std::unique_ptr<Pipeline> pipeline = std::make_unique<Pipeline>("../assets/shaders/object");
+        //Scene
+        SceneSerializer scene_serializer;
+        scene = scene_serializer.deserialize();
+        E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene));
 
-    std::cout << "\tScene: " << scene << std::endl;
-    scene->printScene();
+        //Meshes
+        MeshSerializer  mesh_serializer;
+        for (const auto& entry : std::filesystem::directory_iterator("../assets/meshes/")) {
+            if(entry.path().extension() == ".e64mesh")
+            {
+                ECS::Mesh mesh = mesh_serializer.deserialize();
+                E64::Engine::ctx->asset_manager->addMesh(mesh);
+            }
+        }
+    }
 }
 
 E64::SceneLayer::~SceneLayer(){
@@ -42,7 +52,7 @@ void E64::SceneLayer::OnRender(){
 
     E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
 
-    if(E64::Engine::ctx->editor_mode)
+    if(E64::Engine::ctx->Editor)
     {
         renderer->beginRenderPass(RenderTarget::TEXTURE);
     }

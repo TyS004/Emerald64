@@ -2,7 +2,7 @@
 #include "EditorInput/EditorInput.h"
 
 #include "AssetImporter/AssetImporter.h"
-#include "AssetSerialization/MeshSerializer.h"
+#include "Serialization/MeshSerializer.h"
 
 #include <filesystem>
 #include <E64.h>
@@ -11,8 +11,6 @@ using namespace E64;
 
 Editor::EditorLayer::EditorLayer(){
     Editor::EditorInput::Init();
-
-    E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>();
 
     selected = 0;
     
@@ -64,15 +62,16 @@ void Editor::EditorLayer::OnAttach(){
     scene->setCameraData(camera_comp);
 
     std::string path = "/Users/tylerstier/Desktop/Emerald64/assets/meshes/";
-    //FBXParser parser;
     AssetImporter importer;
     MeshSerializer serializer;
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
         if(entry.path().extension() == ".obj")
         {
-            ECS::Mesh mesh = importer.importMesh(entry.path());
+            ECS::Mesh mesh = importer.importMesh(entry.path().string());
+            std::cout << "PATH: " << mesh.path << std::endl;
             E64::Engine::ctx->asset_manager->addMesh(mesh);
 
+            std::cout << "PATH: " << mesh.path << std::endl;
             serializer.serialize(&mesh);
         }
     }
@@ -279,9 +278,9 @@ void Editor::EditorLayer::buildMeshHeader(){
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if(ImGui::CollapsingHeader("Mesh"))
     {
-        ImGui::Text("Mesh ID: %d", mesh->handle.id);
+        ImGui::Text("Mesh ID: %d", mesh->mesh_handle.id);
 
-        std::string name = mesh->handle.path;
+        std::string name = mesh->mesh_handle.path;
         ImGui::Text("Name: %s", name.c_str());
 
         ImGui::Text("Texture");

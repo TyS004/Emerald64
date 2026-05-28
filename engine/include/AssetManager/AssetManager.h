@@ -10,7 +10,7 @@ namespace E64{
             AssetManager();
             ~AssetManager();
 
-            AssetHandle addMesh(ECS::Mesh& mesh);
+            ECS::MeshComponent addMesh(ECS::Mesh mesh);
             ECS::Mesh* getMesh(AssetHandle handle);
             std::vector<ECS::Mesh*> getMeshes();
 

@@ -11,7 +11,7 @@ namespace E64{
         std::unique_ptr<E64::Renderer> renderer;
         std::unique_ptr<E64::Scene> active_scene;
         std::unique_ptr<E64::AssetManager> asset_manager;
-        bool editor_mode = false;
+        bool Editor = false;
     };
 }
 

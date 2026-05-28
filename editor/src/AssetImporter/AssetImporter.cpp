@@ -3,10 +3,10 @@
 Editor::AssetImporter::AssetImporter(){}
 Editor::AssetImporter::~AssetImporter(){}
 
-E64::ECS::Mesh Editor::AssetImporter::importMesh(std::filesystem::path path){
+E64::ECS::Mesh Editor::AssetImporter::importMesh(std::string path){
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(
-        path.string(),
+        path,
         aiProcess_CalcTangentSpace      |
         aiProcess_Triangulate           |
         aiProcess_JoinIdenticalVertices |
@@ -33,11 +33,11 @@ E64::ECS::Mesh Editor::AssetImporter::importMesh(std::filesystem::path path){
     findMesh(scene->mRootNode);
 
     if (!raw_mesh) {
-        E64::Log::error("Mesh Not Found");
+        E64::Log::error("ASSET IMPORTER ERROR: Mesh not Found in File");
         return E64::ECS::Mesh{};
     }
 
-    E64::Log::debug(std::to_string(raw_mesh->mNumVertices)  + " Vertices from " + path.string());
+    E64::Log::debug(std::to_string(raw_mesh->mNumVertices)  + " Vertices from " + path);
     E64::Log::debug(std::to_string(raw_mesh->mNumFaces)     + " Polygon Count");
     E64::Log::debug(std::to_string(raw_mesh->mNumFaces * 3) + " Index Count");
 
@@ -76,6 +76,7 @@ E64::ECS::Mesh Editor::AssetImporter::importMesh(std::filesystem::path path){
 
     E64::Log::info(std::to_string(num_poly_verts) + " total indices");
 
+    E64::Log::debug(path);
     mesh.path    = path;
     mesh.texture = E64::TBO();
 

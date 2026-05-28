@@ -69,7 +69,7 @@ void E64::Scene::createDefaultScene(){
         100.0f
     };
     ECS::TransformComponent transform {};
-    transform.position.z = -5.0f;
+    transform.position.z = -15.0f;
     transform.euler.x = 90.0f;
     
     ECS::ComponentManager::addComponent<ECS::CameraComponent>(camera_entity, camera);
@@ -130,7 +130,7 @@ void E64::Scene::render(){
     for(ECS::Entity entity : entites){
         if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(entity) &&
             ECS::ComponentManager::hasComponent<ECS::TransformComponent>(entity) &&
-            !E64::Engine::ctx->editor_mode)
+            !E64::Engine::ctx->Editor)
         {
             ECS::CameraComponent* camera = ECS::ComponentManager::getComponent<ECS::CameraComponent>(entity);
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
@@ -156,14 +156,14 @@ void E64::Scene::render(){
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
             ECS::MeshComponent* mesh_componet  = ECS::ComponentManager::getComponent<ECS::MeshComponent>(entity);
             
-            ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->handle);
+            ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->mesh_handle);
             if(mesh == nullptr) { 
                 E64::Log::error("MESH NOT FOUND FOR Component IN ENTITY: " + std::to_string(entity)); 
 
-                AssetHandle handle;
-                handle.id = 0;
-                handle.path = "default";
-                mesh = E64::Engine::ctx->asset_manager->getMesh(handle); // MESH FOR MISSING MESH
+                AssetHandle mesh_handle;
+                mesh_handle.id = 0;
+                mesh_handle.path = "default";
+                mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_handle); // MESH FOR MISSING MESH
             }
 
             glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)

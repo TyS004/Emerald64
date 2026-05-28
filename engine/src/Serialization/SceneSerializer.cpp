@@ -31,11 +31,11 @@ void E64::SceneSerializer::serialize(){
     file.close();
 }
 
-void E64::SceneSerializer::deserialize(){
+E64::Scene* E64::SceneSerializer::deserialize(){
     ECS::EntityManager::flushEntites();
     ECS::ComponentManager::flushComponents();
 
-    E64::Scene scene;
+    E64::Scene* scene = new Scene();
 
     std::ifstream file("../assets/scenes/scene.json");
     json scene_json;
@@ -44,12 +44,12 @@ void E64::SceneSerializer::deserialize(){
 
     for (const json& entity_json : scene_json["entities"]) {
         ECS::Entity e = entity_json["id"];
-        scene.pushEntity(e);
+        scene->pushEntity(e);
         ECS::ComponentManager::deserialize(entity_json, e);
     }
 
-    E64::Log::debug("Loaded Scene: " + scene.getName());
-    scene.printScene();
+    E64::Log::debug("Loaded Scene: " + scene->getName());
+    scene->printScene();
 
-    E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(scene));
+    return scene;
 }

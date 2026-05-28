@@ -63,12 +63,11 @@ void Editor::EditorInput::OnFileDropped(const char* path){
     E64::Log::debug(std::string(path));
 
     if(ext == ".obj"){
-        // FBXParser parser = FBXParser();
         AssetImporter importer;
         ECS::Mesh mesh = importer.importMesh(fs_path);
-        AssetHandle handle = E64::Engine::ctx->asset_manager->addMesh(mesh);
+        ECS::MeshComponent comp = E64::Engine::ctx->asset_manager->addMesh(mesh);
         ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected_entity);
-        if(mesh_comp) mesh_comp->handle = handle;
+        if(mesh_comp) mesh_comp->mesh_handle = comp.mesh_handle;
         else {
             E64::Log::error("Entity Has No Mesh Component! \nCreate a Mesh Component for this Entity to Assign a Mesh to it.");
         }
@@ -76,7 +75,7 @@ void Editor::EditorInput::OnFileDropped(const char* path){
 
     else if(ext == ".png" || ext == ".jpg" || ext == ".bmp"){
         ECS::MeshComponent* mesh_componet = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected_entity);
-        ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->handle);
+        ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->mesh_handle);
         mesh->texture = TBO(fs_path);
         mesh->texture.upload();
     }

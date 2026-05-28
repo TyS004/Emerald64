@@ -10,11 +10,6 @@ std::unique_ptr<E64::EngineCtx> E64::Engine::ctx = std::make_unique<E64::EngineC
 void E64::Engine::run(){
     ctx->renderer = std::make_unique<E64::Renderer>();
     E64::Renderer* renderer = ctx->renderer.get();
-    for(Layer* layer : E64::Layer::layers){
-        if(layer->GetLayerType() == E64::Layer::LayerType::EDITOR_LAYER){
-            ctx->editor_mode = true;
-        }
-    }
 
     SDL_GPUDevice* device = E64::Window::getDevice();
     SDL_Window* window = E64::Window::getWindow();

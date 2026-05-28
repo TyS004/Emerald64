@@ -4,6 +4,7 @@
 
 int main(){
     std::cout << "Starting Editor" << std::endl;
+    E64::Engine::ctx->Editor = true;
     
     E64::Window::Create("Emerald 64 Editor", 1300, 800);
 

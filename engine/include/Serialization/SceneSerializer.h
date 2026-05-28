@@ -13,7 +13,7 @@ namespace E64{
             ~SceneSerializer();
 
             void serialize();
-            void deserialize();
+            E64::Scene* deserialize();
     };
 }
 

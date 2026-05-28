@@ -23,27 +23,36 @@ add_subdirectory(./vendor/imgui)
 
 # ── Engine (DLL) ──────────────────────────────
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS engine/src/*.cpp)
+
 add_library(E64 SHARED ${ENGINE_SOURCES})
+
 target_include_directories(E64 PUBLIC ./engine/include)
 include_directories(E64 PRIVATE ./vendor/json)
 include_directories(E64 PRIVATE ./vendor/stb_img)
+
 target_link_libraries(E64 PUBLIC SDL3::SDL3 glm::glm  ImGui::ImGui)
+
 target_precompile_headers(E64 PRIVATE engine/src/pch.h)
 
 # ── Editor (EXE) ──────────────────────────────
 file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS editor/src/*.cpp)
+
 add_executable(E64Editor ${EDITOR_SOURCES})
-target_link_libraries(E64 PRIVATE assimp)
+target_compile_definitions(E64Editor PRIVATE E64_EDITOR)
+target_compile_definitions(E64 PRIVATE E64_EDITOR)
+
 target_include_directories(E64Editor PUBLIC ./editor/include)
 target_include_directories(E64Editor PRIVATE vendor/assimp/include)
+
+target_link_libraries(E64 PRIVATE assimp)
 target_link_libraries(E64Editor PRIVATE assimp)
 target_link_libraries(E64Editor PRIVATE E64)
-target_compile_definitions(E64Editor PRIVATE E64_EDITOR)
+
 target_precompile_headers(E64Editor REUSE_FROM E64)
 
 # ── Sandbox (EXE) ──────────────────────────────
-file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS n64/*.cpp)
-add_executable(E64Runtime ${EDITOR_SOURCES})
+file(GLOB_RECURSE RUNTIME_SOURCES CONFIGURE_DEPENDS n64/*.cpp)
+add_executable(E64Runtime ${RUNTIME_SOURCES})
 target_link_libraries(E64Runtime PRIVATE E64)
 target_precompile_headers(E64Runtime REUSE_FROM E64)
 

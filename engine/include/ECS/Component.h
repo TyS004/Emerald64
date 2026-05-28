@@ -40,18 +40,23 @@ namespace E64{
         };
         
         struct MeshComponent{
-            AssetHandle handle;
+            AssetHandle mesh_handle;
+            AssetHandle tex_handle;
             
             void serialize(json& j) const
             {
-                j["handle_id"] = {handle.id};
-                j["handle_path"] = {handle.path};
+                j["mesh_handle_id"] = {mesh_handle.id};
+                j["mesh_handle_path"] = {mesh_handle.path};
+                j["tex_handle_id"] = {tex_handle.id};
+                j["tex_handle_path"] = {tex_handle.path};
             } 
 
             void deserialize(const json& j)
             {
-                handle.id = j["handle_id"][0];
-                handle.path = j["handle_path"][0];
+                mesh_handle.id = j["mesh_handle_id"][0];
+                mesh_handle.path = j["mesh_handle_path"][0];
+                tex_handle.id = j["tex_handle_id"][0];
+                tex_handle.path = j["tex_handle_path"][0];
             }
         };
 
@@ -164,7 +169,7 @@ namespace E64{
                 33, 34, 35
             };
 
-            std::filesystem::path path = "default";
+            std::string path = "default";
 
             void upload(){
                 vbo.upload(vertices);
@@ -172,10 +177,52 @@ namespace E64{
                 texture.upload();
             }
 
-            friend std::ostream& operator<<(std::ostream& file, Mesh mesh){
-                
+            friend std::ofstream& operator<<(std::ofstream& file, const ECS::Mesh& mesh) {
+                E64::Log::info("Writing to E64Mesh..." + mesh.path);
+            
+                uint32_t vcount   = mesh.vertices.size();
+                uint32_t icount   = mesh.indices.size();
+                std::string path_str = mesh.path;
+                uint32_t path_len = path_str.size();
+            
+                file.write(reinterpret_cast<const char*>(&vcount),               sizeof(uint32_t));
+                file.write(reinterpret_cast<const char*>(mesh.vertices.data()),  sizeof(Vertex) * vcount);
+                file.write(reinterpret_cast<const char*>(&icount),               sizeof(uint32_t));
+                file.write(reinterpret_cast<const char*>(mesh.indices.data()),   sizeof(uint32_t) * icount);
+                file.write(reinterpret_cast<const char*>(&path_len),             sizeof(uint32_t));
+                file.write(path_str.c_str(),                                     path_len);
+            
                 return file;
             }
+
+            friend std::ifstream& operator>>(std::ifstream& file, ECS::Mesh& mesh) {
+                E64::Log::info("Reading from E64Mesh..." + mesh.path);
+
+                uint32_t vcount = 0;
+                file.read(reinterpret_cast<char*>(&vcount), sizeof(uint32_t));
+                mesh.vertices.resize(vcount);
+                file.read(reinterpret_cast<char*>(mesh.vertices.data()), sizeof(Vertex) * vcount);
+
+
+                uint32_t icount = 0;
+                file.read(reinterpret_cast<char*>(&icount), sizeof(uint32_t));
+                mesh.indices.resize(icount);
+                file.read(reinterpret_cast<char*>(mesh.indices.data()), sizeof(uint32_t) * icount);
+
+
+                uint32_t path_len = 0;
+                file.read(reinterpret_cast<char*>(&path_len), sizeof(uint32_t));
+                std::string path_str(path_len, '\0');
+                file.read(path_str.data(), path_len);
+                mesh.path = path_str;
+
+                return file;
+            }
+        };
+
+        struct Texture{
+            TBO texture;
+            const char* img_data;
         };
 
         using ComponentMask = uint32_t;

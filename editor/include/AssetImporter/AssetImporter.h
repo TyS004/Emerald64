@@ -13,7 +13,7 @@ namespace Editor{
             AssetImporter();
             ~AssetImporter();
 
-            E64::ECS::Mesh importMesh(std::filesystem::path path);
+            E64::ECS::Mesh importMesh(std::string path);
     };
 }
 
