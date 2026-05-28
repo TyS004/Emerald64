@@ -85,7 +85,7 @@ void E64::Renderer::beginRenderPass(RenderTarget target){
     switch(target){ 
         case SWAPCHAIN:
             color_target_info.texture = swapchain;
-            render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, nullptr);
+            render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, &depth_target_info);
             break;
         case TEXTURE:
             color_target_info.texture = scene_texture;

@@ -40,6 +40,9 @@ void Editor::EditorInput::OnKeyDown(SDL_Scancode scancode){
         case SDL_SCANCODE_F1:
             debug_mode = !debug_mode;
             break;
+        case SDL_SCANCODE_F12:
+            std::system("./E64Runtime");
+            break;
         default:
             break;
     }

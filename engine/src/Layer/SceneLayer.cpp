@@ -52,8 +52,7 @@ void E64::SceneLayer::OnRender(){
 
     E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
 
-    if(E64::Engine::ctx->Editor)
-    {
+    if(E64::Engine::ctx->Editor){
         renderer->beginRenderPass(RenderTarget::TEXTURE);
     }
     else{
