@@ -13,6 +13,8 @@ void E64::Engine::run(){
 
     SDL_GPUDevice* device = E64::Window::getDevice();
     SDL_Window* window = E64::Window::getWindow();
+    //E64::SceneLayer* layer = new E64::SceneLayer();
+    //E64::Layer::layers.push_back(layer);
 
     float dt  = 0.0f;
     while(running){

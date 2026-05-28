@@ -24,8 +24,8 @@ void E64::Window::Create(const char* name, int width, int height){
     E64::Window::width = width;
     E64::Window::height = height;
 
-    if(__APPLE__) device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
-    else          device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, nullptr);
+    if(!_WIN32) device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
+    else          device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_DXIL, true, nullptr);
     if(!device) { E64::Log::error(SDL_GetError()); SDL_Quit(); }
 
     SDL_ClaimWindowForGPUDevice(device, window);

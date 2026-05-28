@@ -319,7 +319,7 @@ void Editor::EditorLayer::buildFileManager(){
     for(const ECS::Mesh* mesh : E64::Engine::ctx->asset_manager->getMeshes()){
         std::filesystem::path path = E64::Engine::ctx->asset_manager->getMeshes()[i]->path;
         ImGui::PushID(i);
-        ImGui::Selectable(path.c_str());
+        ImGui::Selectable(path.string().c_str());
         if(ImGui::BeginDragDropSource()){
             ImGui::SetDragDropPayload("Mesh ID", &i, sizeof(int));
             ImGui::EndDragDropSource();

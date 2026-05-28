@@ -17,12 +17,12 @@ E64::Shader::~Shader(){
 SDL_GPUShader* E64::Shader::loadShader(){
     char fullPath[256];
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
-        if(__APPLE__) snprintf(fullPath, sizeof(fullPath), "%s_vert.metal", path);
-        else          snprintf(fullPath, sizeof(fullPath), "%s_vert.spv", path);
+        if(!_WIN32) snprintf(fullPath, sizeof(fullPath), "%s_vert.metal", path);
+        else          snprintf(fullPath, sizeof(fullPath), "%s_vert.dxil", path);
     }
     else{
-        if(__APPLE__) snprintf(fullPath, sizeof(fullPath), "%s_frag.metal", path);
-        else          snprintf(fullPath, sizeof(fullPath), "%s_frag.spv", path);
+        if(!_WIN32) snprintf(fullPath, sizeof(fullPath), "%s_frag.metal", path);
+        else          snprintf(fullPath, sizeof(fullPath), "%s_frag.dxil", path);
     }
 
     size_t codeSize;
@@ -38,20 +38,20 @@ SDL_GPUShader* E64::Shader::loadShader(){
     info.code_size = codeSize;
     info.stage = stage;
     info.num_storage_buffers = 0;
-    info.num_storage_textures = 0;
+    info.num_storage_textures = 0; 
 
-    if(__APPLE__) info.format = SDL_GPU_SHADERFORMAT_MSL;
-    else          info.format = SDL_GPU_SHADERFORMAT_SPIRV;
+    if(!_WIN32)   info.format = SDL_GPU_SHADERFORMAT_MSL;
+    else          info.format = SDL_GPU_SHADERFORMAT_DXIL;
 
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
         info.num_uniform_buffers = 1;
         info.num_samplers = 0;
-        info.entrypoint = "vertex_main";
+        info.entrypoint = "main";
     }
     else{
         info.num_uniform_buffers = 0;
         info.num_samplers = 1;
-        info.entrypoint = "fragment_main";
+        info.entrypoint = "main";
     }
 
     SDL_GPUShader* shader = SDL_CreateGPUShader(device, &info);

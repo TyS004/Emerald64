@@ -40,6 +40,7 @@ E64::SceneLayer::SceneLayer(){
             }
         }
     }
+    E64::Log::info("OnRender called");
 }
 
 E64::SceneLayer::~SceneLayer(){
@@ -47,12 +48,14 @@ E64::SceneLayer::~SceneLayer(){
 }
 
 void E64::SceneLayer::OnRender(){
+    E64::Log::info("OnRender called");
     scene = E64::Engine::ctx->active_scene.get();
     if(!scene) { E64::Log::error("NO SCENE"); return; }
 
     E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
 
     if(E64::Engine::ctx->Editor){
+        E64::Log::error("cmd_buf is null");
         renderer->beginRenderPass(RenderTarget::TEXTURE);
     }
     else{

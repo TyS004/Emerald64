@@ -1,7 +1,6 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <uuid/uuid.h>
 #include <unordered_map>
 
 #include "ECS/Component.h"

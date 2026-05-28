@@ -71,6 +71,9 @@ void E64::Renderer::ResizeViewport(){
 }
 
 void E64::Renderer::beginRenderPass(RenderTarget target){
+    if (!cmd_buf) { E64::Log::error("cmd_buf is null"); return; }
+    if (!swapchain) { E64::Log::error("swapchain is null"); return; }
+
     draw_calls = 0;
 
     color_target_info.clear_color = {75/255.0f, 75/255.0f, 75/255.0f, 255/255.0f};
