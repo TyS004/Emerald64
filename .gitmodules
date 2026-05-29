@@ -11,3 +11,6 @@
 [submodule "vendor/assimp"]
 	path = vendor/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "vendor/libdragon"]
+	path = vendor/libdragon
+	url = https://github.com/DragonMinded/libdragon.git

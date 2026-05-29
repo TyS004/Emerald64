@@ -3,5 +3,6 @@
 .vscode/
 
 bin/
+bin64/
 
 .clangd
