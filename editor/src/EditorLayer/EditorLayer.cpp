@@ -4,6 +4,8 @@
 #include "AssetImporter/AssetImporter.h"
 #include "Serialization/MeshSerializer.h"
 
+#include "SDLRenderer.h"
+
 #include <filesystem>
 #include <E64.h>
 
@@ -68,10 +70,10 @@ void Editor::EditorLayer::OnAttach(){
         if(entry.path().extension() == ".obj")
         {
             ECS::Mesh mesh = importer.importMesh(entry.path().string());
-            std::cout << "PATH: " << mesh.path << std::endl;
+            std::cout << "PATH: " << mesh.obj_path << std::endl;
             E64::Engine::ctx->asset_manager->addMesh(mesh);
 
-            std::cout << "PATH: " << mesh.path << std::endl;
+            std::cout << "PATH: " << mesh.obj_path << std::endl;
             serializer.serialize(&mesh);
         }
     }
@@ -104,7 +106,7 @@ void Editor::EditorLayer::OnImGuiRender(){
     
     ImGui::Render();
 
-    E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
+    SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
     ImGui_ImplSDLGPU3_PrepareDrawData(ImGui::GetDrawData(), renderer->getCommandBuffer());
     renderer->beginRenderPass(SWAPCHAIN);
     renderer->drawUI();
@@ -195,7 +197,8 @@ void Editor::EditorLayer::buildViewport(){
         Editor::EditorInput::OnWindowResize(viewport_size.x, viewport_size.y);
         Editor::EditorInput::getCamera()->OnResize(viewport_size.x, viewport_size.y);
     }
-    ImGui::Image((ImTextureID)E64::Engine::ctx->renderer->getSceneTexture(), ImGui::GetContentRegionAvail());
+    SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+    ImGui::Image((ImTextureID)renderer->getSceneTexture(), ImGui::GetContentRegionAvail());
     if(Editor::EditorInput::debug_mode) buildDebug(viewport_tl);
 
     ImGui::End();
@@ -317,7 +320,7 @@ void Editor::EditorLayer::buildFileManager(){
 
     int i = 0;
     for(const ECS::Mesh* mesh : E64::Engine::ctx->asset_manager->getMeshes()){
-        std::filesystem::path path = E64::Engine::ctx->asset_manager->getMeshes()[i]->path;
+        std::filesystem::path path = E64::Engine::ctx->asset_manager->getMeshes()[i]->obj_path;
         ImGui::PushID(i);
         ImGui::Selectable(path.c_str());
         if(ImGui::BeginDragDropSource()){

@@ -50,7 +50,7 @@ void E64::SceneLayer::OnRender(){
     scene = E64::Engine::ctx->active_scene.get();
     if(!scene) { E64::Log::error("NO SCENE"); return; }
 
-    E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
+    E64::IRenderer* renderer = E64::Engine::ctx->renderer;
 
     if(E64::Engine::ctx->Editor){
         renderer->beginRenderPass(RenderTarget::TEXTURE);

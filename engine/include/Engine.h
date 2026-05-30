@@ -1,20 +1,5 @@
-#ifndef ENGINE
-#define ENGINE
-
-#include "Renderer/VBO.h"
-#include "Renderer/IBO.h"
-#include "Renderer/Renderer.h"
-#include "Renderer/Pipeline.h"
-
-#include "Layer/Layer.h"
-#include "Layer/SceneLayer.h"
-#include "Layer/PhysicsLayer.h"
-
-#include "ECS/Entity.h"
-#include "ECS/ComponentManager.h"
-#include "ECS/Scene.h"
-
-#include "Serialization/SceneSerializer.h"
+#ifndef ENGINE_H
+#define ENGINE_H
 
 #include "ctx.h"
 

@@ -1,5 +1,4 @@
 #include "Input/Input.h"
-#include "Window/Window.h"
 #include "Layer/PhysicsLayer.h"
 
 bool E64::Input::running = true;

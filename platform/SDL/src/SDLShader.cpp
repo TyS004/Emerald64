@@ -1,20 +1,19 @@
-#include "Renderer/Shader.h"
-#include "Logger/Logger.h"
+#include "SDLShader.h"
 
-static E64::Log logger = E64::Log();
+#include <string>
 
-E64::Shader::Shader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device){
+SDLShader::SDLShader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device){
     this->device = device;
     this->stage = stage;
     this->path = path;
     this->shader = loadShader();
 }
 
-E64::Shader::~Shader(){
+SDLShader::~SDLShader(){
     SDL_ReleaseGPUShader(this->device, this->shader);
 }
 
-SDL_GPUShader* E64::Shader::loadShader(){
+SDL_GPUShader* SDLShader::loadShader(){
     char fullPath[256];
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
         if(__APPLE__) snprintf(fullPath, sizeof(fullPath), "%s_vert.metal", path);
@@ -28,10 +27,11 @@ SDL_GPUShader* E64::Shader::loadShader(){
     size_t codeSize;
     void* code = SDL_LoadFile(fullPath, &codeSize);
     if(!code){  
-        logger.warn("Failed to Load Shader File");
-        logger.warn(fullPath);
+        E64::Log::warn("Failed to Load Shader File");
+        E64::Log::warn(fullPath);
         return nullptr;
     }
+    E64::Log::warn(fullPath);
 
     SDL_GPUShaderCreateInfo info = {};
     info.code = (const Uint8*) code;
@@ -58,15 +58,15 @@ SDL_GPUShader* E64::Shader::loadShader(){
     SDL_free(code);
 
     if(!shader){
-        logger.warn("Failed to Create Shader");
+        E64::Log::warn("Failed to Create Shader");
         return nullptr;
     }
     std::string msg = "Successfully Loaded Shader ";
     msg += fullPath;
-    logger.info(msg.c_str());
+    E64::Log::info(msg.c_str());
     return shader;
 }
 
-SDL_GPUShader* E64::Shader::getShader(){
+SDL_GPUShader* SDLShader::getShader(){
     return this->shader;
 }

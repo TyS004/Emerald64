@@ -77,8 +77,8 @@ E64::ECS::Mesh Editor::AssetImporter::importMesh(std::string path){
     E64::Log::info(std::to_string(num_poly_verts) + " total indices");
 
     E64::Log::debug(path);
-    mesh.path    = path;
-    mesh.texture = E64::TBO();
+    mesh.obj_path    = path;
+    mesh.texture_path = "";
 
     return mesh;
 }

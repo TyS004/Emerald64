@@ -1,11 +1,7 @@
 #ifndef EDITOR_CAMERA_H
 #define EDITOR_CAMERA_H
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include "ECS/Component.h"
-#include "ECS/Entity.h"
+#include <E64.h>
 
 namespace Editor{
     class EditorCamera{

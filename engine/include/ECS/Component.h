@@ -1,10 +1,10 @@
 #ifndef ECS_H
 #define ECS_H
 
-#include "Renderer/VBO.h"
-#include "Renderer/IBO.h"
-#include "Renderer/TBO.h"
+#include "Renderer/RendererHandle.h"
+
 #include "AssetManager/AssetHandle.h"
+
 #include <json.hpp>
 
 using json = nlohmann::json;
@@ -89,9 +89,10 @@ namespace E64{
         };
 
         struct Mesh{
-            VBO vbo;
-            IBO ibo;
-            TBO texture;
+            GPUBufferHandle vbo_handle        = 0;
+            GPUBufferHandle ibo_handle        = 0;
+            GPUTextureHandle texture_handle   = 0;
+            GPUSamplerHandle sampler_handle   = 0;
 
             std::vector<Vertex> vertices = { 
                 // Front (red)
@@ -169,20 +170,18 @@ namespace E64{
                 33, 34, 35
             };
 
-            std::string path = "default";
+            std::string obj_path = "default";
+            std::string texture_path = "";
 
             void upload(){
-                vbo.upload(vertices);
-                ibo.upload(indices);
-                texture.upload();
             }
 
             friend std::ofstream& operator<<(std::ofstream& file, const ECS::Mesh& mesh) {
-                E64::Log::info("Writing to E64Mesh..." + mesh.path);
+                E64::Log::info("Writing to E64Mesh..." + mesh.obj_path);
             
                 uint32_t vcount   = mesh.vertices.size();
                 uint32_t icount   = mesh.indices.size();
-                std::string path_str = mesh.path;
+                std::string path_str = mesh.obj_path;
                 uint32_t path_len = path_str.size();
             
                 file.write(reinterpret_cast<const char*>(&vcount),               sizeof(uint32_t));
@@ -196,7 +195,7 @@ namespace E64{
             }
 
             friend std::ifstream& operator>>(std::ifstream& file, ECS::Mesh& mesh) {
-                E64::Log::info("Reading from E64Mesh..." + mesh.path);
+                E64::Log::info("Reading from E64Mesh..." + mesh.obj_path);
 
                 uint32_t vcount = 0;
                 file.read(reinterpret_cast<char*>(&vcount), sizeof(uint32_t));
@@ -214,14 +213,15 @@ namespace E64{
                 file.read(reinterpret_cast<char*>(&path_len), sizeof(uint32_t));
                 std::string path_str(path_len, '\0');
                 file.read(path_str.data(), path_len);
-                mesh.path = path_str;
+                mesh.obj_path = path_str;
 
                 return file;
             }
         };
 
+        //NOT YET IMPLEMENTED
         struct Texture{
-            TBO texture;
+            GPUTextureHandle texture;
             const char* img_data;
         };
 

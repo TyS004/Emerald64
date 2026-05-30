@@ -12,7 +12,7 @@ namespace E64{
             static void Destory();
 
             static SDL_Event PollEvent();
-
+        
             static SDL_Window* getWindow();
             static SDL_GPUDevice* getDevice();
 

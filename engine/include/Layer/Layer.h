@@ -2,6 +2,7 @@
 #define LAYER_H
 
 #include "ctx.h"
+#include <SDL3/SDL.h>
 
 namespace E64{
     class Layer{

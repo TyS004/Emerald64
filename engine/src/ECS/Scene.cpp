@@ -1,6 +1,6 @@
 #include "ECS/Scene.h"
 #include "ECS/ComponentManager.h"
-#include "Renderer/Renderer.h"
+#include "Renderer/IRenderer.h"
 #include "ECS/Entity.h"
 #include "Engine.h"
 
@@ -125,7 +125,7 @@ void E64::Scene::setCameraData(E64::ECS::CameraData camera_data){
 }
 
 void E64::Scene::render(){
-    E64::Renderer* renderer = E64::Engine::ctx->renderer.get();
+    E64::IRenderer* renderer = E64::Engine::ctx->renderer;
 
     for(ECS::Entity entity : entites){
         if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(entity) &&

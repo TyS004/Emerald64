@@ -1,17 +1,14 @@
-#include "Renderer/Pipeline.h"
-#include "Logger/Logger.h"
-#include "Renderer/VBO.h"
+#include "SDLPipeline.h"
+#include "SDLShader.h"
 
 #include <cstddef>
 
-static E64::Log logger = E64::Log();
-
-E64::Pipeline::Pipeline(const char* shaderPath){
+SDLPipeline::SDLPipeline(const char* shaderPath){
     this->device = E64::Window::getDevice();
     SDL_Window* window = E64::Window::getWindow();
     
-    vert_shader = new Shader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
-    frag_shader = new Shader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
+    vert_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
+    frag_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
 
     SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {};
     pipelineInfo.vertex_shader = vert_shader->getShader();
@@ -33,7 +30,7 @@ E64::Pipeline::Pipeline(const char* shaderPath){
     vertexBufferDesctiptions[0].slot = 0;
     vertexBufferDesctiptions[0].input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
     vertexBufferDesctiptions[0].instance_step_rate = 0;
-    vertexBufferDesctiptions[0].pitch = sizeof(Vertex);
+    vertexBufferDesctiptions[0].pitch = sizeof(E64::Vertex);
 
     pipelineInfo.vertex_input_state.num_vertex_buffers = 1;
     pipelineInfo.vertex_input_state.vertex_buffer_descriptions = vertexBufferDesctiptions;
@@ -49,13 +46,13 @@ E64::Pipeline::Pipeline(const char* shaderPath){
     vertexAttributes[1].buffer_slot = 0; // use buffer at slot 0
     vertexAttributes[1].location = 1; // layout (location = 1) in shader
     vertexAttributes[1].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4; // vec4
-    vertexAttributes[1].offset = offsetof(Vertex, color); // 4th float from current buffer position
+    vertexAttributes[1].offset = offsetof(E64::Vertex, color); // 4th float from current buffer position
 
     //a_uv
     vertexAttributes[2].buffer_slot = 0;
     vertexAttributes[2].location = 2; // layout (location = 2) in shader
     vertexAttributes[2].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2; // vec2
-    vertexAttributes[2].offset = offsetof(Vertex, uv);    // 4th float from current buffer position
+    vertexAttributes[2].offset = offsetof(E64::Vertex, uv);    // 4th float from current buffer position
 
     pipelineInfo.vertex_input_state.num_vertex_attributes = 3;
     pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;
@@ -71,10 +68,10 @@ E64::Pipeline::Pipeline(const char* shaderPath){
     pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
 }
 
-E64::Pipeline::~Pipeline(){
+SDLPipeline::~SDLPipeline(){
     //SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
 }
 
-SDL_GPUGraphicsPipeline* E64::Pipeline::getPipeline(){
+SDL_GPUGraphicsPipeline* SDLPipeline::getPipeline(){
     return this->pipeline;
 }

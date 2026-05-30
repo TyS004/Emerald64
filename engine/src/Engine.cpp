@@ -1,15 +1,15 @@
 #include "Engine.h"
 
-#include <imgui.h>
-#include <backends/imgui_impl_sdl3.h>
-#include <backends/imgui_impl_sdlgpu3.h>
+#include "Layer/Layer.h"
+#include "Window/Window.h"
+
+#include <unistd.h>
 
 bool E64::Engine::running = true;
 std::unique_ptr<E64::EngineCtx> E64::Engine::ctx = std::make_unique<E64::EngineCtx>();
 
 void E64::Engine::run(){
-    ctx->renderer = std::make_unique<E64::Renderer>();
-    E64::Renderer* renderer = ctx->renderer.get();
+    E64::IRenderer* renderer = ctx->renderer;
 
     SDL_GPUDevice* device = E64::Window::getDevice();
     SDL_Window* window = E64::Window::getWindow();
@@ -39,8 +39,6 @@ void E64::Engine::run(){
         }
         
         renderer->submit();
-
-        SDL_Delay(1);
 
         auto end = std::chrono::high_resolution_clock::now();
         dt = std::chrono::duration<float>(end - start).count();

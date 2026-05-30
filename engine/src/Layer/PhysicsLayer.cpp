@@ -1,4 +1,7 @@
 #include "Layer/PhysicsLayer.h"
+
+#include "ECS/ComponentManager.h"
+
 #include "Engine.h"
 
 bool E64::PhysicsLayer::running = false;

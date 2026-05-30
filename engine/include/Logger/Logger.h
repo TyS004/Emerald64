@@ -1,8 +1,6 @@
 #ifndef LOGGER
 #define LOGGER
 
-#include <SDL3/SDL.h>
-
 namespace E64{
     class Log
     {

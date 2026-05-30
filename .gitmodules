@@ -14,3 +14,4 @@
 [submodule "vendor/libdragon"]
 	path = vendor/libdragon
 	url = https://github.com/DragonMinded/libdragon.git
+	ignore = dirty

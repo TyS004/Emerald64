@@ -343,10 +343,10 @@
         {
             "Mesh": {
                 "mesh_handle_id": [
-                    0
+                    3
                 ],
                 "mesh_handle_path": [
-                    "default"
+                    "/Users/tylerstier/Desktop/Emerald64/assets/meshes/sphere.obj"
                 ],
                 "tex_handle_id": [
                     0
@@ -357,7 +357,7 @@
             },
             "Transform": {
                 "position": [
-                    -10.0,
+                    -10.699999809265137,
                     0.0,
                     5.0
                 ],
@@ -367,9 +367,9 @@
                     0.0
                 ],
                 "scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    15.0,
+                    15.0,
+                    15.0
                 ]
             },
             "id": 10
@@ -3411,7 +3411,7 @@
                 "position": [
                     0.0,
                     0.0,
-                    -10.0
+                    -20.0
                 ],
                 "rotation": [
                     90.0,

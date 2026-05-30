@@ -1,8 +1,5 @@
 #include "Window/Window.h"
-#include "Logger/Logger.h"
 #include "Layer/Layer.h"
-
-E64::Log logger;
 
 SDL_Window* E64::Window::window = nullptr;
 SDL_GPUDevice* E64::Window::device = nullptr;
@@ -14,12 +11,12 @@ bool E64::Window::VSync = false;
 
 void E64::Window::Create(const char* name, int width, int height){
     if(SDL_Init(SDL_INIT_VIDEO) == 0){
-        logger.warn("SDL Could not Initalize");
+        E64::Log::warn("SDL Could not Initalize");
         return;
     }
 
     window = SDL_CreateWindow(name, width, height, 0);
-    if(!window) { logger.warn("Window could not be created"); SDL_Quit();}
+    if(!window) { E64::Log::warn("Window could not be created"); SDL_Quit();}
 
     E64::Window::width = width;
     E64::Window::height = height;

@@ -1,6 +1,4 @@
 #include "EditorCamera/EditorCamera.h"
-#include "Input/Input.h"
-#include "Engine.h"
 
 Editor::EditorCamera::EditorCamera(){
     cam_sens = 0.25f;

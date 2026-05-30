@@ -1,4 +1,5 @@
 #include "AssetManager/AssetManager.h"
+#include "Engine.h"
 #include <filesystem>
 
 int mesh_id = 0;
@@ -16,13 +17,16 @@ E64::AssetManager::~AssetManager(){
 }
 
 E64::ECS::MeshComponent E64::AssetManager::addMesh(E64::ECS::Mesh mesh){
-    mesh.upload();
+    mesh.vbo_handle = E64::Engine::ctx->renderer->createVertexBuffer(mesh.vertices);
+    mesh.ibo_handle = E64::Engine::ctx->renderer->createIndexBuffer(mesh.indices);
+    mesh.texture_handle = E64::Engine::ctx->renderer->createTexture(mesh.texture_path);
+    mesh.sampler_handle = E64::Engine::ctx->renderer->createSampler();
 
     ECS::MeshComponent comp;
-    comp.mesh_handle.path = mesh.path;
+    comp.mesh_handle.path = mesh.obj_path;
     comp.mesh_handle.id = mesh_id++;
 
-    E64::Log::debug("Registerd Mesh: " + mesh.path + " To AssetManager");
+    E64::Log::debug("Registerd Mesh: " + mesh.obj_path + " To AssetManager");
     mesh_repository[comp.mesh_handle.path] = std::make_unique<ECS::Mesh>(std::move(mesh));
 
     return comp;

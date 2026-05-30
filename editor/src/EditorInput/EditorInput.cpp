@@ -79,8 +79,8 @@ void Editor::EditorInput::OnFileDropped(const char* path){
     else if(ext == ".png" || ext == ".jpg" || ext == ".bmp"){
         ECS::MeshComponent* mesh_componet = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected_entity);
         ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->mesh_handle);
-        mesh->texture = TBO(fs_path);
-        mesh->texture.upload();
+        // mesh->texture_path = TBO(fs_path);
+        // mesh->texture_path.upload();
     }
 }
 
