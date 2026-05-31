@@ -2,6 +2,9 @@
 #define ECS_H
 
 #include "Renderer/RendererHandle.h"
+#include "Logger/Logger.h"
+
+#include <fstream>
 
 #include "AssetManager/AssetHandle.h"
 

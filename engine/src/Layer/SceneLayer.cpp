@@ -35,7 +35,7 @@ E64::SceneLayer::SceneLayer(){
         for (const auto& entry : std::filesystem::directory_iterator("../assets/meshes/")) {
             if(entry.path().extension() == ".e64mesh")
             {
-                ECS::Mesh mesh = mesh_serializer.deserialize();
+                ECS::Mesh mesh = mesh_serializer.deserialize(entry.path().string());
                 E64::Engine::ctx->asset_manager->addMesh(mesh);
             }
         }

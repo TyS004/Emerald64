@@ -1,6 +1,9 @@
 #ifndef LOGGER
 #define LOGGER
 
+#include <string>
+#include <iostream>
+
 namespace E64{
     class Log
     {

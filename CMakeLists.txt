@@ -51,7 +51,7 @@ target_link_libraries(E64Editor PRIVATE E64)
 target_precompile_headers(E64Editor REUSE_FROM E64)
 
 # ── Runtime (EXE) ──────────────────────────────
-file(GLOB_RECURSE RUNTIME_SOURCES CONFIGURE_DEPENDS runtime/*.cpp platform/SDL/src/*.cpp)
+file(GLOB_RECURSE RUNTIME_SOURCES CONFIGURE_DEPENDS runtime/SDL/*.cpp platform/SDL/src/*.cpp)
 add_executable(E64Runtime ${RUNTIME_SOURCES})
 
 target_include_directories(E64Runtime PUBLIC ./platform/SDL/include)

@@ -18,13 +18,13 @@ void E64::MeshSerializer::serialize(E64::ECS::Mesh* mesh){
     file.close();
 }
 
-E64::ECS::Mesh E64::MeshSerializer::deserialize(){
-    std::filesystem::path path = "../assets/meshes/sphere.e64mesh";
-    std::ifstream file(path, std::ios::binary);
-    if(!file) { E64::Log::error("Could Not Binary Open " + path.string()); return E64::ECS::Mesh(); }  
+E64::ECS::Mesh E64::MeshSerializer::deserialize(std::string path){
+    std::filesystem::path fs_path = path;
+    std::ifstream file(fs_path, std::ios::binary);
+    if(!file) { E64::Log::error("Could Not Binary Open " + fs_path.string()); return E64::ECS::Mesh(); }  
 
     E64::ECS::Mesh mesh;
-    mesh.obj_path = path.string();
+    mesh.obj_path = fs_path.string();
     file >> mesh;
 
     file.close();

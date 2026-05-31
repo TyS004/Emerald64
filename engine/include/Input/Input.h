@@ -1,6 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <functional>
 #include <SDL3/SDL.h>
 
 namespace E64{

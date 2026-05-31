@@ -1,6 +1,8 @@
 #include "Window/Window.h"
 #include "Layer/Layer.h"
 
+#define __APPLE__ 1
+
 SDL_Window* E64::Window::window = nullptr;
 SDL_GPUDevice* E64::Window::device = nullptr;
 uint32_t E64::Window::width = 1600;

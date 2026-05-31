@@ -10,7 +10,7 @@ namespace E64{
             ~MeshSerializer();
         
         void serialize(E64::ECS::Mesh* mesh);
-        ECS::Mesh deserialize();
+        ECS::Mesh deserialize(std::string path);
     };
 }
 
