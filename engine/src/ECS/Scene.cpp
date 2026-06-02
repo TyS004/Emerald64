@@ -1,6 +1,6 @@
 #include "ECS/Scene.h"
 #include "ECS/ComponentManager.h"
-#include "Renderer/IRenderer.h"
+#include "Renderer/Renderer.h"
 #include "ECS/Entity.h"
 #include "Engine.h"
 
@@ -135,7 +135,7 @@ void E64::Scene::render(){
     for(ECS::Entity entity : entites){
         if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(entity) &&
             ECS::ComponentManager::hasComponent<ECS::TransformComponent>(entity) &&
-            !E64::Engine::ctx->Editor)
+            (E64::Engine::ctx->mode == DESKTOP_RUNTIME || E64::Engine::ctx->mode == N64_RUNTIME))
         {
             ECS::CameraComponent* camera = ECS::ComponentManager::getComponent<ECS::CameraComponent>(entity);
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);

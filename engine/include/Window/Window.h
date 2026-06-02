@@ -10,8 +10,6 @@ namespace E64{
         public:
             static void Create(const char* name, int width, int height);
             static void Destory();
-
-            static SDL_Event PollEvent();
         
             static SDL_Window* getWindow();
             static SDL_GPUDevice* getDevice();
@@ -24,6 +22,7 @@ namespace E64{
             static bool getVSync();
 
             static void toggleVSync();
+
         private:
             static SDL_Window* window;
             static SDL_GPUDevice* device;

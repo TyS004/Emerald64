@@ -1,26 +1,24 @@
-#ifndef UI_INPUT_H
-#define UI_INPUT_H
+// EditorInput.h
+#pragma once
 
+#include "Input/SDLInput.h"
 #include "EditorCamera/EditorCamera.h"
 
-namespace Editor{
-    class EditorInput{
-        public:
-            static void Init();
+namespace Editor {
+    class EditorInput : public E64::SDLInput {
+    public:
+        EditorInput();
 
-            static void OnKeyPressed(SDL_Scancode scancode);
-            static void OnKeyDown(SDL_Scancode scancode);
-            static void OnMouseMove(SDL_MouseMotionEvent e);
-            static void OnWindowResize(float width, float height);
-            static void OnFileDropped(const char* path);
+        void OnKeyPressed(E64::Scancode key) override;
+        void OnKeyDown(E64::Scancode key) override;
+        void OnMouseMove(float xrel, float yrel) override;
+        void OnWindowResize(int w, int h) override;
+        void OnFileDropped(const char* path);
 
-            static EditorCamera* getCamera();
+        bool debug_mode = true;
+        int selected_entity = 0;
 
-            static bool debug_mode;
-            static int selected_entity;
-        private:
-            static EditorCamera* camera;
+    protected:
+        void processEvent(SDL_Event& e) override;
     };
 }
-
-#endif

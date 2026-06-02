@@ -23,9 +23,9 @@ class N64Renderer : public E64::IRenderer{
         void beginRenderPass(E64::RenderTarget target){};
         void endRenderPass(){};
         
-        void draw(E64::ECS::Mesh* mesh){};
+        void draw(E64::ECS::Mesh* mesh);
         void drawUI(){};
-        void submit(){};
+        void submit();
 
         E64::GPUBufferHandle createVertexBuffer(std::vector<E64::Vertex> vertices){ return 0; };
         E64::GPUBufferHandle createIndexBuffer(std::vector<E64::Index> indcies){ return 0; };

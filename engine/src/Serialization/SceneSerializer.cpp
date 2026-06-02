@@ -38,6 +38,10 @@ E64::Scene* E64::SceneSerializer::deserialize(){
     E64::Scene* scene = new Scene();
 
     std::ifstream file("../assets/scenes/scene.json");
+    if(!file){
+        E64::Log::debug("CANNOT OPEN FILE");
+        return nullptr;
+    }
     json scene_json;
     file >> scene_json;
     file.close();

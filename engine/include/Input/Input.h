@@ -1,38 +1,29 @@
-#ifndef INPUT_H
-#define INPUT_H
+#pragma once
 
-#include <functional>
-#include <SDL3/SDL.h>
+#include "Input/Scancode.h"
 
-namespace E64{
-    class Input{
-        public:
-            static bool isRunning();
-            static void processEvent(SDL_Event e);
+namespace E64 {
+    class Input {
+    public:
+        virtual ~Input() = default;
 
-            static bool isKeyPressed(SDL_Scancode code);
-            static bool isKeyDown(SDL_Scancode code);
-            static void OnKeyPressed(SDL_Scancode scancode) {};
-            static void OnKeyDown(SDL_Scancode scancode);
+        virtual void poll() = 0;
 
-            static void OnMouseMove(SDL_MouseMotionEvent e) {};
-            static float getXRel();
-            static float getYRel();
+        virtual bool isRunning() { return false; };
+        virtual bool isKeyPressed(Scancode key) { return false; };
+        virtual bool isKeyDown(Scancode key) { return false; };
 
-            static void OnWindowResize(SDL_WindowEvent e) {};
+        virtual void OnKeyPressed(Scancode key) {}
+        virtual void OnKeyDown(Scancode key) {};      
+        virtual void OnMouseMove(float xrel, float yrel) {}
+        virtual void OnWindowResize(int w, int h) {}
 
-            static void OnFileDropped(const char* data) {};
+        virtual float getXRel() { return 0.0f;};
+        virtual float getYRel() { return 0.0f; };
 
-            static std::function<void(SDL_Scancode)>           OnKeyPressedBind;
-            static std::function<void(SDL_Scancode)>           OnKeyDownBind;
-            static std::function<void(SDL_MouseMotionEvent)>   OnMouseMoveBind;
-            static std::function<void(SDL_WindowEvent)>        OnWindowResizeBind;
-            static std::function<void(const char*)>            OnFileDroppedBind;
-        private:
-            static float xrel;
-            static float yrel;
-            static bool running;
+    protected:
+        bool running = true;
+        float xrel = 0.0f;
+        float yrel = 0.0f;
     };
 }
-
-#endif 

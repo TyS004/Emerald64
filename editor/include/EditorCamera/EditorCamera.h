@@ -21,6 +21,8 @@ namespace Editor{
             float getSens();
             float getVelocity();
         private:
+            E64::SDLInput* input;
+        
             glm::mat4 view;
             glm::mat4 proj;
             

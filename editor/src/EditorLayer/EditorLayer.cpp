@@ -12,7 +12,8 @@
 using namespace E64;
 
 Editor::EditorLayer::EditorLayer(){
-    Editor::EditorInput::Init();
+    input = dynamic_cast<Editor::EditorInput*>(E64::Engine::ctx->input);
+    camera = new Editor::EditorCamera();
 
     selected = 0;
     
@@ -59,7 +60,6 @@ Editor::EditorLayer::~EditorLayer(){
 
 void Editor::EditorLayer::OnAttach(){
     E64::Scene* scene = Engine::ctx->active_scene.get();
-    Editor::EditorCamera* camera = Editor::EditorInput::getCamera();
     ECS::CameraData camera_comp = { camera->getProj(), camera->getView() };
     scene->setCameraData(camera_comp);
 
@@ -84,7 +84,7 @@ void Editor::EditorLayer::OnEvent(SDL_Event* e){
 }
 
 void Editor::EditorLayer::OnUpdate(float dt){
-    Editor::EditorInput::getCamera()->OnUpdate(dt);
+    camera->OnUpdate(dt);
 
     FPS = (1.0f / dt);
     ms = dt * 1000;
@@ -194,12 +194,12 @@ void Editor::EditorLayer::buildViewport(){
     
     if (cur_viewport_size.x != viewport_size.x || cur_viewport_size.y != viewport_size.y) {
         viewport_size = cur_viewport_size;
-        Editor::EditorInput::OnWindowResize(viewport_size.x, viewport_size.y);
-        Editor::EditorInput::getCamera()->OnResize(viewport_size.x, viewport_size.y);
+        input->OnWindowResize(viewport_size.x, viewport_size.y);
+        camera->OnResize(viewport_size.x, viewport_size.y);
     }
     SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
     ImGui::Image((ImTextureID)renderer->getSceneTexture(), ImGui::GetContentRegionAvail());
-    if(Editor::EditorInput::debug_mode) buildDebug(viewport_tl);
+    if(input->debug_mode) buildDebug(viewport_tl);
 
     ImGui::End();
 }
@@ -228,7 +228,7 @@ void Editor::EditorLayer::buildSceneSelector(){
         bool is_selected = (selected == e);
         if(ImGui::Selectable(std::string("Entity: " + std::to_string(e)).c_str(), &is_selected)){
             selected = e;
-            EditorInput::selected_entity = selected;
+            input->selected_entity = selected;
         }
         ImGui::PopID();
 

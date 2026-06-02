@@ -11,15 +11,15 @@ std::unique_ptr<E64::EngineCtx> E64::Engine::ctx = std::make_unique<E64::EngineC
 void E64::Engine::run(){
     E64::IRenderer* renderer = ctx->renderer;
 
-    SDL_GPUDevice* device = E64::Window::getDevice();
-    SDL_Window* window = E64::Window::getWindow();
-
     float dt  = 0.0f;
     while(running){
         auto start = std::chrono::high_resolution_clock::now();
 
-        E64::Window::PollEvent();
-        if(!E64::Input::isRunning()) break;
+        if(ctx->input) { 
+            ctx->input->poll(); 
+            if(!ctx->input->isRunning()) exit();
+        }
+        else { E64::Log::error("No Input Attached"); E64::Engine::exit(); }
 
         if(renderer->isPendingResize())
         {

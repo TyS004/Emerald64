@@ -43,17 +43,6 @@ void E64::Window::Destory(){
     SDL_Quit();
 }
 
-SDL_Event E64::Window::PollEvent(){
-    SDL_Event event;
-    while(SDL_PollEvent(&event)){
-        E64::Input::processEvent(event);
-        for(Layer* layer : Layer::layers){
-            layer->OnEvent(&event);
-        }
-    }
-    return event;
-}
-
 SDL_Window* E64::Window::getWindow(){
     return window;
 }

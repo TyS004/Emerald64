@@ -3,6 +3,8 @@
 
 #include <E64.h>
 
+#include "EditorInput/EditorInput.h"
+
 #include <imgui.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlgpu3.h>
@@ -45,6 +47,9 @@ namespace Editor{
 
             ImVec2 viewport_size;
             ImFont* font;
+
+            EditorInput* input;
+            EditorCamera* camera;
     };
 }
 

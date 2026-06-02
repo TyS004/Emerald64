@@ -38,8 +38,6 @@ target_precompile_headers(E64 PRIVATE engine/src/pch.h)
 file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS editor/src/*.cpp platform/SDL/src/*.cpp)
 
 add_executable(E64Editor ${EDITOR_SOURCES})
-target_compile_definitions(E64Editor PRIVATE E64_EDITOR)
-target_compile_definitions(E64 PRIVATE E64_EDITOR)
 
 target_include_directories(E64Editor PUBLIC ./editor/include ./platform/SDL/include)
 target_include_directories(E64Editor PRIVATE vendor/assimp/include)
@@ -52,6 +50,7 @@ target_precompile_headers(E64Editor REUSE_FROM E64)
 
 # ── Runtime (EXE) ──────────────────────────────
 file(GLOB_RECURSE RUNTIME_SOURCES CONFIGURE_DEPENDS runtime/SDL/*.cpp platform/SDL/src/*.cpp)
+
 add_executable(E64Runtime ${RUNTIME_SOURCES})
 
 target_include_directories(E64Runtime PUBLIC ./platform/SDL/include)

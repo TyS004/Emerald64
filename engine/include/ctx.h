@@ -1,16 +1,26 @@
 #ifndef CTX_H
 #define CTX_H
 
-#include "Renderer/IRenderer.h"
+#include "Renderer/Renderer.h"
+#include "Input/Input.h"
 #include "ECS/Scene.h"
 #include "AssetManager/AssetManager.h"
 
 namespace E64{
+    enum E64_MODE{
+        EDITOR,
+        DESKTOP_RUNTIME,
+        N64_RUNTIME,
+        NONE
+    };
+
     struct EngineCtx{
         IRenderer* renderer;
+        Input* input;
         std::unique_ptr<E64::Scene> active_scene;
         std::unique_ptr<E64::AssetManager> asset_manager;
-        bool Editor = false;
+
+        E64_MODE mode = NONE;
     };
 }
 

@@ -1,6 +1,8 @@
 #include "EditorCamera/EditorCamera.h"
 
 Editor::EditorCamera::EditorCamera(){
+    input = nullptr;
+
     cam_sens = 0.25f;
     cam_vel = 15.0f;
 
@@ -30,6 +32,7 @@ Editor::EditorCamera::~EditorCamera(){
 }
 
 void Editor::EditorCamera::OnUpdate(float dt){
+    input = reinterpret_cast<E64::SDLInput*>(E64::Engine::ctx->input);
     if(E64::Window::isMouseLock()){
         glm::vec3 direction;
         direction.x = cos(glm::radians(transform->euler.x)) * cos(glm::radians(transform->euler.y));
@@ -40,13 +43,13 @@ void Editor::EditorCamera::OnUpdate(float dt){
         glm::vec3 camera_right = glm::normalize(glm::cross(camera_front, glm::vec3(0, 1, 0)));
         glm::vec3 camera_up    = glm::normalize(glm::cross(camera_right, camera_front));
 
-        if(E64::Input::isKeyDown(SDL_SCANCODE_W)) { transform->position += (cam_vel * camera_front) * dt; }
-        if(E64::Input::isKeyDown(SDL_SCANCODE_S)) { transform->position -= (cam_vel * camera_front) * dt; }
-        if(E64::Input::isKeyDown(SDL_SCANCODE_A)) { transform->position -= (cam_vel * glm::normalize(glm::cross(camera_front, camera_up))) * dt; }
-        if(E64::Input::isKeyDown(SDL_SCANCODE_D)) { transform->position += (cam_vel * glm::normalize(glm::cross(camera_front, camera_up))) * dt; }
+        if(input->isKeyDown(E64::Scancode::W)) { transform->position += (cam_vel * camera_front) * dt; }
+        if(input->isKeyDown(E64::Scancode::S)) { transform->position -= (cam_vel * camera_front) * dt; }
+        if(input->isKeyDown(E64::Scancode::A)) { transform->position -= (cam_vel * glm::normalize(glm::cross(camera_front, camera_up))) * dt; }
+        if(input->isKeyDown(E64::Scancode::D)) { transform->position += (cam_vel * glm::normalize(glm::cross(camera_front, camera_up))) * dt; }
 
-        xrel = E64::Input::getXRel();
-        yrel = E64::Input::getYRel();
+        xrel = input->getXRel();
+        yrel = input->getYRel();
         if(((prev_xrel != xrel) || (prev_yrel != yrel)))
         {
             transform->euler.x += (xrel * cam_sens);

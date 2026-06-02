@@ -18,17 +18,18 @@ E64::SceneLayer::SceneLayer(){
     E64::Engine::ctx->asset_manager = std::make_unique<E64::AssetManager>();
     E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>();
 
-    if(E64::Engine::ctx->Editor){
+    if(E64::Engine::ctx->mode == EDITOR || E64::Engine::ctx->mode == N64_RUNTIME){
         scene = E64::Engine::ctx->active_scene.get();
         scene->createDefaultScene();
     }
-    else{
+    else if(E64::Engine::ctx->mode == DESKTOP_RUNTIME){
         //Deserialize at Runtime
 
         //Scene
         SceneSerializer scene_serializer;
         scene = scene_serializer.deserialize();
-        E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene));
+        if(!scene){ E64::Log::error("Scene Could Not Be Loaded"); }
+        else{ E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene)); }
 
         //Meshes
         MeshSerializer  mesh_serializer;
@@ -52,7 +53,7 @@ void E64::SceneLayer::OnRender(){
 
     E64::IRenderer* renderer = E64::Engine::ctx->renderer;
 
-    if(E64::Engine::ctx->Editor){
+    if(E64::Engine::ctx->mode == EDITOR){
         renderer->beginRenderPass(RenderTarget::TEXTURE);
     }
     else{
