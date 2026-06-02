@@ -12,7 +12,7 @@ void E64::Engine::run(){
 
     float dt  = 0.0f;
     while(running){
-        //auto start = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::high_resolution_clock::now();
 
         if(ctx->input) { 
             ctx->input->poll(); 
@@ -39,8 +39,8 @@ void E64::Engine::run(){
         
         renderer->submit();
 
-        // auto end = std::chrono::high_resolution_clock::now();
-        // dt = std::chrono::duration<float>(end - start).count();
+        auto end = std::chrono::high_resolution_clock::now();
+        dt = std::chrono::duration<float>(end - start).count();
     }
 }
 
