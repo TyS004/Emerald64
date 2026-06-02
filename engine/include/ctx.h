@@ -3,6 +3,7 @@
 
 #include "Renderer/Renderer.h"
 #include "Input/Input.h"
+#include "Window/Window.h"
 #include "ECS/Scene.h"
 #include "AssetManager/AssetManager.h"
 
@@ -15,6 +16,7 @@ namespace E64{
     };
 
     struct EngineCtx{
+        Window* window;
         IRenderer* renderer;
         Input* input;
         std::unique_ptr<E64::Scene> active_scene;

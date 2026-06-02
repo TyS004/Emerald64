@@ -2,6 +2,7 @@
 #define EDITOR_CAMERA_H
 
 #include <E64.h>
+#include <Input/SDLInput.h>
 
 namespace Editor{
     class EditorCamera{

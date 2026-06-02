@@ -8,9 +8,6 @@ E64::SDLInput::SDLInput() {
 void E64::SDLInput::poll() {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
-        for(E64::Layer* layer : E64::Layer::layers){
-            layer->OnEvent(&e);
-        }
         processEvent(e);
     }
 }

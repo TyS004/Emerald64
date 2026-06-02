@@ -4,7 +4,7 @@
 #include "AssetImporter/AssetImporter.h"
 #include "Serialization/MeshSerializer.h"
 
-#include "SDLRenderer.h"
+#include <Renderer/SDLRenderer.h>
 
 #include <filesystem>
 #include <E64.h>
@@ -25,22 +25,24 @@ Editor::EditorLayer::EditorLayer(){
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-    SDL_Window* window = E64::Window::getWindow();
-    SDL_GPUDevice* device = E64::Window::getDevice();
+    sdl_window = dynamic_cast<E64::SDLWindow*>(E64::Engine::ctx->window);
+
+    SDL_Window* window = sdl_window->getWindow();
+    SDL_GPUDevice* device = sdl_window->getDevice();
     if(!window) E64::Log::error("EDITORLAYER: NO WINDOW FOUND!");
     if(!device) E64::Log::error("EDITORLAYER: NO DEVICE FOUND!");
 
     // Setup Platform/Renderer backends
-    ImGui_ImplSDL3_InitForSDLGPU(E64::Window::getWindow());
+    ImGui_ImplSDL3_InitForSDLGPU(window);
     ImGui_ImplSDLGPU3_InitInfo init_info = {};
-    init_info.Device = E64::Window::getDevice();
+    init_info.Device = device;
     init_info.ColorTargetFormat = SDL_GetGPUSwapchainTextureFormat(device, window);
     init_info.MSAASamples = SDL_GPU_SAMPLECOUNT_1;                      // multi-viewports mode
     init_info.SwapchainComposition = SDL_GPU_SWAPCHAINCOMPOSITION_SDR;  // multi-viewports mode
     init_info.PresentMode = SDL_GPU_PRESENTMODE_IMMEDIATE;
     ImGui_ImplSDLGPU3_Init(&init_info);
 
-    float scale = SDL_GetWindowDisplayScale(E64::Window::getWindow());
+    float scale = SDL_GetWindowDisplayScale(window);
 
     ImFontConfig cfg;
     cfg.SizePixels = 18.0f * scale;
@@ -77,10 +79,6 @@ void Editor::EditorLayer::OnAttach(){
             serializer.serialize(&mesh);
         }
     }
-}
-
-void Editor::EditorLayer::OnEvent(SDL_Event* e){
-    if(!E64::Window::isMouseLock()) ImGui_ImplSDL3_ProcessEvent(e);
 }
 
 void Editor::EditorLayer::OnUpdate(float dt){
@@ -184,7 +182,7 @@ void Editor::EditorLayer::buildDockspace(){
 
 void Editor::EditorLayer::buildViewport(){
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-    if(E64::Window::isMouseLock()){
+    if(sdl_window->isMouseLock()){
         window_flags |= ImGuiWindowFlags_NoMove;
     }
     ImGui::Begin("Viewport", nullptr);
@@ -207,7 +205,7 @@ void Editor::EditorLayer::buildViewport(){
 void Editor::EditorLayer::buildDebug(ImVec2 viewport_tl){
     std::string FPS_UI = "FPS: " + std::to_string(FPS);
     std::string MS_UI = "ms: " + std::to_string(ms);
-    std::string VSYNC_UI = "VSync: " + (E64::Window::getVSync() ? std::string("ON") : std::string("OFF"));
+    std::string VSYNC_UI = "VSync: " + (sdl_window->getVSync() ? std::string("ON") : std::string("OFF"));
     std::string draw_calls = "E64::Renderer::DrawIndexedPrimitves(): " + std::to_string(E64::Engine::ctx->renderer->getDrawCalls());
     
     ImGui::GetWindowDrawList()->AddText(viewport_tl, IM_COL32(255, 255, 255, 255), FPS_UI.c_str());
@@ -218,7 +216,7 @@ void Editor::EditorLayer::buildDebug(ImVec2 viewport_tl){
 
 void Editor::EditorLayer::buildSceneSelector(){
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-    if(E64::Window::isMouseLock()){
+    if(sdl_window->isMouseLock()){
         window_flags |= ImGuiWindowFlags_NoMove;
     }
 

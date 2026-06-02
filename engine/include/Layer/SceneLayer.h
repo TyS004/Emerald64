@@ -11,7 +11,7 @@ namespace E64{
 
             void OnUpdate(float dt) {};
             void OnImGuiRender() {};
-            void OnEvent(SDL_Event e) {};
+            void OnEvent() {};
             void OnRender();
             void OnAttach() {};
 

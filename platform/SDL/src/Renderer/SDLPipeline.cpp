@@ -1,11 +1,13 @@
-#include "SDLPipeline.h"
-#include "SDLShader.h"
+#include "Renderer/SDLPipeline.h"
+#include "Renderer/SDLShader.h"
+#include <Window/SDLWindow.h>
 
 #include <cstddef>
 
-SDLPipeline::SDLPipeline(const char* shaderPath){
-    this->device = E64::Window::getDevice();
-    SDL_Window* window = E64::Window::getWindow();
+E64::SDLPipeline::SDLPipeline(const char* shaderPath){
+    SDLWindow* sdl_window = dynamic_cast<E64::SDLWindow*>(E64::Engine::ctx->window);
+    this->device = sdl_window->getDevice();
+    SDL_Window* window = sdl_window->getWindow();
     
     vert_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
     frag_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
@@ -68,10 +70,10 @@ SDLPipeline::SDLPipeline(const char* shaderPath){
     pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
 }
 
-SDLPipeline::~SDLPipeline(){
+E64::SDLPipeline::~SDLPipeline(){
     //SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
 }
 
-SDL_GPUGraphicsPipeline* SDLPipeline::getPipeline(){
+SDL_GPUGraphicsPipeline* E64::SDLPipeline::getPipeline(){
     return this->pipeline;
 }

@@ -1,19 +1,19 @@
-#include "SDLShader.h"
+#include "Renderer/SDLShader.h"
 
 #include <string>
 
-SDLShader::SDLShader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device){
+E64::SDLShader::SDLShader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device){
     this->device = device;
     this->stage = stage;
     this->path = path;
     this->shader = loadShader();
 }
 
-SDLShader::~SDLShader(){
+E64::SDLShader::~SDLShader(){
     SDL_ReleaseGPUShader(this->device, this->shader);
 }
 
-SDL_GPUShader* SDLShader::loadShader(){
+SDL_GPUShader* E64::SDLShader::loadShader(){
     char fullPath[256];
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
         if(__APPLE__) snprintf(fullPath, sizeof(fullPath), "%s_vert.metal", path);
@@ -67,6 +67,6 @@ SDL_GPUShader* SDLShader::loadShader(){
     return shader;
 }
 
-SDL_GPUShader* SDLShader::getShader(){
+SDL_GPUShader* E64::SDLShader::getShader(){
     return this->shader;
 }

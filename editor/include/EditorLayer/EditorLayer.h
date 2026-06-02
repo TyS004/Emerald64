@@ -2,6 +2,7 @@
 #define EditorLayer_H
 
 #include <E64.h>
+#include <Window/SDLWindow.h>
 
 #include "EditorInput/EditorInput.h"
 
@@ -17,7 +18,7 @@ namespace Editor{
             ~EditorLayer();
 
             void OnUpdate(float dt);
-            void OnEvent(SDL_Event* e);
+            void OnEvent() {};
             void OnImGuiRender();
             void OnRender() {};
             void OnAttach();
@@ -48,6 +49,7 @@ namespace Editor{
             ImVec2 viewport_size;
             ImFont* font;
 
+            E64::SDLWindow* sdl_window;
             EditorInput* input;
             EditorCamera* camera;
     };

@@ -3,6 +3,7 @@
 #include "AssetImporter/AssetImporter.h"
 
 #include <E64.h>
+#include <backends/imgui_impl_sdl3.h>
 #include <filesystem>
 
 Editor::EditorInput::EditorInput() : E64::SDLInput() {
@@ -10,21 +11,24 @@ Editor::EditorInput::EditorInput() : E64::SDLInput() {
 }
 
 void Editor::EditorInput::processEvent(SDL_Event& e) {
+    if(!E64::Engine::ctx->window->isMouseLock()) ImGui_ImplSDL3_ProcessEvent(&e);
+
     E64::SDLInput::processEvent(e);
     if (e.type == SDL_EVENT_DROP_FILE)
         OnFileDropped(e.drop.data);
 }
 
 void Editor::EditorInput::OnKeyPressed(E64::Scancode key) {
+    E64::Window* window = E64::Engine::ctx->window;
     if (key == E64::Scancode::Escape) E64::Engine::exit();
 
     switch (key) {
         case E64::Scancode::Z:
-            if (E64::Window::isMouseLock()) E64::Window::setMouseLock(false);
-            else { SDL_HideCursor(); E64::Window::setMouseLock(true); }
+            if (window->isMouseLock()) window->setMouseLock(false);
+            else { SDL_HideCursor();   window->setMouseLock(true); }
             break;
         case E64::Scancode::V:
-            E64::Window::toggleVSync();
+            window->toggleVSync();
             break;
         case E64::Scancode::F1:
             debug_mode = !debug_mode;

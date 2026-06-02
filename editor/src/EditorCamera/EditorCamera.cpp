@@ -33,7 +33,7 @@ Editor::EditorCamera::~EditorCamera(){
 
 void Editor::EditorCamera::OnUpdate(float dt){
     input = reinterpret_cast<E64::SDLInput*>(E64::Engine::ctx->input);
-    if(E64::Window::isMouseLock()){
+    if(E64::Engine::ctx->window->isMouseLock()){
         glm::vec3 direction;
         direction.x = cos(glm::radians(transform->euler.x)) * cos(glm::radians(transform->euler.y));
         direction.y = sin(glm::radians(transform->euler.y));

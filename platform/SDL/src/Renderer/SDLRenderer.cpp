@@ -1,20 +1,24 @@
-#include "SDLRenderer.h"
-#include "SDLGPURegistry.h"
+#include "Renderer/SDLRenderer.h"
+#include "Renderer/SDLGPURegistry.h"
+#include <Window/SDLWindow.h>
 
 #include <imgui.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlgpu3.h>
 
-SDLRenderer::SDLRenderer(){
-    window = E64::Window::getWindow();
-    device = E64::Window::getDevice();
+E64::SDLRenderer::SDLRenderer(){
+    SDLWindow* sdl_window = dynamic_cast<E64::SDLWindow*>(E64::Engine::ctx->window);
+    window = sdl_window->getWindow();
+    device = sdl_window->getDevice();
+    width =  sdl_window->getWidth();
+    height = sdl_window->getHeight();
 
     depth_texture_info = {};
     depth_texture_info.type   = SDL_GPU_TEXTURETYPE_2D;
     depth_texture_info.format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT;
     depth_texture_info.usage  = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET;
-    depth_texture_info.width  = E64::Window::getWidth();
-    depth_texture_info.height = E64::Window::getHeight();
+    depth_texture_info.width  = width;
+    depth_texture_info.height = height;
     depth_texture_info.layer_count_or_depth = 1;
     depth_texture_info.num_levels = 1;
     depth_texture_info.sample_count = SDL_GPU_SAMPLECOUNT_1;
@@ -24,8 +28,8 @@ SDLRenderer::SDLRenderer(){
     scene_texture_info.type   = SDL_GPU_TEXTURETYPE_2D;
     scene_texture_info.format = SDL_GetGPUSwapchainTextureFormat(device, window);
     scene_texture_info.usage  = SDL_GPU_TEXTUREUSAGE_COLOR_TARGET | SDL_GPU_TEXTUREUSAGE_SAMPLER;
-    scene_texture_info.width  = E64::Window::getWidth();
-    scene_texture_info.height = E64::Window::getHeight();
+    scene_texture_info.width  = width;
+    scene_texture_info.height = height;
     scene_texture_info.layer_count_or_depth = 1;
     scene_texture_info.num_levels = 1;
     scene_texture = SDL_CreateGPUTexture(device, &scene_texture_info);
@@ -33,19 +37,16 @@ SDLRenderer::SDLRenderer(){
     depth_target_info = {};
     color_target_info = {};
 
-    width = E64::Window::getWidth();
-    height = E64::Window::getHeight();
-
     draw_calls = 0;
 
     pipeline = std::make_unique<SDLPipeline>("../assets/shaders/object");
 }
 
-SDLRenderer::~SDLRenderer(){
+E64::SDLRenderer::~SDLRenderer(){
 
 }
 
-void SDLRenderer::aquireCmdBufferandSwapChain(){
+void E64::SDLRenderer::aquireCmdBufferandSwapChain(){
     cmd_buf = SDL_AcquireGPUCommandBuffer(device);
     SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buf, window, &swapchain, &width, &height);
     if (!swapchain) {
@@ -54,13 +55,13 @@ void SDLRenderer::aquireCmdBufferandSwapChain(){
     }
 }
 
-void SDLRenderer::OnImGuiResize(float width, float height){
+void E64::SDLRenderer::OnImGuiResize(float width, float height){
     pending_resize = true;
     this->width = width;
     this->height = height;
 }
 
-void SDLRenderer::ResizeViewport(){
+void E64::SDLRenderer::ResizeViewport(){
     if(width == 0 || height == 0) return;
 
     if (depth_texture)
@@ -77,7 +78,7 @@ void SDLRenderer::ResizeViewport(){
     scene_texture = SDL_CreateGPUTexture(device, &scene_texture_info);
 }
 
-void SDLRenderer::beginRenderPass(E64::RenderTarget target){
+void E64::SDLRenderer::beginRenderPass(E64::RenderTarget target){
     draw_calls = 0;
 
     color_target_info.clear_color = {75/255.0f, 75/255.0f, 75/255.0f, 255/255.0f};
@@ -101,15 +102,15 @@ void SDLRenderer::beginRenderPass(E64::RenderTarget target){
     }
 }
 
-void SDLRenderer::endRenderPass(){
+void E64::SDLRenderer::endRenderPass(){
     SDL_EndGPURenderPass(render_pass);
 }
 
-void SDLRenderer::bindPipeline(){
+void E64::SDLRenderer::bindPipeline(){
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
-void SDLRenderer::bindVertexBuffers(E64::ECS::Mesh* mesh){
+void E64::SDLRenderer::bindVertexBuffers(E64::ECS::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     SDL_GPUBufferBinding buffer_binding = {};
@@ -118,7 +119,7 @@ void SDLRenderer::bindVertexBuffers(E64::ECS::Mesh* mesh){
     SDL_BindGPUVertexBuffers(render_pass, 0, &buffer_binding, 1);
 }
 
-void SDLRenderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
+void E64::SDLRenderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     SDL_GPUBuffer* index_buffer = SDLGPURegistry::ibo_registry.at(mesh->ibo_handle);
@@ -129,7 +130,7 @@ void SDLRenderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
     SDL_BindGPUIndexBuffer(render_pass, &binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 }
 
-void SDLRenderer::bindFragmentSamplers(E64::ECS::Mesh* mesh){
+void E64::SDLRenderer::bindFragmentSamplers(E64::ECS::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     SDL_GPUTextureSamplerBinding binding;
@@ -139,14 +140,14 @@ void SDLRenderer::bindFragmentSamplers(E64::ECS::Mesh* mesh){
     SDL_BindGPUFragmentSamplers(render_pass, 0, &binding, 1);
 }
 
-void SDLRenderer::draw(E64::ECS::Mesh* mesh){
+void E64::SDLRenderer::draw(E64::ECS::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     draw_calls++;
     SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
 }
 
-E64::GPUBufferHandle SDLRenderer::createVertexBuffer(std::vector<E64::Vertex> vertices){
+E64::GPUBufferHandle E64::SDLRenderer::createVertexBuffer(std::vector<E64::Vertex> vertices){
     SDL_GPUBufferCreateInfo bufferInfo{};
     bufferInfo.size = sizeof(E64::Vertex) * vertices.size();
     bufferInfo.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
@@ -185,7 +186,7 @@ E64::GPUBufferHandle SDLRenderer::createVertexBuffer(std::vector<E64::Vertex> ve
     return handle;
 }
 
-E64::GPUBufferHandle SDLRenderer::createIndexBuffer(std::vector<E64::Index> indices){
+E64::GPUBufferHandle E64::SDLRenderer::createIndexBuffer(std::vector<E64::Index> indices){
     SDL_GPUCommandBuffer* cmd_buffer = SDL_AcquireGPUCommandBuffer(device);
 
     SDL_GPUBufferCreateInfo buffer_info{};
@@ -224,7 +225,7 @@ E64::GPUBufferHandle SDLRenderer::createIndexBuffer(std::vector<E64::Index> indi
     return handle;
 }
 
-E64::GPUTextureHandle SDLRenderer::createTexture(std::string path){
+E64::GPUTextureHandle E64::SDLRenderer::createTexture(std::string path){
     int width, height, channels;
     unsigned char* img_data;
 
@@ -287,7 +288,7 @@ E64::GPUTextureHandle SDLRenderer::createTexture(std::string path){
     if (!transfer_buffer) { E64::Log::error(SDL_GetError()); }
 }
 
-E64::GPUSamplerHandle SDLRenderer::createSampler(){
+E64::GPUSamplerHandle E64::SDLRenderer::createSampler(){
     SDL_GPUSamplerCreateInfo sampler_info{};
     sampler_info.min_filter = SDL_GPU_FILTER_LINEAR;          // For minification
     sampler_info.mag_filter = SDL_GPU_FILTER_LINEAR;          // For magnification
@@ -305,30 +306,30 @@ E64::GPUSamplerHandle SDLRenderer::createSampler(){
     return handle;
 }
 
-void SDLRenderer::sendUniforms(glm::mat4 mvp){
+void E64::SDLRenderer::sendUniforms(glm::mat4 mvp){
     SDL_PushGPUVertexUniformData(cmd_buf, 0, &mvp, sizeof(mvp));
 }
 
-void SDLRenderer::submit(){
+void E64::SDLRenderer::submit(){
     SDL_SubmitGPUCommandBuffer(cmd_buf);
 }
 
-void SDLRenderer::drawUI(){
+void E64::SDLRenderer::drawUI(){
     ImGui_ImplSDLGPU3_RenderDrawData(ImGui::GetDrawData(), cmd_buf, render_pass);
 }
 
-SDL_GPUCommandBuffer* SDLRenderer::getCommandBuffer(){
+SDL_GPUCommandBuffer* E64::SDLRenderer::getCommandBuffer(){
     return cmd_buf;
 }
 
-SDL_GPUTexture* SDLRenderer::getSceneTexture(){
+SDL_GPUTexture* E64::SDLRenderer::getSceneTexture(){
     return scene_texture;
 }
 
-int SDLRenderer::getDrawCalls(){
+int E64::SDLRenderer::getDrawCalls(){
     return draw_calls;
 }
 
-bool SDLRenderer::isPendingResize(){
+bool E64::SDLRenderer::isPendingResize(){
     return pending_resize;
 }

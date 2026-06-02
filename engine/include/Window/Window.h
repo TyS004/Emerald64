@@ -1,37 +1,22 @@
-#ifndef WINDOW
-#define WINDOW
-
-#include <SDL3/SDL.h>
-#include "Input/Input.h"
+#ifndef WINDOW_H
+#define WINDOW_H
 
 namespace E64{
     class Window
     {
         public:
-            static void Create(const char* name, int width, int height);
-            static void Destory();
-        
-            static SDL_Window* getWindow();
-            static SDL_GPUDevice* getDevice();
+            virtual ~Window() = default;
 
-            static void setMouseLock(bool lock);
-            static bool isMouseLock();
+            virtual void create(const char* name, int width, int height) = 0;
 
-            static uint32_t getWidth();
-            static uint32_t  getHeight();
-            static bool getVSync();
+            virtual void setMouseLock(bool lock) = 0;
+            virtual bool isMouseLock() = 0;
 
-            static void toggleVSync();
+            virtual uint32_t getWidth() = 0;
+            virtual uint32_t getHeight() = 0;
 
-        private:
-            static SDL_Window* window;
-            static SDL_GPUDevice* device;
-
-            static uint32_t width;
-            static uint32_t height;
-
-            static bool isMouseLocked;
-            static bool VSync;
+            virtual bool getVSync() = 0;
+            virtual void toggleVSync() = 0;
     };
 }
 

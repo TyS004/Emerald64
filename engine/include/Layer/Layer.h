@@ -2,7 +2,6 @@
 #define LAYER_H
 
 #include "ctx.h"
-#include <SDL3/SDL.h>
 
 namespace E64{
     class Layer{
@@ -17,7 +16,7 @@ namespace E64{
             static void Attach(Layer* layer) { layers.push_back(layer); layer->OnAttach(); };
 
             virtual void OnUpdate(float dt) {};
-            virtual void OnEvent(SDL_Event* e) {};
+            virtual void OnEvent() {};
             virtual void OnImGuiRender() {};
             virtual void OnRender() {};
             virtual void OnAttach() {};

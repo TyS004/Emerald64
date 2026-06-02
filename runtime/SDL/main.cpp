@@ -1,15 +1,18 @@
-#define E64_DESKTOP_RUNTIME
-
 #include <E64.h>
+#include <Window/SDLWindow.h>
+#include <Renderer/SDLRenderer.h>
+#include <Input/SDLInput.h>
 
-#include "SDLRenderer.h"
+#include "Renderer/SDLRenderer.h"
 
 int main(){
     E64::Engine::ctx->mode = E64::E64_MODE::DESKTOP_RUNTIME;
+
+    E64::SDLWindow* window = new E64::SDLWindow();
+    window->create("E64 Runtime", 800, 600);
+    E64::Engine::ctx->window = window;
     
-    E64::Window::Create("E64 Runtime", 800, 600);
-    
-    SDLRenderer* renderer = new SDLRenderer();
+    E64::SDLRenderer* renderer = new E64::SDLRenderer();
     E64::SDLInput* input = new E64::SDLInput();
 
     E64::Engine::ctx->renderer = renderer;

@@ -1,27 +1,34 @@
-#include "Window/Window.h"
+#include "Window/SDLWindow.h"
 #include "Layer/Layer.h"
 
 #define __APPLE__ 1
 
-SDL_Window* E64::Window::window = nullptr;
-SDL_GPUDevice* E64::Window::device = nullptr;
-uint32_t E64::Window::width = 1600;
-uint32_t  E64::Window::height = 900;
+E64::SDLWindow::SDLWindow(){
+    window = nullptr;
+    device = nullptr;
+    width = 1600;
+    height = 900;
+    isMouseLocked = false;
+    VSync = false;
+}
 
-bool E64::Window::isMouseLocked = false;
-bool E64::Window::VSync = false;
+E64::SDLWindow::~SDLWindow(){
+    SDL_DestroyWindow(window);
+    SDL_DestroyGPUDevice(device);
+    SDL_Quit();
+}
 
-void E64::Window::Create(const char* name, int width, int height){
+void E64::SDLWindow::create(const char* name, int width, int height){
     if(SDL_Init(SDL_INIT_VIDEO) == 0){
         E64::Log::warn("SDL Could not Initalize");
         return;
     }
 
     window = SDL_CreateWindow(name, width, height, 0);
-    if(!window) { E64::Log::warn("Window could not be created"); SDL_Quit();}
+    if(!window) { E64::Log::warn("SDLWindow could not be created"); SDL_Quit();}
 
-    E64::Window::width = width;
-    E64::Window::height = height;
+    E64::SDLWindow::width = width;
+    E64::SDLWindow::height = height;
 
     if(__APPLE__) device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
     else          device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, nullptr);
@@ -37,42 +44,36 @@ void E64::Window::Create(const char* name, int width, int height){
     SDL_SetHint(SDL_HINT_WINDOWS_RAW_KEYBOARD, "1");
 }
 
-void E64::Window::Destory(){
-    SDL_DestroyWindow(window);
-    SDL_DestroyGPUDevice(device);
-    SDL_Quit();
-}
-
-SDL_Window* E64::Window::getWindow(){
+SDL_Window* E64::SDLWindow::getWindow(){
     return window;
 }
 
-SDL_GPUDevice* E64::Window::getDevice(){
+SDL_GPUDevice* E64::SDLWindow::getDevice(){
     return device;
 }
 
-uint32_t  E64::Window::getWidth(){
+uint32_t  E64::SDLWindow::getWidth(){
     return width;
 }
 
-uint32_t  E64::Window::getHeight(){
+uint32_t  E64::SDLWindow::getHeight(){
     return height;
 }
 
-bool E64::Window::getVSync(){
+bool E64::SDLWindow::getVSync(){
     return VSync;
 }
 
-void E64::Window::setMouseLock(bool lock){
+void E64::SDLWindow::setMouseLock(bool lock){
     SDL_SetWindowRelativeMouseMode(window, lock);
     isMouseLocked = lock;
 }
 
-bool E64::Window::isMouseLock(){
+bool E64::SDLWindow::isMouseLock(){
     return isMouseLocked;
 }
 
-void E64::Window::toggleVSync(){
+void E64::SDLWindow::toggleVSync(){
     VSync = !VSync;
     SDL_WaitForGPUIdle(device);
     SDL_SetGPUSwapchainParameters(device, window,

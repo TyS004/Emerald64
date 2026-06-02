@@ -4,7 +4,7 @@
 #include "Input/Input.h"
 #include <SDL3/SDL.h>
 
-namespace E64{
+namespace E64 {
     class SDLInput : public Input {
     public:
         SDLInput();
