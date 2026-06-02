@@ -49,6 +49,7 @@ E64::Scene* E64::SceneSerializer::deserialize(){
     for (const json& entity_json : scene_json["entities"]) {
         ECS::Entity e = entity_json["id"];
         scene->pushEntity(e);
+        E64::Log::info(std::to_string(e));
         ECS::ComponentManager::deserialize(entity_json, e);
     }
 

@@ -188,4 +188,8 @@ void E64::Scene::render(){
             renderer->draw(mesh);
         }
     }
+
+    for(ECS::Entity e : entites){
+        std::cout << e << std::endl;
+    }
 }

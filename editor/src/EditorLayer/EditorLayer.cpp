@@ -150,7 +150,8 @@ void Editor::EditorLayer::buildMainMenuBar(){
             }
             if(ImGui::MenuItem("Load Scene")){
                 E64::SceneSerializer serializer;
-                serializer.deserialize();
+                E64::Scene* scene = serializer.deserialize();
+                E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene));
             }
             ImGui::EndMenu();
         }
