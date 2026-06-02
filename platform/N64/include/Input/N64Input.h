@@ -1,7 +1,8 @@
 #ifndef N64_INPUT_H
 #define N64_INPUT_H
 
-#include "Input/Input.h"
+#include <E64.h>
+#include <libdragon.h>
 
 namespace E64{
     class N64Input : public Input{
@@ -10,6 +11,10 @@ namespace E64{
             ~N64Input();
 
             void poll();
+
+            void OnButtonPress(joypad_buttons_t);
+        private:
+            joypad_inputs_t inputs;
     };
 }
 

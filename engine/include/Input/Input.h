@@ -9,7 +9,7 @@ namespace E64 {
 
         virtual void poll() = 0;
 
-        virtual bool isRunning() { return false; };
+        virtual bool isRunning() { return true; };
         virtual bool isKeyPressed(Scancode key) { return false; };
         virtual bool isKeyDown(Scancode key) { return false; };
 

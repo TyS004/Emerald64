@@ -6,11 +6,10 @@
 int mesh_id = 0;
 
 E64::AssetManager::AssetManager(){
-    E64::Log::info("ASSET MANAGER INSTANTIATED");
-    E64::Log::info("LOADED DEFAULT MESH");
+    E64::Log::info("ASSET MANAGER INSTANTIATED\n");
 
     ECS::Mesh default_mesh{};
-    ECS::MeshComponent mesh_comp = { addMesh(default_mesh) };
+    addMesh(default_mesh);
 }
 
 E64::AssetManager::~AssetManager(){
@@ -27,7 +26,7 @@ E64::ECS::MeshComponent E64::AssetManager::addMesh(E64::ECS::Mesh mesh){
     comp.mesh_handle.path = mesh.obj_path;
     comp.mesh_handle.id = mesh_id++;
 
-    E64::Log::debug("Registerd Mesh: " + mesh.obj_path + " To AssetManager");
+    E64::Log::debug("REGISTERED MESH: " + mesh.obj_path + " TO ASSETMANAGER");
     mesh_repository[comp.mesh_handle.path] = std::make_unique<ECS::Mesh>(std::move(mesh));
 
     return comp;

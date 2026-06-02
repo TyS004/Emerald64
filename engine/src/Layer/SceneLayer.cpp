@@ -11,6 +11,8 @@
 #include <random>
 
 E64::SceneLayer::SceneLayer(){
+    E64::Log::info("Scene Layer Created\n");
+
     ECS::ComponentRegistry<ECS::TransformComponent>::registerComponent("Transform");
     ECS::ComponentRegistry<ECS::MeshComponent>::registerComponent("Mesh");
     ECS::ComponentRegistry<ECS::CameraComponent>::registerComponent("Camera");
@@ -19,12 +21,13 @@ E64::SceneLayer::SceneLayer(){
     E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>();
 
     if(E64::Engine::ctx->mode == EDITOR || E64::Engine::ctx->mode == N64_RUNTIME){
+        E64::Log::info("Creating Default Scene");
         scene = E64::Engine::ctx->active_scene.get();
         scene->createDefaultScene();
     }
     else if(E64::Engine::ctx->mode == DESKTOP_RUNTIME){
         //Deserialize at Runtime
-
+        E64::Log::info("Loading Scene");
         //Scene
         SceneSerializer scene_serializer;
         scene = scene_serializer.deserialize();
@@ -40,7 +43,9 @@ E64::SceneLayer::SceneLayer(){
                 E64::Engine::ctx->asset_manager->addMesh(mesh);
             }
         }
+        E64::Log::info("SCENE: " + scene->getName() + " LOADED");
     }
+    scene->printScene();
 }
 
 E64::SceneLayer::~SceneLayer(){

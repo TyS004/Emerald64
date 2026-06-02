@@ -22,6 +22,7 @@ namespace E64{
 
             static void registerComponent(const std::string& name){
                 handlers[name] = { &serialize, &deserialize };
+                E64::Log::info("Registered " + name + " Component into Registry");
             }
 
             static void serialize(json& json, ECS::Entity e){

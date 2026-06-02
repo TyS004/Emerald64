@@ -48,7 +48,7 @@ void E64::Scene::createDefaultScene(){
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(-10, 10);
 
-    for(int i = 0; i < 100; ++i){
+    for(int i = 0; i < 10; ++i){
         pushEntity();
     }
 
@@ -74,7 +74,7 @@ void E64::Scene::createDefaultScene(){
         100.0f
     };
     ECS::TransformComponent transform {};
-    transform.position.z = -15.0f;
+    transform.position.z = -30.0f;
     transform.euler.x = 90.0f;
     
     ECS::ComponentManager::addComponent<ECS::CameraComponent>(camera_entity, camera);
@@ -119,6 +119,10 @@ void E64::Scene::printScene(){
         if(E64::ECS::EntityManager::entity_index[e] & E64::ECS::ComponentBit<ECS::MeshComponent>::mask)
         {
             msg += "Mesh ";
+        }
+        if(E64::ECS::EntityManager::entity_index[e] & E64::ECS::ComponentBit<ECS::CameraComponent>::mask)
+        {
+            msg += "Camera ";
         }
         msg += "}";
         E64::Log::info("Entity " + std::to_string(e) + ": " + msg);

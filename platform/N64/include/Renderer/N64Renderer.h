@@ -3,6 +3,11 @@
 
 #include <E64.h>
 
+#include <libdragon.h>
+#include <t3d/t3d.h>
+#include <t3d/t3dmath.h>
+#include <t3d/t3dmodel.h>
+
 namespace E64 {
     class N64Renderer : public E64::IRenderer{
         public:
@@ -19,7 +24,7 @@ namespace E64 {
             void bindIndexBuffers(E64::ECS::Mesh* mesh){};
             void bindFragmentSamplers(E64::ECS::Mesh* mesh){};
 
-            void sendUniforms(glm::mat4 mvp){};
+            void sendUniforms(glm::mat4 mvp);
 
             void beginRenderPass(E64::RenderTarget target){};
             void endRenderPass(){};
@@ -37,6 +42,8 @@ namespace E64 {
             
             int getDrawCalls(){return -1;};
 
+        private:
+            T3DViewport viewport;
     };
 }
 
