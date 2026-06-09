@@ -13,8 +13,13 @@ namespace E64{
             void poll();
 
             void OnButtonPress(joypad_buttons_t);
+
+            joypad_inputs_t* getInputs();
         private:
             joypad_inputs_t inputs;
+
+            int r_axis;
+            int u_axis;
     };
 }
 

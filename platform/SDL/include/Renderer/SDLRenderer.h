@@ -14,7 +14,7 @@ namespace E64 {
             void OnImGuiResize(float width, float height);
             void ResizeViewport();
 
-            void aquireCmdBufferandSwapChain();
+            void startFrame();
 
             void bindPipeline();
             void bindVertexBuffers(E64::ECS::Mesh* mesh);

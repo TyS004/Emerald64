@@ -25,8 +25,7 @@ void E64::Engine::run(){
             renderer->ResizeViewport();
         }
 
-        renderer->aquireCmdBufferandSwapChain();
-
+        renderer->startFrame();
         for(Layer* layer : E64::Layer::layers){
             layer->OnUpdate(dt);
         }
@@ -36,11 +35,10 @@ void E64::Engine::run(){
         for(Layer* layer : E64::Layer::layers){
             layer->OnImGuiRender();
         }
-        
         renderer->submit();
 
         auto end = std::chrono::high_resolution_clock::now();
-        dt = std::chrono::duration<float>(end - start).count();
+        if(ctx->mode != N64_RUNTIME) dt = std::chrono::duration<float>(end - start).count();
     }
 }
 

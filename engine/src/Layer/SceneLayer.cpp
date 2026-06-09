@@ -65,6 +65,56 @@ void E64::SceneLayer::OnRender(){
         renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
     }
     renderer->bindPipeline();
-    scene->render();
+    
+    for(ECS::Entity entity : scene->getEntites()){
+        if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(entity) &&
+            ECS::ComponentManager::hasComponent<ECS::TransformComponent>(entity) &&
+            (E64::Engine::ctx->mode == DESKTOP_RUNTIME || E64::Engine::ctx->mode == N64_RUNTIME))
+        {
+            ECS::CameraComponent* camera = ECS::ComponentManager::getComponent<ECS::CameraComponent>(entity);
+            ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
+
+            glm::mat4 view = glm::lookAt(
+                transform->position,        // Camera Pos
+                glm::vec3(0, 0, 0),         // Looking at Origin
+                glm::vec3(0, 1, 0)          // Up Vector 
+            );
+        
+            glm::mat4 proj = glm::perspective(
+                camera->fov,                // FOV
+                camera->aspect_ratio,       // Aspect Ratio
+                camera->near_plane,         // Near plane
+                camera->far_plane           // Far Plane
+            );
+            scene->setCameraData({proj, view});
+        }
+
+        if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(entity) &&
+            ECS::ComponentManager::hasComponent<ECS::TransformComponent>(entity))
+        {
+            ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
+            ECS::MeshComponent* mesh_componet  = ECS::ComponentManager::getComponent<ECS::MeshComponent>(entity);
+            
+            ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->mesh_handle);
+            if(mesh == nullptr) { 
+                E64::Log::error("MESH NOT FOUND FOR Component IN ENTITY: " + std::to_string(entity)); 
+
+                AssetHandle mesh_handle;
+                mesh_handle.id = 0;
+                mesh_handle.path = "default";
+                mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_handle); // MESH FOR MISSING MESH
+            }
+
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
+                * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
+                * glm::scale(glm::mat4(1.0f), transform->scale);
+
+            glm::mat4 mvp = scene->getCameraData().proj * scene->getCameraData().view * model;
+
+            renderer->sendUniforms(mvp);
+            renderer->draw(mesh);
+        }
+    }
+
     renderer->endRenderPass();
 }

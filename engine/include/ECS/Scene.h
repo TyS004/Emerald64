@@ -22,7 +22,6 @@ namespace E64{
             void setCameraData(ECS::CameraData camera);
             
             void printScene();
-            void render();
         private:
             std::string name;
             ECS::CameraData active_camera_data;

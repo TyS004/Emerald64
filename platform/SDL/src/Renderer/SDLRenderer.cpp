@@ -46,7 +46,7 @@ E64::SDLRenderer::~SDLRenderer(){
 
 }
 
-void E64::SDLRenderer::aquireCmdBufferandSwapChain(){
+void E64::SDLRenderer::startFrame(){
     cmd_buf = SDL_AcquireGPUCommandBuffer(device);
     SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buf, window, &swapchain, &width, &height);
     if (!swapchain) {
@@ -143,6 +143,9 @@ void E64::SDLRenderer::bindFragmentSamplers(E64::ECS::Mesh* mesh){
 void E64::SDLRenderer::draw(E64::ECS::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
+    bindVertexBuffers(mesh);
+    bindIndexBuffers(mesh);
+    bindFragmentSamplers(mesh);
     draw_calls++;
     SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
 }
