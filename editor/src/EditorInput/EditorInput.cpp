@@ -60,7 +60,7 @@ void Editor::EditorInput::OnFileDropped(const char* path) {
 
     if (ext == ".obj") {
         AssetImporter importer;
-        E64::ECS::Mesh mesh = importer.importMesh(fs_path);
+        E64::Mesh mesh = importer.importMesh(fs_path);
         E64::ECS::MeshComponent comp = E64::Engine::ctx->asset_manager->addMesh(mesh);
         E64::ECS::MeshComponent* mesh_comp = E64::ECS::ComponentManager::getComponent<E64::ECS::MeshComponent>(selected_entity);
         if (mesh_comp) mesh_comp->mesh_handle = comp.mesh_handle;
@@ -68,7 +68,7 @@ void Editor::EditorInput::OnFileDropped(const char* path) {
     }
     else if (ext == ".png" || ext == ".jpg" || ext == ".bmp") {
         E64::ECS::MeshComponent* mesh_comp = E64::ECS::ComponentManager::getComponent<E64::ECS::MeshComponent>(selected_entity);
-        E64::ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_comp->mesh_handle);
+        E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_comp->mesh_handle);
         // mesh->texture_path = TBO(fs_path);
         // mesh->texture_path.upload();
     }

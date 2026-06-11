@@ -109,7 +109,7 @@ void E64::N64Layer::OnRender(){
         if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(e) && ECS::ComponentManager::hasComponent<ECS::TransformComponent>(e)){
             ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(e);
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(e);
-            ECS::Mesh* mesh = assetmanager->getMesh(mesh_comp->mesh_handle);
+            Mesh* mesh = assetmanager->getMesh(mesh_comp->mesh_handle);
             if(!mesh){
                 mesh = assetmanager->getMesh({0, "default"});
             }

@@ -39,7 +39,7 @@ E64::SceneLayer::SceneLayer(){
         for (const auto& entry : std::filesystem::directory_iterator("../assets/meshes/")) {
             if(entry.path().extension() == ".e64mesh")
             {
-                ECS::Mesh mesh = mesh_serializer.deserialize(entry.path().string());
+                Mesh mesh = mesh_serializer.deserialize(entry.path().string());
                 E64::Engine::ctx->asset_manager->addMesh(mesh);
             }
         }
@@ -95,7 +95,7 @@ void E64::SceneLayer::OnRender(){
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
             ECS::MeshComponent* mesh_componet  = ECS::ComponentManager::getComponent<ECS::MeshComponent>(entity);
             
-            ECS::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->mesh_handle);
+            Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->mesh_handle);
             if(mesh == nullptr) { 
                 E64::Log::error("MESH NOT FOUND FOR Component IN ENTITY: " + std::to_string(entity)); 
 

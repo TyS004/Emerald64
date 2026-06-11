@@ -46,13 +46,13 @@ Editor::EditorLayer::EditorLayer(){
 
     ImFontConfig cfg;
     cfg.SizePixels = 18.0f * scale;
-    cfg.OversampleH = 4;
-    cfg.OversampleV = 4;
+    cfg.OversampleH = 2;
+    cfg.OversampleV = 2;
     cfg.PixelSnapH = true;
 
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     
-    font = io.Fonts->AddFontFromFileTTF("../assets/fonts/Inter-Regular.ttf", 18.0f * scale, &cfg);
+    font = io.Fonts->AddFontFromFileTTF("../assets/fonts/Inter-SemiBold.ttf", 15.0f * scale, &cfg);
     io.FontGlobalScale = 1.0f / scale;
 }
 
@@ -68,10 +68,12 @@ void Editor::EditorLayer::OnAttach(){
     std::string path = "/Users/tylerstier/Desktop/Emerald64/assets/meshes/";
     AssetImporter importer;
     MeshSerializer serializer;
+    
+    //TEMP LOOP THROGUH ASSET DIR AND SERIALZE TO .e64mesh and import
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
         if(entry.path().extension() == ".obj")
         {
-            ECS::Mesh mesh = importer.importMesh(entry.path().string());
+            Mesh mesh = importer.importMesh(entry.path().string());
             std::cout << "PATH: " << mesh.obj_path << std::endl;
             E64::Engine::ctx->asset_manager->addMesh(mesh);
 
@@ -318,7 +320,7 @@ void Editor::EditorLayer::buildFileManager(){
     ImGui::Begin("Files");
 
     int i = 0;
-    for(const ECS::Mesh* mesh : E64::Engine::ctx->asset_manager->getMeshes()){
+    for(const Mesh* mesh : E64::Engine::ctx->asset_manager->getMeshes()){
         std::filesystem::path path = E64::Engine::ctx->asset_manager->getMeshes()[i]->obj_path;
         ImGui::PushID(i);
         ImGui::Selectable(path.c_str());

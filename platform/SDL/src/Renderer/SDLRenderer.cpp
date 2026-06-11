@@ -110,7 +110,7 @@ void E64::SDLRenderer::bindPipeline(){
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
-void E64::SDLRenderer::bindVertexBuffers(E64::ECS::Mesh* mesh){
+void E64::SDLRenderer::bindVertexBuffers(E64::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     SDL_GPUBufferBinding buffer_binding = {};
@@ -119,7 +119,7 @@ void E64::SDLRenderer::bindVertexBuffers(E64::ECS::Mesh* mesh){
     SDL_BindGPUVertexBuffers(render_pass, 0, &buffer_binding, 1);
 }
 
-void E64::SDLRenderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
+void E64::SDLRenderer::bindIndexBuffers(E64::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     SDL_GPUBuffer* index_buffer = SDLGPURegistry::ibo_registry.at(mesh->ibo_handle);
@@ -130,7 +130,7 @@ void E64::SDLRenderer::bindIndexBuffers(E64::ECS::Mesh* mesh){
     SDL_BindGPUIndexBuffer(render_pass, &binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 }
 
-void E64::SDLRenderer::bindFragmentSamplers(E64::ECS::Mesh* mesh){
+void E64::SDLRenderer::bindFragmentSamplers(E64::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     SDL_GPUTextureSamplerBinding binding;
@@ -140,7 +140,7 @@ void E64::SDLRenderer::bindFragmentSamplers(E64::ECS::Mesh* mesh){
     SDL_BindGPUFragmentSamplers(render_pass, 0, &binding, 1);
 }
 
-void E64::SDLRenderer::draw(E64::ECS::Mesh* mesh){
+void E64::SDLRenderer::draw(E64::Mesh* mesh){
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
     bindVertexBuffers(mesh);

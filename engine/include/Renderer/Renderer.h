@@ -4,6 +4,7 @@
 #include "RendererHandle.h"
 
 #include "ECS/Component.h"
+#include "AssetManager/Assets.h"
 
 namespace E64{
     enum RenderTarget{
@@ -19,16 +20,16 @@ namespace E64{
             virtual void startFrame(){};
 
             virtual void bindPipeline(){};
-            virtual void bindVertexBuffers(E64::ECS::Mesh* mesh){};
-            virtual void bindIndexBuffers(E64::ECS::Mesh* mesh){};
-            virtual void bindFragmentSamplers(E64::ECS::Mesh* mesh){};
+            virtual void bindVertexBuffers(E64::Mesh* mesh){};
+            virtual void bindIndexBuffers(E64::Mesh* mesh){};
+            virtual void bindFragmentSamplers(E64::Mesh* mesh){};
 
             virtual void sendUniforms(glm::mat4 mvp){};
 
             virtual void beginRenderPass(RenderTarget target){};
             virtual void endRenderPass(){};
             
-            virtual void draw(ECS::Mesh* mesh){};
+            virtual void draw(Mesh* mesh){};
             virtual void drawUI(){};
             virtual void submit(){};
 

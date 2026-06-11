@@ -2,6 +2,7 @@
 #define ASSETMANAGER_H
 
 #include "AssetHandle.h"
+#include "AssetManager/Assets.h"
 #include "ECS/Component.h"
 
 namespace E64{
@@ -10,13 +11,13 @@ namespace E64{
             AssetManager();
             ~AssetManager();
 
-            ECS::MeshComponent addMesh(ECS::Mesh mesh);
-            ECS::Mesh* getMesh(AssetHandle handle);
-            std::vector<ECS::Mesh*> getMeshes();
+            ECS::MeshComponent addMesh(Mesh mesh);
+            Mesh* getMesh(AssetHandle handle);
+            std::vector<Mesh*> getMeshes();
 
         private:
-            std::unordered_map<std::string, std::unique_ptr<ECS::Mesh>> mesh_repository;
-            std::string path;
+            std::unordered_map<std::string, std::unique_ptr<Mesh>> mesh_repository;
+            std::unordered_map<std::string, std::unique_ptr<Texture>> texture_reposity;
     };
 }
 

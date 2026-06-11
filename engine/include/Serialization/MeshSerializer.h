@@ -1,7 +1,7 @@
 #ifndef MESH_SERIALIZER_H
 #define MESH_SERIALIZER_H
 
-#include "ECS/Component.h"
+#include "AssetManager/Assets.h"
 
 namespace E64{
     class MeshSerializer{
@@ -9,8 +9,8 @@ namespace E64{
             MeshSerializer();
             ~MeshSerializer();
         
-        void serialize(E64::ECS::Mesh* mesh);
-        ECS::Mesh deserialize(std::string path);
+        void serialize(E64::Mesh* mesh);
+        Mesh deserialize(std::string path);
     };
 }
 

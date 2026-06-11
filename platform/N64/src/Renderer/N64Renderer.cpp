@@ -48,7 +48,7 @@ void E64::N64Renderer::sendModelMat4FP(T3DMat4FP* modelMat4FP){
     this->modelMatFP = modelMat4FP;
 }
 
-void E64::N64Renderer::draw(E64::ECS::Mesh* mesh){
+void E64::N64Renderer::draw(E64::Mesh* mesh){
     if(*n64_window->getMode() == CONSOLE) return;
 
     if(!frame_buf || !z_buf){

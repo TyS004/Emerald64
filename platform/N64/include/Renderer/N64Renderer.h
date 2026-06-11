@@ -22,9 +22,9 @@ namespace E64 {
             void startFrame();
 
             void bindPipeline(){};
-            void bindVertexBuffers(E64::ECS::Mesh* mesh){};
-            void bindIndexBuffers(E64::ECS::Mesh* mesh){};
-            void bindFragmentSamplers(E64::ECS::Mesh* mesh){};
+            void bindVertexBuffers(E64::Mesh* mesh){};
+            void bindIndexBuffers(E64::Mesh* mesh){};
+            void bindFragmentSamplers(E64::Mesh* mesh){};
 
             void sendUniforms(glm::mat4 mvp){};
             void sendModelMat4FP(T3DMat4FP* modelMatFP);
@@ -32,7 +32,7 @@ namespace E64 {
             void beginRenderPass(E64::RenderTarget target){};
             void endRenderPass(){};
             
-            void draw(E64::ECS::Mesh* mesh);
+            void draw(E64::Mesh* mesh);
             void drawText();
             void drawUI(){};
             void submit();
