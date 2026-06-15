@@ -77,11 +77,14 @@ void Editor::EditorInput::OnFileDropped(const char* path) {
     else if (ext == ".png" || ext == ".jpg" || ext == ".bmp") {
         E64::ECS::MeshComponent* mesh_comp = E64::ECS::ComponentManager::getComponent<E64::ECS::MeshComponent>(selected_entity);
         if(!mesh_comp){
-            E64::Log::error("Entity Has No Mesh Component!\nCreate a Mesh Component for this Entity to Assign a Mesh to it.");
+            E64::Log::error("Entity Has No Mesh Component!\nCreate a Mesh Component for this Entity to Assign a Texture to it.");
             return;
         }
         
-        // std::filesystem::path fs_path = path;
-        // mesh_comp->texture_path = fs_path.replace_extension(".e64tex");
+        std::filesystem::path base = "/Users/tylerstier/Desktop/Emerald64/assets";
+        std::filesystem::path rel = std::filesystem::relative(path, base);
+        E64::AssetHandle handle = E64::Engine::ctx->asset_manager->loadTextureAsset(rel);
+        mesh_comp->tex_handle = handle;
+        mesh_comp->texture_path = rel;
     }
 }

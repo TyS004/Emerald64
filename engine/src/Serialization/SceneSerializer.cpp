@@ -57,9 +57,10 @@ E64::Scene* E64::SceneSerializer::deserialize(std::string path){
         if(comp) {
             //E64::Log::info("SceneSerializer: Compoent Mesh Path: " + comp->mesh_path);
             comp->mesh_handle = E64::Engine::ctx->asset_manager->loadMeshAsset(comp->mesh_path);
+            comp->tex_handle  = E64::Engine::ctx->asset_manager->loadTextureAsset(comp->texture_path);
         }
     }
-    
+
     E64::Log::debug("Loaded Scene: " + scene->getName());
     //scene->printScene();
 

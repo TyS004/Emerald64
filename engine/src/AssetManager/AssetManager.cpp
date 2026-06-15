@@ -20,6 +20,7 @@ E64::AssetManager::~AssetManager(){
 
 E64::AssetHandle E64::AssetManager::loadMeshAsset(std::string path){
     if(mesh_handle_repository.count(path) > 0){
+        E64::Log::info("Mesh Already Registered");
         return mesh_handle_repository.at(path);
     }
     
@@ -45,10 +46,15 @@ E64::AssetHandle E64::AssetManager::loadMeshAsset(std::string path){
 
 E64::AssetHandle E64::AssetManager::loadTextureAsset(std::string path){
     if(texture_handle_repository.count(path) > 0){
+        E64::Log::info("Texture Already Registered");
         return texture_handle_repository.at(path);
     }
 
     Texture texture{};
+    if(path != "default"){
+        std::filesystem::path absolute_path = E64::Engine::ctx->root_dir.string() + path;
+        texture.img_data = stbi_load(absolute_path.c_str(), &texture.width, &texture.height, &texture.channels, STBI_rgb_alpha);
+    }
     texture.texture = E64::Engine::ctx->renderer->createTexture(texture.img_data, texture.width, texture.height);
     texture.sampler = E64::Engine::ctx->renderer->createSampler();
 
@@ -56,6 +62,7 @@ E64::AssetHandle E64::AssetManager::loadTextureAsset(std::string path){
 
     E64::Log::debug("REGISTERED TEXTURE: " + path + " TO ASSETMANAGER");
     texture_repository[handle] = std::make_unique<Texture>(std::move(texture));
+    texture_handle_repository[path] = handle;
 
     return handle;
 }
