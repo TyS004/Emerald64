@@ -44,6 +44,8 @@ Editor::EditorLayer::EditorLayer(){
 
     float scale = SDL_GetWindowDisplayScale(window);
 
+    float retina_scale = 2.0f;
+
     ImFontConfig cfg;
     cfg.SizePixels = 18.0f * scale;
     cfg.OversampleH = 2;
@@ -52,8 +54,8 @@ Editor::EditorLayer::EditorLayer(){
 
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     
-    font = io.Fonts->AddFontFromFileTTF("../assets/fonts/Inter-SemiBold.ttf", 15.0f * scale, &cfg);
-    io.FontGlobalScale = 1.0f / scale;
+    font = io.Fonts->AddFontFromFileTTF("../assets/fonts/Switzer-Variable.ttf", 16.0f * retina_scale, &cfg);
+    io.FontGlobalScale = 1.0f / retina_scale;
 }
 
 Editor::EditorLayer::~EditorLayer(){

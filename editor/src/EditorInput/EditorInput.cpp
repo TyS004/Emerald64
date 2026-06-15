@@ -58,7 +58,7 @@ void Editor::EditorInput::OnFileDropped(const char* path) {
     std::filesystem::path ext = fs_path.extension();
     E64::Log::debug(std::string(path));
 
-    if (ext == ".obj") {
+    if (ext == ".obj" || ext == ".glb" || ext == ".gltf" || ext == ".fbx") {
         E64::ECS::MeshComponent* mesh_comp = E64::ECS::ComponentManager::getComponent<E64::ECS::MeshComponent>(selected_entity);
         if (!mesh_comp){
             E64::Log::error("Entity Has No Mesh Component!\nCreate a Mesh Component for this Entity to Assign a Mesh to it.");
