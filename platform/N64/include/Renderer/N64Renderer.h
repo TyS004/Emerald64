@@ -48,13 +48,15 @@ namespace E64 {
             T3DViewport* getViewport();
 
             std::vector<std::string> debug_msg_queue;
+
+            void toggleDebug();
+            bool isDebug();
         private:
             glm::mat4 mvp;
             T3DViewport viewport;
 
             N64Window* n64_window;
-
-            T3DVertPacked* vertices;
+            
             rspq_block_t* dplDraw;
 
             fm_mat4_t modelMat;
@@ -66,6 +68,8 @@ namespace E64 {
 
             surface_t* frame_buf;
             surface_t* z_buf;
+
+            bool debug_mode = false;
     };
 }
 

@@ -12,8 +12,8 @@ namespace E64{
             SceneSerializer();
             ~SceneSerializer();
 
-            void serialize();
-            E64::Scene* deserialize();
+            void serialize(std::string path);
+            E64::Scene* deserialize(std::string path);
     };
 }
 

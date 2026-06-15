@@ -40,6 +40,8 @@ E64::SDLRenderer::SDLRenderer(){
     draw_calls = 0;
 
     pipeline = std::make_unique<SDLPipeline>("../assets/shaders/object");
+
+    stbi_set_flip_vertically_on_load(true);
 }
 
 E64::SDLRenderer::~SDLRenderer(){
@@ -110,19 +112,19 @@ void E64::SDLRenderer::bindPipeline(){
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
-void E64::SDLRenderer::bindVertexBuffers(E64::Mesh* mesh){
-    if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
+void E64::SDLRenderer::bindVertexBuffers(E64::ECS::MeshComponent* comp){
+    E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMeshAsset(comp->mesh_handle);
 
     SDL_GPUBufferBinding buffer_binding = {};
-    buffer_binding.buffer = SDLGPURegistry::vbo_registry.at(mesh->vbo_handle);
+    buffer_binding.buffer = SDLGPURegistry::vbo_registry.at(mesh->vbo);
     buffer_binding.offset = 0;
     SDL_BindGPUVertexBuffers(render_pass, 0, &buffer_binding, 1);
 }
 
-void E64::SDLRenderer::bindIndexBuffers(E64::Mesh* mesh){
-    if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
+void E64::SDLRenderer::bindIndexBuffers(E64::ECS::MeshComponent* comp){
+    E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMeshAsset(comp->mesh_handle);
 
-    SDL_GPUBuffer* index_buffer = SDLGPURegistry::ibo_registry.at(mesh->ibo_handle);
+    SDL_GPUBuffer* index_buffer = SDLGPURegistry::ibo_registry.at(mesh->ibo);
     SDL_GPUBufferBinding binding;
     binding.buffer = index_buffer;
     binding.offset = 0;
@@ -130,22 +132,25 @@ void E64::SDLRenderer::bindIndexBuffers(E64::Mesh* mesh){
     SDL_BindGPUIndexBuffer(render_pass, &binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 }
 
-void E64::SDLRenderer::bindFragmentSamplers(E64::Mesh* mesh){
-    if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
+void E64::SDLRenderer::bindFragmentSamplers(E64::ECS::MeshComponent* comp){
+    E64::AssetManager* assetmanager = E64::Engine::ctx->asset_manager.get();
+    E64::Texture* texture = assetmanager->getTextureAsset(comp->tex_handle);
 
     SDL_GPUTextureSamplerBinding binding;
-    binding.texture = SDLGPURegistry::texture_registry[mesh->texture_handle];
-    binding.sampler = SDLGPURegistry::sampler_registry[mesh->sampler_handle];
+    binding.texture = SDLGPURegistry::texture_registry[texture->texture];
+    binding.sampler = SDLGPURegistry::sampler_registry[texture->sampler];
 
     SDL_BindGPUFragmentSamplers(render_pass, 0, &binding, 1);
 }
 
-void E64::SDLRenderer::draw(E64::Mesh* mesh){
+void E64::SDLRenderer::draw(E64::ECS::MeshComponent* comp){
+    E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMeshAsset(comp->mesh_handle);
     if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
 
-    bindVertexBuffers(mesh);
-    bindIndexBuffers(mesh);
-    bindFragmentSamplers(mesh);
+    bindVertexBuffers(comp);
+    bindIndexBuffers(comp);
+    bindFragmentSamplers(comp);
+    
     draw_calls++;
     SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
 }
@@ -228,16 +233,7 @@ E64::GPUBufferHandle E64::SDLRenderer::createIndexBuffer(std::vector<E64::Index>
     return handle;
 }
 
-E64::GPUTextureHandle E64::SDLRenderer::createTexture(std::string path){
-    int width, height, channels;
-    unsigned char* img_data;
-
-    stbi_set_flip_vertically_on_load(true);
-    if(path.empty()) img_data = stbi_load("../assets/textures/test.png", &width, &height, &channels, STBI_rgb_alpha);
-    else img_data = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb_alpha);
-    if(!img_data){
-        E64::Log::error("Could Not Load Image Data");
-    }
+E64::GPUTextureHandle E64::SDLRenderer::createTexture(unsigned char* img_data, int width, int height){
     int img_size = width * height * 4;
 
     SDL_GPUTextureCreateInfo info = {};

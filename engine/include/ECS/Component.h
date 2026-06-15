@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include "AssetManager/AssetHandle.h"
+#include "AssetManager/Assets.h"
 
 #include <json.hpp>
 
@@ -43,23 +44,22 @@ namespace E64{
         };
         
         struct MeshComponent{
-            AssetHandle mesh_handle;
-            AssetHandle tex_handle;
+            AssetHandle mesh_handle = 0;
+            std::string mesh_path = "default";
+
+            AssetHandle tex_handle = 0;
+            std::string texture_path = "default";
             
             void serialize(json& j) const
             {
-                j["mesh_handle_id"] = {mesh_handle.id};
-                j["mesh_handle_path"] = {mesh_handle.path};
-                j["tex_handle_id"] = {tex_handle.id};
-                j["tex_handle_path"] = {tex_handle.path};
-            } 
+                j["mesh_path"] = {mesh_path};
+                j["texture_path"] = {texture_path};
+            }
 
             void deserialize(const json& j)
             {
-                mesh_handle.id = j["mesh_handle_id"][0];
-                mesh_handle.path = j["mesh_handle_path"][0];
-                tex_handle.id = j["tex_handle_id"][0];
-                tex_handle.path = j["tex_handle_path"][0];
+                mesh_path = j["mesh_path"][0];
+                texture_path = j["texture_path"][0];
             }
         };
 

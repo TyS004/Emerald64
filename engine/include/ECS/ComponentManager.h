@@ -15,7 +15,7 @@ namespace E64{
                 static T* getComponent(Entity e){
                     if(e < 0) return nullptr;
                     if(!(EntityManager::entity_index[e] & ComponentBit<T>::mask)) { 
-                        E64::Log::error("Component Not Found");
+                        E64::Log::error("Component Not Found : ComponentManager::getComponent");
                         return nullptr; 
                     }
                     uint32_t i = ComponentRegistry<T>::entity_to_idx[e];
@@ -112,9 +112,9 @@ namespace E64{
                 static void deserialize(const json& entity_json, ECS::Entity e){
                     for(auto& [name, fns] : ComponentRegistryBase::handlers){
                         if(entity_json.contains(name)) {
-                            std::cout << "JSON DESERIALZIE CONTAINS: " << name << std::endl;
-                            std::cout << entity_json[name] << std::endl;
-                            std::cout << std::endl;
+                            // E64::Log::info("JSON DESERIALZIE CONTAINS: " + name);
+                            // //E64::Log::info(entity_json[name]);
+                            // E64::Log::info("");
                             fns.second(entity_json[name], e);
                         }
                     }

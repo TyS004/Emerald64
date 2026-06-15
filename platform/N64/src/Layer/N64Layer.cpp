@@ -5,15 +5,25 @@
 #include <libdragon.h>
 
 E64::N64Layer::N64Layer(){
+    ECS::ComponentRegistry<ECS::TransformComponent>::registerComponent("Transform");
+    ECS::ComponentRegistry<ECS::MeshComponent>::registerComponent("Mesh");
+    ECS::ComponentRegistry<ECS::CameraComponent>::registerComponent("Camera");
+
     E64::Engine::ctx->asset_manager = std::make_unique<E64::AssetManager>();
 
-    E64::Scene scene;
-    scene.createDefaultScene();
-    scene.printScene();
+    dfs_init(DFS_DEFAULT_LOCATION);
+    std::filesystem::path scene_path = E64::Engine::ctx->root_dir.string() + "scenes/scene.json";
+    E64::SceneSerializer serializer;
+    E64::Scene* scene = serializer.deserialize(scene_path);
+    if(!scene){
+        E64::Log::info(scene_path.string());
+        E64::Log::info(E64::Engine::ctx->root_dir.string());
+        exit(0);
+    }
+    static_assert(sizeof(Vertex) == 36, "Vertex struct has unexpected padding");
 
-    modelMatFP = (T3DMat4FP*)malloc_uncached(sizeof(T3DMat4FP) * scene.getEntites().size());
-    E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(scene));
-
+    modelMatFP = (T3DMat4FP*)malloc_uncached(sizeof(T3DMat4FP) * scene->getEntites().size());
+    E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene));
     camera = new N64Camera{};
     camera->transform = {{0.0f, 0.0f, -60.0f}};
     camera->euler = {{0.0f, 0.0f, 0.0f}};
@@ -98,7 +108,7 @@ void E64::N64Layer::OnUpdate(float dt){
 }
 
 void E64::N64Layer::OnRender(){
-    this->scene = E64::Engine::ctx->active_scene.get();
+    Scene* scene = E64::Engine::ctx->active_scene.get();
     E64::N64Renderer* renderer = dynamic_cast<E64::N64Renderer*>(E64::Engine::ctx->renderer);
     E64::AssetManager* assetmanager = E64::Engine::ctx->asset_manager.get();
 
@@ -109,26 +119,34 @@ void E64::N64Layer::OnRender(){
         if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(e) && ECS::ComponentManager::hasComponent<ECS::TransformComponent>(e)){
             ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(e);
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(e);
-            Mesh* mesh = assetmanager->getMesh(mesh_comp->mesh_handle);
+            Mesh* mesh = assetmanager->getMeshAsset(mesh_comp->mesh_handle);
+            E64::Log::info(std::to_string(mesh_comp->mesh_handle));
             if(!mesh){
-                mesh = assetmanager->getMesh({0, "default"});
+                mesh = assetmanager->getMeshAsset(0);
+                E64::Log::error("Missing Mesh Defaulted to Cube");
             }
 
-            fm_vec3_t trans = {{transform->position.x * SCALE, transform->position.y * SCALE, transform->position.z * SCALE}};
-            fm_mat4_t translateMat, rotMat;
-            fm_mat4_t finalMat;
-            fm_mat4_identity(&translateMat);
-            fm_mat4_identity(&rotMat);
-            fm_mat4_from_translation(&translateMat, &trans);
-            //fm_mat4_from_axis_angle(&rotMat, &camera->rot_axis, camera->rot_angle);
-            fm_mat4_mul(&finalMat, &translateMat, &rotMat);
-            t3d_mat4_to_fixed(&modelMatFP[i], &finalMat);
+            fm_vec3_t translation_vec = {{transform->position.x * SCALE, transform->position.y * SCALE, transform->position.z * SCALE}};
+            float rotation_vec[3] = {transform->euler.x, transform->euler.y, transform->euler.z};
+            fm_vec3_t scale_vec = {{transform->scale.x, transform->scale.y, transform->scale.z}};
 
-            E64::N64Window* window = dynamic_cast<E64::N64Window*>(E64::Engine::ctx->window);
+            fm_mat4_t translation, rotation, scale;
+            fm_mat4_t model;
+
+            fm_mat4_identity(&translation);
+            fm_mat4_identity(&rotation);
+            fm_mat4_from_srt_euler(&model, &scale_vec, rotation_vec, &translation_vec);
+            t3d_mat4_to_fixed(&modelMatFP[i], &model);
+
             renderer->sendModelMat4FP(&modelMatFP[i]);
-            renderer->draw(mesh);
+            // if(mesh_comp->mesh_handle == 1){
+                renderer->draw(mesh);
+            // }
             i++;
         }
     }
-    renderer->drawText();
+
+    if(renderer->isDebug()){
+        renderer->drawText();
+    }
 }

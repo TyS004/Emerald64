@@ -1,7 +1,12 @@
 #include "AssetImporter/AssetImporter.h"
 
-Editor::AssetImporter::AssetImporter(){}
-Editor::AssetImporter::~AssetImporter(){}
+Editor::AssetImporter::AssetImporter(){
+
+}
+
+Editor::AssetImporter::~AssetImporter(){
+
+}
 
 E64::Mesh Editor::AssetImporter::importMesh(std::string path){
     Assimp::Importer importer;
@@ -63,7 +68,7 @@ E64::Mesh Editor::AssetImporter::importMesh(std::string path){
             vertices[vi].uv.x = has_uvs ? raw_mesh->mTextureCoords[0][idx].x : 0.f;
             vertices[vi].uv.y = has_uvs ? raw_mesh->mTextureCoords[0][idx].y : 0.f;
 
-            vertices[vi].color = { 0.5f, 0.5f, 0.5f, 1.0f };
+            vertices[vi].color = { 1.0f, 0.0f, 0.0f, 1.0f };
         }
     }
     mesh.vertices = vertices;
@@ -75,10 +80,11 @@ E64::Mesh Editor::AssetImporter::importMesh(std::string path){
     mesh.indices = indices;
 
     E64::Log::info(std::to_string(num_poly_verts) + " total indices");
-
     E64::Log::debug(path);
-    mesh.obj_path    = path;
-    mesh.texture_path = "";
+
+    E64::MeshSerializer serializer;
+    std::filesystem::path fs_path = path;
+    serializer.serialize(mesh, fs_path.replace_extension(".e64mesh"));
 
     return mesh;
 }

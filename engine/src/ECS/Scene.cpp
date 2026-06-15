@@ -48,11 +48,12 @@ void E64::Scene::createDefaultScene(){
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(-10, 10);
 
-    for(int i = 0; i < 50; ++i){
+    for(int i = 0; i < 25; ++i){
         pushEntity();
     }
 
-    ECS::MeshComponent mesh_comp = {{0, "default"}};
+    ECS::MeshComponent mesh_comp{};
+
     for(ECS::Entity e : entites){
         float x = dist(gen);
         float y = dist(gen);

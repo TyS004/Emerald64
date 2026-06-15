@@ -30,19 +30,10 @@ E64::SceneLayer::SceneLayer(){
         E64::Log::info("Loading Scene");
         //Scene
         SceneSerializer scene_serializer;
-        scene = scene_serializer.deserialize();
+        scene = scene_serializer.deserialize("../assets/scenes/scene.json");
         if(!scene){ E64::Log::error("Scene Could Not Be Loaded"); }
         else{ E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene)); }
 
-        //Meshes
-        MeshSerializer  mesh_serializer;
-        for (const auto& entry : std::filesystem::directory_iterator("../assets/meshes/")) {
-            if(entry.path().extension() == ".e64mesh")
-            {
-                Mesh mesh = mesh_serializer.deserialize(entry.path().string());
-                E64::Engine::ctx->asset_manager->addMesh(mesh);
-            }
-        }
         E64::Log::info("SCENE: " + scene->getName() + " LOADED");
     }
     scene->printScene();
@@ -95,14 +86,10 @@ void E64::SceneLayer::OnRender(){
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
             ECS::MeshComponent* mesh_componet  = ECS::ComponentManager::getComponent<ECS::MeshComponent>(entity);
             
-            Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_componet->mesh_handle);
+            Mesh* mesh = E64::Engine::ctx->asset_manager->getMeshAsset(mesh_componet->mesh_handle);
             if(mesh == nullptr) { 
-                E64::Log::error("MESH NOT FOUND FOR Component IN ENTITY: " + std::to_string(entity)); 
-
-                AssetHandle mesh_handle;
-                mesh_handle.id = 0;
-                mesh_handle.path = "default";
-                mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_handle); // MESH FOR MISSING MESH
+                E64::Log::error("MESH NOT FOUND FOR Component IN ENTITY: " + std::to_string(entity) + "WHEN RENDERING IN SCENELAYER"); 
+                mesh = E64::Engine::ctx->asset_manager->getMeshAsset(0); // MESH FOR MISSING MESH
             }
 
             glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
@@ -112,7 +99,7 @@ void E64::SceneLayer::OnRender(){
             glm::mat4 mvp = scene->getCameraData().proj * scene->getCameraData().view * model;
 
             renderer->sendUniforms(mvp);
-            renderer->draw(mesh);
+            renderer->draw(mesh_componet);
         }
     }
 

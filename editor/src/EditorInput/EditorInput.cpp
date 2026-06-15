@@ -59,17 +59,29 @@ void Editor::EditorInput::OnFileDropped(const char* path) {
     E64::Log::debug(std::string(path));
 
     if (ext == ".obj") {
+        E64::ECS::MeshComponent* mesh_comp = E64::ECS::ComponentManager::getComponent<E64::ECS::MeshComponent>(selected_entity);
+        if (!mesh_comp){
+            E64::Log::error("Entity Has No Mesh Component!\nCreate a Mesh Component for this Entity to Assign a Mesh to it.");
+            return;
+        }
+
         AssetImporter importer;
         E64::Mesh mesh = importer.importMesh(fs_path);
-        E64::ECS::MeshComponent comp = E64::Engine::ctx->asset_manager->addMesh(mesh);
-        E64::ECS::MeshComponent* mesh_comp = E64::ECS::ComponentManager::getComponent<E64::ECS::MeshComponent>(selected_entity);
-        if (mesh_comp) mesh_comp->mesh_handle = comp.mesh_handle;
-        else E64::Log::error("Entity Has No Mesh Component!\nCreate a Mesh Component for this Entity to Assign a Mesh to it.");
+
+        std::filesystem::path base = "/Users/tylerstier/Desktop/Emerald64/assets";
+        std::filesystem::path rel = std::filesystem::relative(path, base);
+        E64::AssetHandle handle = E64::Engine::ctx->asset_manager->loadMeshAsset(rel.replace_extension(".e64mesh"));
+        mesh_comp->mesh_handle = handle;
+        mesh_comp->mesh_path = rel.replace_extension(".e64mesh");
     }
     else if (ext == ".png" || ext == ".jpg" || ext == ".bmp") {
         E64::ECS::MeshComponent* mesh_comp = E64::ECS::ComponentManager::getComponent<E64::ECS::MeshComponent>(selected_entity);
-        E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMesh(mesh_comp->mesh_handle);
-        // mesh->texture_path = TBO(fs_path);
-        // mesh->texture_path.upload();
+        if(!mesh_comp){
+            E64::Log::error("Entity Has No Mesh Component!\nCreate a Mesh Component for this Entity to Assign a Mesh to it.");
+            return;
+        }
+        
+        // std::filesystem::path fs_path = path;
+        // mesh_comp->texture_path = fs_path.replace_extension(".e64tex");
     }
 }

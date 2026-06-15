@@ -7,6 +7,7 @@
 
 int main(){
     E64::Engine::ctx->mode = E64::E64_MODE::EDITOR;
+    E64::Engine::ctx->root_dir = "../assets/";
     
     std::cout << "Starting Editor" << std::endl;
 

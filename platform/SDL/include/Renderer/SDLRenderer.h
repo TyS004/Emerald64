@@ -17,22 +17,22 @@ namespace E64 {
             void startFrame();
 
             void bindPipeline();
-            void bindVertexBuffers(E64::Mesh* mesh);
-            void bindIndexBuffers(E64::Mesh* mesh);
-            void bindFragmentSamplers(E64::Mesh* mesh);
+            void bindVertexBuffers(E64::ECS::MeshComponent* comp);
+            void bindIndexBuffers(E64::ECS::MeshComponent* comp);
+            void bindFragmentSamplers(E64::ECS::MeshComponent* comp);
 
             void sendUniforms(glm::mat4 mvp);
 
             void beginRenderPass(E64::RenderTarget target);
             void endRenderPass();
             
-            void draw(E64::Mesh* mesh);
+            void draw(E64::ECS::MeshComponent* comp);
             void drawUI();
             void submit();
 
             E64::GPUBufferHandle createVertexBuffer(std::vector<E64::Vertex> vertices);
             E64::GPUBufferHandle createIndexBuffer(std::vector<E64::Index> indices);
-            E64::GPUTextureHandle createTexture(std::string path);
+            E64::GPUTextureHandle createTexture(unsigned char* img_data, int  width, int height);
             E64::GPUTextureHandle createSampler();
 
             bool isPendingResize();

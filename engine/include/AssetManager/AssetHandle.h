@@ -5,10 +5,7 @@
 #include <cstdint>
 
 namespace E64{
-    struct AssetHandle{
-        uint32_t id;
-        std::string path;
-    };
+    using AssetHandle = uint32_t;
 }
 
 #endif

@@ -16,9 +16,8 @@ namespace E64{
             void OnImGuiRender() {};
             void OnRender();
             void OnAttach(){};
+            
         private:
-            E64::Scene* scene;
-
             fm_mat4_t modelMat;
             T3DMat4FP* modelMatFP;
 

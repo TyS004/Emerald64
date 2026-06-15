@@ -3,47 +3,55 @@
 
 #include "Renderer/RendererHandle.h"
 #include <fstream>
+#include <stdint.h>
+#include <cstring>
+#include "stb_image.h"
 #include "Logger/Logger.h"
 
 namespace E64{
+
+    struct MeshBatch{
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> indices;
+        int base;
+    };
+
     struct Mesh{
-        GPUBufferHandle vbo_handle        = -1;
-        GPUBufferHandle ibo_handle        = -1;
-        GPUTextureHandle texture_handle   = -1;
-        GPUSamplerHandle sampler_handle   = -1;
+        GPUBufferHandle vbo = -1;
+        GPUBufferHandle ibo = -1;
 
         std::vector<Vertex> vertices = { 
             // Front (red)
-            {{-0.5f, -0.5f,  0.5f}, {1,0,0,1}, {0,0}},
-            {{ 0.5f, -0.5f,  0.5f}, {1,0,0,1}, {1,0}},
-            {{ 0.5f,  0.5f,  0.5f}, {1,0,0,1}, {1,1}},
-            {{-0.5f, -0.5f,  0.5f}, {1,0,0,1}, {0,0}},
-            {{ 0.5f,  0.5f,  0.5f}, {1,0,0,1}, {1,1}},
-            {{-0.5f,  0.5f,  0.5f}, {1,0,0,1}, {0,1}},
+            {{-0.5f, -0.5f,  0.5f}, {1,0,1,1}, {0,0}},
+            {{ 0.5f, -0.5f,  0.5f}, {1,0,1,1}, {1,0}},
+            {{ 0.5f,  0.5f,  0.5f}, {1,0,1,1}, {1,1}},
+            {{-0.5f, -0.5f,  0.5f}, {1,0,1,1}, {0,0}},
+            {{ 0.5f,  0.5f,  0.5f}, {1,0,1,1}, {1,1}},
+            {{-0.5f,  0.5f,  0.5f}, {1,0,1,1}, {0,1}},
         
             // Back (green)
-            {{ 0.5f, -0.5f, -0.5f}, {0,1,0,1}, {0,0}},
-            {{-0.5f, -0.5f, -0.5f}, {0,1,0,1}, {1,0}},
-            {{-0.5f,  0.5f, -0.5f}, {0,1,0,1}, {1,1}},
-            {{ 0.5f, -0.5f, -0.5f}, {0,1,0,1}, {0,0}},
-            {{-0.5f,  0.5f, -0.5f}, {0,1,0,1}, {1,1}},
-            {{ 0.5f,  0.5f, -0.5f}, {0,1,0,1}, {0,1}},
+            {{ 0.5f, -0.5f, -0.5f}, {1,0,1,1}, {0,0}},
+            {{-0.5f, -0.5f, -0.5f}, {1,0,1,1}, {1,0}},
+            {{-0.5f,  0.5f, -0.5f}, {1,0,1,1}, {1,1}},
+            {{ 0.5f, -0.5f, -0.5f}, {1,0,1,1}, {0,0}},
+            {{-0.5f,  0.5f, -0.5f}, {1,0,1,1}, {1,1}},
+            {{ 0.5f,  0.5f, -0.5f}, {1,0,1,1}, {0,1}},
         
             // Left (blue)
-            {{-0.5f, -0.5f, -0.5f}, {0,0,1,1}, {0,0}},
-            {{-0.5f, -0.5f,  0.5f}, {0,0,1,1}, {1,0}},
-            {{-0.5f,  0.5f,  0.5f}, {0,0,1,1}, {1,1}},
-            {{-0.5f, -0.5f, -0.5f}, {0,0,1,1}, {0,0}},
-            {{-0.5f,  0.5f,  0.5f}, {0,0,1,1}, {1,1}},
-            {{-0.5f,  0.5f, -0.5f}, {0,0,1,1}, {0,1}},
+            {{-0.5f, -0.5f, -0.5f}, {1,0,1,1}, {0,0}},
+            {{-0.5f, -0.5f,  0.5f}, {1,0,1,1}, {1,0}},
+            {{-0.5f,  0.5f,  0.5f}, {1,0,1,1}, {1,1}},
+            {{-0.5f, -0.5f, -0.5f}, {1,0,1,1}, {0,0}},
+            {{-0.5f,  0.5f,  0.5f}, {1,0,1,1}, {1,1}},
+            {{-0.5f,  0.5f, -0.5f}, {1,0,1,1}, {0,1}},
         
             // Right (yellow)
-            {{ 0.5f, -0.5f,  0.5f}, {1,1,0,1}, {0,0}},
-            {{ 0.5f, -0.5f, -0.5f}, {1,1,0,1}, {1,0}},
-            {{ 0.5f,  0.5f, -0.5f}, {1,1,0,1}, {1,1}},
-            {{ 0.5f, -0.5f,  0.5f}, {1,1,0,1}, {0,0}},
-            {{ 0.5f,  0.5f, -0.5f}, {1,1,0,1}, {1,1}},
-            {{ 0.5f,  0.5f,  0.5f}, {1,1,0,1}, {0,1}},
+            {{ 0.5f, -0.5f,  0.5f}, {1,0,1,1}, {0,0}},
+            {{ 0.5f, -0.5f, -0.5f}, {1,0,1,1}, {1,0}},
+            {{ 0.5f,  0.5f, -0.5f}, {1,0,1,1}, {1,1}},
+            {{ 0.5f, -0.5f,  0.5f}, {1,0,1,1}, {0,0}},
+            {{ 0.5f,  0.5f, -0.5f}, {1,0,1,1}, {1,1}},
+            {{ 0.5f,  0.5f,  0.5f}, {1,0,1,1}, {0,1}},
         
             // Top (magenta)
             {{-0.5f,  0.5f,  0.5f}, {1,0,1,1}, {0,0}},
@@ -54,12 +62,12 @@ namespace E64{
             {{-0.5f,  0.5f, -0.5f}, {1,0,1,1}, {0,1}},
         
             // Bottom (cyan)
-            {{-0.5f, -0.5f, -0.5f}, {0,1,1,1}, {0,0}},
-            {{ 0.5f, -0.5f, -0.5f}, {0,1,1,1}, {1,0}},
-            {{ 0.5f, -0.5f,  0.5f}, {0,1,1,1}, {1,1}},
-            {{-0.5f, -0.5f, -0.5f}, {0,1,1,1}, {0,0}},
-            {{ 0.5f, -0.5f,  0.5f}, {0,1,1,1}, {1,1}},
-            {{-0.5f, -0.5f,  0.5f}, {0,1,1,1}, {0,1}}
+            {{-0.5f, -0.5f, -0.5f}, {1,0,1,1}, {0,0}},
+            {{ 0.5f, -0.5f, -0.5f}, {1,0,1,1}, {1,0}},
+            {{ 0.5f, -0.5f,  0.5f}, {1,0,1,1}, {1,1}},
+            {{-0.5f, -0.5f, -0.5f}, {1,0,1,1}, {0,0}},
+            {{ 0.5f, -0.5f,  0.5f}, {1,0,1,1}, {1,1}},
+            {{-0.5f, -0.5f,  0.5f}, {1,0,1,1}, {0,1}}
         };
 
         std::vector<uint32_t> indices = {
@@ -88,49 +96,25 @@ namespace E64{
             33, 34, 35
         };
 
-        std::string obj_path = "default";
-        std::string texture_path = "";
+        std::vector<MeshBatch> batches{};
+        int MAX_BATCH_SIZE = 36;
 
-        friend std::ofstream& operator<<(std::ofstream& file, const Mesh& mesh) {
-            E64::Log::info("Writing to E64Mesh..." + mesh.obj_path);
-        
-            uint32_t vcount   = mesh.vertices.size();
-            uint32_t icount   = mesh.indices.size();
-            std::string path_str = mesh.obj_path;
-            uint32_t path_len = path_str.size();
-        
-            file.write(reinterpret_cast<const char*>(&vcount),               sizeof(uint32_t));
-            file.write(reinterpret_cast<const char*>(mesh.vertices.data()),  sizeof(Vertex) * vcount);
-            file.write(reinterpret_cast<const char*>(&icount),               sizeof(uint32_t));
-            file.write(reinterpret_cast<const char*>(mesh.indices.data()),   sizeof(uint32_t) * icount);
-            file.write(reinterpret_cast<const char*>(&path_len),             sizeof(uint32_t));
-            file.write(path_str.c_str(),                                     path_len);
-        
-            return file;
-        }
-
-        friend std::ifstream& operator>>(std::ifstream& file, Mesh& mesh) {
-            E64::Log::info("Reading from E64Mesh..." + mesh.obj_path);
-
-            uint32_t vcount = 0;
-            file.read(reinterpret_cast<char*>(&vcount), sizeof(uint32_t));
-            mesh.vertices.resize(vcount);
-            file.read(reinterpret_cast<char*>(mesh.vertices.data()), sizeof(Vertex) * vcount);
-
-
-            uint32_t icount = 0;
-            file.read(reinterpret_cast<char*>(&icount), sizeof(uint32_t));
-            mesh.indices.resize(icount);
-            file.read(reinterpret_cast<char*>(mesh.indices.data()), sizeof(uint32_t) * icount);
-
-
-            uint32_t path_len = 0;
-            file.read(reinterpret_cast<char*>(&path_len), sizeof(uint32_t));
-            std::string path_str(path_len, '\0');
-            file.read(path_str.data(), path_len);
-            mesh.obj_path = path_str;
-
-            return file;
+        void batch(){
+            for(size_t i = 0; i < vertices.size(); i += MAX_BATCH_SIZE){
+                MeshBatch batch;
+                batch.base = i;
+                int batch_size = std::min(MAX_BATCH_SIZE, (int)vertices.size() - (int)i);
+                int k = 0;
+                for(size_t j = i; j < batch_size + i; ++j){
+                    batch.vertices.push_back(vertices.at(indices.at(j)));
+                    batch.indices.push_back(k);
+                    ++k;
+                }
+                batches.push_back(batch);
+                E64::Log::info("Batch Base" + std::to_string(i) + ": Indices Size" + std::to_string(batch.indices.size()));
+                E64::Log::info("Batch Base" + std::to_string(i) + ": Vetex Size" + std::to_string(batch.vertices.size()));
+            }
+            E64::Log::info("Created " + std::to_string(batches.size()) + " batches");
         }
     };
 
@@ -138,7 +122,11 @@ namespace E64{
         GPUTextureHandle texture = -1;
         GPUSamplerHandle sampler = -1;
 
-        const char* img_data = nullptr;
+        int width;
+        int height;
+        int channels;
+
+        unsigned char* img_data = stbi_load("../assets/textures/test.png", &width, &height, &channels, STBI_rgb_alpha);
     };
 }
 

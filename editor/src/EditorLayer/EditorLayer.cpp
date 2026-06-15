@@ -64,23 +64,6 @@ void Editor::EditorLayer::OnAttach(){
     E64::Scene* scene = Engine::ctx->active_scene.get();
     ECS::CameraData camera_comp = { camera->getProj(), camera->getView() };
     scene->setCameraData(camera_comp);
-
-    std::string path = "/Users/tylerstier/Desktop/Emerald64/assets/meshes/";
-    AssetImporter importer;
-    MeshSerializer serializer;
-    
-    //TEMP LOOP THROGUH ASSET DIR AND SERIALZE TO .e64mesh and import
-    for (const auto& entry : std::filesystem::directory_iterator(path)) {
-        if(entry.path().extension() == ".obj")
-        {
-            Mesh mesh = importer.importMesh(entry.path().string());
-            std::cout << "PATH: " << mesh.obj_path << std::endl;
-            E64::Engine::ctx->asset_manager->addMesh(mesh);
-
-            std::cout << "PATH: " << mesh.obj_path << std::endl;
-            serializer.serialize(&mesh);
-        }
-    }
 }
 
 void Editor::EditorLayer::OnUpdate(float dt){
@@ -148,11 +131,11 @@ void Editor::EditorLayer::buildMainMenuBar(){
         {
             if(ImGui::MenuItem("Save Scene", "(CTRL + S)")){
                 E64::SceneSerializer serializer;
-                serializer.serialize();
+                serializer.serialize("../assets/scenes/scene.json");
             }
             if(ImGui::MenuItem("Load Scene")){
                 E64::SceneSerializer serializer;
-                E64::Scene* scene = serializer.deserialize();
+                E64::Scene* scene = serializer.deserialize("../assets/scenes/scene.json");
                 E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene));
             }
             ImGui::EndMenu();
@@ -277,14 +260,12 @@ void Editor::EditorLayer::buildTransformHeader(){
 }
 
 void Editor::EditorLayer::buildMeshHeader(){
-    ECS::MeshComponent* mesh = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected);
+    ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected);
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if(ImGui::CollapsingHeader("Mesh"))
     {
-        ImGui::Text("Mesh ID: %d", mesh->mesh_handle.id);
-
-        std::string name = mesh->mesh_handle.path;
+        std::string name = mesh_comp->mesh_path;
         ImGui::Text("Name: %s", name.c_str());
 
         ImGui::Text("Texture");
@@ -320,10 +301,10 @@ void Editor::EditorLayer::buildFileManager(){
     ImGui::Begin("Files");
 
     int i = 0;
-    for(const Mesh* mesh : E64::Engine::ctx->asset_manager->getMeshes()){
-        std::filesystem::path path = E64::Engine::ctx->asset_manager->getMeshes()[i]->obj_path;
+    for(auto& [path, handle] : E64::Engine::ctx->asset_manager->getHandleRepository()){
         ImGui::PushID(i);
-        ImGui::Selectable(path.c_str());
+        std::string asset = std::to_string(handle) + " : " + path;
+        ImGui::Selectable(asset.c_str());
         if(ImGui::BeginDragDropSource()){
             ImGui::SetDragDropPayload("Mesh ID", &i, sizeof(int));
             ImGui::EndDragDropSource();

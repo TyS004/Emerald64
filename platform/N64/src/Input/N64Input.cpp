@@ -31,8 +31,9 @@ void E64::N64Input::poll(){
 
     joypad_buttons_t button = joypad_get_buttons_pressed(JOYPAD_PORT_1);
     inputs = joypad_get_inputs(JOYPAD_PORT_1);
+
     if(button.a != 0){
-        renderer->debug_msg_queue.push_back("A Pressed");
+        renderer->toggleDebug();
     }
 }
 

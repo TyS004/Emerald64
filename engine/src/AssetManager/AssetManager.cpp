@@ -1,48 +1,95 @@
 #include "AssetManager/AssetManager.h"
+#include "Serialization/MeshSerializer.h"
 #include "Engine.h"
 
 #include <filesystem>
 
 int mesh_id = 0;
+int tex_id = 0;
 
 E64::AssetManager::AssetManager(){
     E64::Log::info("ASSET MANAGER INSTANTIATED\n");
 
-    Mesh default_mesh{};
-    addMesh(default_mesh);
+    loadMeshAsset("default");
+    loadTextureAsset("default");
 }
 
 E64::AssetManager::~AssetManager(){
     
 }
 
-E64::ECS::MeshComponent E64::AssetManager::addMesh(E64::Mesh mesh){
-    mesh.vbo_handle = E64::Engine::ctx->renderer->createVertexBuffer(mesh.vertices);
-    mesh.ibo_handle = E64::Engine::ctx->renderer->createIndexBuffer(mesh.indices);
-    mesh.texture_handle = E64::Engine::ctx->renderer->createTexture(mesh.texture_path);
-    mesh.sampler_handle = E64::Engine::ctx->renderer->createSampler();
+E64::AssetHandle E64::AssetManager::loadMeshAsset(std::string path){
+    if(mesh_handle_repository.count(path) > 0){
+        return mesh_handle_repository.at(path);
+    }
+    
+    E64::Mesh mesh{};
+    if(path != "default"){
+        std::filesystem::path absolute_path = E64::Engine::ctx->root_dir.string() + path;
+        E64::MeshSerializer serializer;
+        mesh = serializer.deserialize(absolute_path);
+    }
+    mesh.batch();
 
-    ECS::MeshComponent comp;
-    comp.mesh_handle.path = mesh.obj_path;
-    comp.mesh_handle.id = mesh_id++;
+    mesh.vbo = E64::Engine::ctx->renderer->createVertexBuffer(mesh.vertices);
+    mesh.ibo = E64::Engine::ctx->renderer->createIndexBuffer(mesh.indices);
 
-    E64::Log::debug("REGISTERED MESH: " + mesh.obj_path + " TO ASSETMANAGER");
-    mesh_repository[comp.mesh_handle.path] = std::make_unique<Mesh>(std::move(mesh));
+    AssetHandle handle = mesh_id;
+    mesh_id++;
 
-    return comp;
+    E64::Log::debug("REGISTERED MESH: " + path + " TO ASSETMANAGER");
+    mesh_repository[handle] = std::make_unique<Mesh>(std::move(mesh));
+    mesh_handle_repository[path] = handle;
+    return handle;
 }
 
-E64::Mesh* E64::AssetManager::getMesh(E64::AssetHandle handle){
-    try { return mesh_repository.at(handle.path).get(); }
-    catch(std::out_of_range e) { E64::Log::error("Asset not Loaded Into Asset Map"); return nullptr; }
+E64::AssetHandle E64::AssetManager::loadTextureAsset(std::string path){
+    if(texture_handle_repository.count(path) > 0){
+        return texture_handle_repository.at(path);
+    }
+
+    Texture texture{};
+    texture.texture = E64::Engine::ctx->renderer->createTexture(texture.img_data, texture.width, texture.height);
+    texture.sampler = E64::Engine::ctx->renderer->createSampler();
+
+    AssetHandle handle = tex_id++;
+
+    E64::Log::debug("REGISTERED TEXTURE: " + path + " TO ASSETMANAGER");
+    texture_repository[handle] = std::make_unique<Texture>(std::move(texture));
+
+    return handle;
 }
 
-std::vector<E64::Mesh*> E64::AssetManager::getMeshes(){
-    std::vector<Mesh*> meshes;
+E64::Mesh* E64::AssetManager::getMeshAsset(AssetHandle handle){
+    try { return mesh_repository.at(handle).get(); }
+    catch(std::out_of_range e) { E64::Log::error("Mesh Asset not Loaded Into Asset Map"); return nullptr; }
+}
+
+E64::Texture* E64::AssetManager::getTextureAsset(AssetHandle handle){
+    try { return texture_repository.at(handle).get(); }
+    catch(std::out_of_range e) { E64::Log::error("Texture Asset not Loaded Into Asset Map"); return nullptr; }
+}
+
+std::vector<E64::Mesh*> E64::AssetManager::getAssets(){
+    std::vector<E64::Mesh*> meshes;
     meshes.reserve(mesh_repository.size());
 
-    for (auto& [path, meshPtr] : mesh_repository)
-        meshes.push_back(meshPtr.get());
+    for (auto& [handle, mesh_ptr] : mesh_repository)
+        meshes.push_back(mesh_ptr.get());
 
     return meshes;
+}
+
+std::vector<E64::AssetHandle> E64::AssetManager::getHandles(){
+    std::vector<E64::AssetHandle> handles;
+    handles.reserve(mesh_handle_repository.size());
+
+    for(auto& [path, handle] : mesh_handle_repository){
+        handles.push_back(handle);
+    }
+    return handles;
+}
+
+std::unordered_map<std::string, E64::AssetHandle> E64::AssetManager::getHandleRepository(){
+    return mesh_handle_repository;
 }

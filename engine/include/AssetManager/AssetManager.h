@@ -11,13 +11,24 @@ namespace E64{
             AssetManager();
             ~AssetManager();
 
-            ECS::MeshComponent addMesh(Mesh mesh);
-            Mesh* getMesh(AssetHandle handle);
-            std::vector<Mesh*> getMeshes();
+            AssetHandle loadMeshAsset(std::string path);
+            AssetHandle loadTextureAsset(std::string path);
+            
+            Mesh* getMeshAsset(AssetHandle handle);
+            Texture* getTextureAsset(AssetHandle handle);
+
+            std::vector<Mesh*> getAssets();
+            std::vector<AssetHandle> getHandles();
+            std::unordered_map<std::string, E64::AssetHandle> getHandleRepository();
 
         private:
-            std::unordered_map<std::string, std::unique_ptr<Mesh>> mesh_repository;
-            std::unordered_map<std::string, std::unique_ptr<Texture>> texture_reposity;
+            std::unordered_map<AssetHandle, std::unique_ptr<Mesh>> mesh_repository;
+            std::unordered_map<std::string, AssetHandle> mesh_handle_repository;
+
+            std::unordered_map<AssetHandle, std::unique_ptr<Texture>> texture_repository;
+            std::unordered_map<std::string, AssetHandle> texture_handle_repository;
+
+            std::filesystem::path project_dir;
     };
 }
 

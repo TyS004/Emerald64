@@ -6,6 +6,7 @@
 int main()
 {
     E64::Engine::ctx->mode = E64::E64_MODE::N64_RUNTIME;
+    E64::Engine::ctx->root_dir = "rom:/";
     
     E64::N64Window* window = new E64::N64Window(E64::RDP, 3);
     E64::Engine::ctx->window = window;

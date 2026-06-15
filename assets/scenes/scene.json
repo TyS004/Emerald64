@@ -2,62 +2,50 @@
     "entities": [
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    2
+                "mesh_path": [
+                    "default"
                 ],
-                "mesh_handle_path": [
-                    "/Users/tylerstier/Desktop/Emerald64/assets/meshes/sphere.obj"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -4.0,
-                    0.0,
-                    19.799999237060547
+                    2.0,
+                    9.0,
+                    10.0
                 ],
                 "rotation": [
-                    0.4000000059604645,
-                    -1.4900000095367432,
-                    0.10999999940395355
+                    0.5899999737739563,
+                    0.0,
+                    0.0
                 ],
                 "scale": [
-                    5.050000190734863,
-                    4.900000095367432,
-                    5.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             },
             "id": 0
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -1.0,
-                    1.0,
-                    -10.0
+                    -8.0,
+                    10.0,
+                    7.0
                 ],
                 "rotation": [
                     0.0,
-                    0.12999999523162842,
+                    0.0,
                     0.0
                 ],
                 "scale": [
@@ -70,24 +58,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
+                    -4.0,
                     5.0,
-                    -2.0,
-                    -2.0
+                    -6.0
                 ],
                 "rotation": [
                     0.0,
@@ -104,24 +86,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    6.0,
-                    -1.0,
-                    2.0
+                    2.0,
+                    4.0,
+                    -6.0
                 ],
                 "rotation": [
                     0.0,
@@ -138,24 +114,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -9.0,
-                    -9.0,
-                    9.0
+                    -2.0,
+                    -1.0,
+                    1.0
                 ],
                 "rotation": [
                     0.0,
@@ -172,23 +142,17 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    9.0,
-                    6.0,
+                    -10.0,
+                    7.0,
                     -9.0
                 ],
                 "rotation": [
@@ -206,24 +170,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
+                    -10.0,
                     9.0,
-                    7.0,
-                    4.0
+                    -2.0
                 ],
                 "rotation": [
                     0.0,
@@ -240,24 +198,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -7.0,
-                    3.0,
-                    -9.0
+                    0.0,
+                    1.0,
+                    10.0
                 ],
                 "rotation": [
                     0.0,
@@ -274,24 +226,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -7.0,
-                    -7.0,
-                    -6.0
+                    -4.0,
+                    -6.0,
+                    -4.0
                 ],
                 "rotation": [
                     0.0,
@@ -308,24 +254,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    8.0,
-                    0.0,
-                    4.0
+                    -10.0,
+                    -8.0,
+                    6.0
                 ],
                 "rotation": [
                     0.0,
@@ -342,24 +282,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    3
+                "mesh_path": [
+                    "default"
                 ],
-                "mesh_handle_path": [
-                    "/Users/tylerstier/Desktop/Emerald64/assets/meshes/sphere.obj"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -10.699999809265137,
                     0.0,
-                    5.0
+                    2.0,
+                    -1.0
                 ],
                 "rotation": [
                     0.0,
@@ -367,33 +301,27 @@
                     0.0
                 ],
                 "scale": [
-                    15.0,
-                    15.0,
-                    15.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             },
             "id": 10
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -4.0,
-                    -6.0,
-                    -4.0
+                    -8.0,
+                    -1.0,
+                    -5.0
                 ],
                 "rotation": [
                     0.0,
@@ -410,24 +338,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -8.0,
-                    -4.0,
-                    10.0
+                    5.0,
+                    2.0,
+                    8.0
                 ],
                 "rotation": [
                     0.0,
@@ -444,24 +366,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    9.0,
-                    -8.0,
-                    1.0
+                    1.0,
+                    1.0,
+                    -4.0
                 ],
                 "rotation": [
                     0.0,
@@ -478,32 +394,26 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    3.0,
-                    6.0,
-                    6.099999904632568
+                    1.0,
+                    10.0,
+                    -3.0
                 ],
                 "rotation": [
                     0.0,
-                    -0.7799999713897705,
+                    0.0,
                     0.0
                 ],
                 "scale": [
-                    9.050000190734863,
+                    1.0,
                     1.0,
                     1.0
                 ]
@@ -512,24 +422,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    3.0,
-                    -3.0,
-                    -6.0
+                    9.0,
+                    10.0,
+                    2.0
                 ],
                 "rotation": [
                     0.0,
@@ -546,24 +450,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    2.0,
-                    1.0,
-                    4.0
+                    0.0,
+                    0.0,
+                    -10.0
                 ],
                 "rotation": [
                     0.0,
@@ -580,24 +478,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
                     -9.0,
-                    9.0,
-                    6.0
+                    10.0,
+                    -5.0
                 ],
                 "rotation": [
                     0.0,
@@ -614,24 +506,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    8.0,
-                    8.0,
-                    6.0
+                    10.0,
+                    -1.0,
+                    -1.0
                 ],
                 "rotation": [
                     0.0,
@@ -648,24 +534,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    5.0,
-                    10.0,
-                    3.0
+                    -8.0,
+                    -1.0,
+                    -2.0
                 ],
                 "rotation": [
                     0.0,
@@ -673,33 +553,27 @@
                     0.0
                 ],
                 "scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    31.799999237060547,
+                    1.25,
+                    20.75
                 ]
             },
             "id": 19
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    2.0,
-                    6.0,
-                    -5.0
+                    -1.0,
+                    -2.0,
+                    7.0
                 ],
                 "rotation": [
                     0.0,
@@ -716,24 +590,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    1.0,
-                    5.0,
-                    2.0
+                    4.0,
+                    -1.0,
+                    -5.0
                 ],
                 "rotation": [
                     0.0,
@@ -750,24 +618,18 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    10.0,
-                    2.0,
-                    -10.0
+                    7.0,
+                    9.0,
+                    8.0
                 ],
                 "rotation": [
                     0.0,
@@ -784,58 +646,46 @@
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
+                "mesh_path": [
+                    "meshes/sphere.e64mesh"
                 ],
-                "mesh_handle_path": [
+                "texture_path": [
                     "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
                 ]
             },
             "Transform": {
                 "position": [
-                    -8.0,
-                    -2.0,
-                    7.0
+                    1.7999999523162842,
+                    2.049999952316284,
+                    1.0
                 ],
                 "rotation": [
                     0.0,
-                    0.0,
+                    0.3700000047683716,
                     0.0
                 ],
                 "scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    5.0,
+                    5.0,
+                    5.0
                 ]
             },
             "id": 23
         },
         {
             "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
+                "mesh_path": [
                     "default"
                 ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
+                "texture_path": [
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -2.0,
-                    1.0,
-                    8.0
+                    0.0,
+                    9.0,
+                    4.0
                 ],
                 "rotation": [
                     0.0,
@@ -851,2556 +701,6 @@
             "id": 24
         },
         {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -3.0,
-                    9.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 25
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    0.0,
-                    4.0,
-                    5.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 26
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -9.0,
-                    8.0,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 27
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    7.0,
-                    -2.0,
-                    -3.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 28
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -6.0,
-                    7.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 29
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    4.0,
-                    -2.0,
-                    -5.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 30
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -1.0,
-                    0.0,
-                    9.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 31
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    10.0,
-                    -3.0,
-                    9.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 32
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    5.0,
-                    -2.0,
-                    5.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 33
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    7.0,
-                    9.0,
-                    9.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 34
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -6.0,
-                    4.0,
-                    -10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 35
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -2.0,
-                    -5.0,
-                    2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 36
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -7.0,
-                    -8.0,
-                    -6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 37
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    4.0,
-                    -5.0,
-                    4.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 38
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    2
-                ],
-                "mesh_handle_path": [
-                    "/Users/tylerstier/Downloads/Falchion_Sword_v1_L3.123c474f8ee0-ad91-4918-81d2-8924fd478d6f/13033_Falchion_Sword_v1_l3.obj"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -9.350000381469727,
-                    6.0,
-                    -8.0
-                ],
-                "rotation": [
-                    -1.399999976158142,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    10.699999809265137,
-                    2.8499999046325684,
-                    1.0
-                ]
-            },
-            "id": 39
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    8.0,
-                    -1.0,
-                    -7.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 40
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -8.0,
-                    -5.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 41
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    3.0,
-                    -6.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 42
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -2.0,
-                    5.0,
-                    5.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 43
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -9.0,
-                    -6.0,
-                    -4.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 44
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    5.0,
-                    7.0,
-                    3.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 45
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -6.0,
-                    10.0,
-                    9.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 46
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -10.0,
-                    -10.0,
-                    4.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 47
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    4.0,
-                    8.0,
-                    3.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 48
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -3.0,
-                    -9.0,
-                    3.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 49
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -6.0,
-                    -6.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 50
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -6.0,
-                    3.0,
-                    -6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 51
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    2
-                ],
-                "mesh_handle_path": [
-                    "/Users/tylerstier/Desktop/Emerald64/assets/meshes/sphere.obj"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -5.0,
-                    2.0,
-                    2.0
-                ],
-                "rotation": [
-                    0.44999998807907104,
-                    -3.0199999809265137,
-                    0.8600000143051147
-                ],
-                "scale": [
-                    6.150000095367432,
-                    5.099999904632568,
-                    5.650000095367432
-                ]
-            },
-            "id": 52
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -7.0,
-                    -2.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 53
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    5.0,
-                    8.0,
-                    -1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 54
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -10.0,
-                    10.0,
-                    8.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 55
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -5.0,
-                    -8.0,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 56
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -10.0,
-                    -6.0,
-                    3.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 57
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    9.0,
-                    8.0,
-                    -2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 58
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    8.0,
-                    -7.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 59
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -4.0,
-                    4.0,
-                    5.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 60
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -9.0,
-                    1.0,
-                    6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 61
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    10.0,
-                    5.0,
-                    6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 62
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    2.0,
-                    3.0,
-                    9.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 63
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    7.0,
-                    3.0,
-                    5.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 64
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -8.0,
-                    9.0,
-                    2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 65
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -7.0,
-                    9.0,
-                    2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 66
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    9.0,
-                    7.0,
-                    6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 67
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    6.0,
-                    -5.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 68
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -5.0,
-                    -8.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 69
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    2.0,
-                    10.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 70
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -2.0,
-                    9.0,
-                    -2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 71
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    6.0,
-                    -1.0,
-                    3.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 72
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    0.0,
-                    -7.0,
-                    -6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 73
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    3.700000047683716,
-                    1.5,
-                    8.550000190734863
-                ],
-                "rotation": [
-                    -0.4099999964237213,
-                    -0.46000000834465027,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    6.849999904632568,
-                    13.149999618530273
-                ]
-            },
-            "id": 74
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -1.0,
-                    9.0,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 75
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -4.0,
-                    0.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 76
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    2.0,
-                    4.0,
-                    2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 77
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    10.0,
-                    0.0,
-                    7.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 78
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    7.0,
-                    9.0,
-                    -6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 79
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -4.0,
-                    7.0,
-                    2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 80
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -4.0,
-                    -7.0,
-                    -10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 81
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -4.0,
-                    -10.0,
-                    -3.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 82
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    4.650000095367432,
-                    3.5,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    -8.350000381469727,
-                    1.0
-                ]
-            },
-            "id": 83
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -6.0,
-                    2.0,
-                    -6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 84
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    6.0,
-                    4.0,
-                    2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 85
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -1.0,
-                    4.0,
-                    4.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 86
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    6.0,
-                    2.0,
-                    9.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 87
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    4.0,
-                    -7.0,
-                    -2.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 88
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -2.0,
-                    -6.0,
-                    -10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 89
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    10.0,
-                    5.0,
-                    -1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 90
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    5.0,
-                    -8.0,
-                    -6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 91
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    5.0,
-                    9.0,
-                    -6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 92
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    7.0,
-                    0.0,
-                    4.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 93
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    0.0,
-                    -4.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 94
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    8.0,
-                    -5.0,
-                    -6.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 95
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    8.0,
-                    -9.0,
-                    -1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 96
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    5.0,
-                    -3.0,
-                    -1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 97
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    1.0,
-                    4.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 98
-        },
-        {
-            "Mesh": {
-                "mesh_handle_id": [
-                    0
-                ],
-                "mesh_handle_path": [
-                    "default"
-                ],
-                "tex_handle_id": [
-                    0
-                ],
-                "tex_handle_path": [
-                    ""
-                ]
-            },
-            "Transform": {
-                "position": [
-                    -4.0,
-                    1.0,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "id": 99
-        },
-        {
             "Camera": {
                 "aspect_ratio": 1.3333333730697632,
                 "far_plane": 100.0,
@@ -3411,7 +711,7 @@
                 "position": [
                     0.0,
                     0.0,
-                    -20.0
+                    -30.0
                 ],
                 "rotation": [
                     90.0,
@@ -3424,7 +724,7 @@
                     1.0
                 ]
             },
-            "id": 100
+            "id": 25
         }
     ],
     "name": "Test_Scene"

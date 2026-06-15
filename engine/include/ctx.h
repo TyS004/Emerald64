@@ -22,6 +22,8 @@ namespace E64{
         std::unique_ptr<E64::Scene> active_scene;
         std::unique_ptr<E64::AssetManager> asset_manager;
 
+        std::filesystem::path root_dir;
+
         E64_MODE mode = NONE;
     };
 }
