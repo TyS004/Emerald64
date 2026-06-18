@@ -20,7 +20,6 @@ E64::N64Layer::N64Layer(){
         E64::Log::info(E64::Engine::ctx->root_dir.string());
         exit(0);
     }
-    static_assert(sizeof(Vertex) == 36, "Vertex struct has unexpected padding");
 
     modelMatFP = (T3DMat4FP*)malloc_uncached(sizeof(T3DMat4FP) * scene->getEntites().size());
     E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene));
@@ -140,7 +139,7 @@ void E64::N64Layer::OnRender(){
 
             renderer->sendModelMat4FP(&modelMatFP[i]);
             // if(mesh_comp->mesh_handle == 1){
-                renderer->draw(mesh);
+            renderer->draw(mesh);
             // }
             i++;
         }

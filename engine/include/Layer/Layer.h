@@ -9,6 +9,7 @@ namespace E64{
             enum LayerType{
                 SCENE_LAYER,
                 EDITOR_LAYER,
+                RUNTIME_LAYER,
                 LAYER
             };
             virtual ~Layer() = default;

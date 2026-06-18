@@ -4,6 +4,7 @@
 #include <Input/SDLInput.h>
 
 #include "Renderer/SDLRenderer.h"
+#include "RuntimeLayer.h"
 
 int main(){
     E64::Engine::ctx->mode = E64::E64_MODE::DESKTOP_RUNTIME;
@@ -19,10 +20,13 @@ int main(){
     E64::Engine::ctx->renderer = renderer;
     E64::Engine::ctx->input = input;
 
-    E64::SceneLayer runtime_layer = E64::SceneLayer();
+    E64::SceneLayer scene_layer = E64::SceneLayer();
     E64::PhysicsLayer physics_layer = E64::PhysicsLayer();
+    Runtime::RuntimeLayer runtime_layer = Runtime::RuntimeLayer();
+
+    E64::Layer::Attach(&scene_layer);
     E64::Layer::Attach(&runtime_layer);
-    E64::Layer::Attach(&physics_layer);
+    //E64::Layer::Attach(&physics_layer);
     
     E64::Engine::run();
     delete renderer;

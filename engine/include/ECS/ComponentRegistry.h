@@ -11,6 +11,7 @@ namespace E64{
                             <std::string,
                                 std::pair<std::function<void(json&, ECS::Entity)>,
                                           std::function<void(const json&, ECS::Entity)>>> handlers;
+            inline static std::unordered_map<std::string, std::function<void()>> clear_fns;
         };
         
         template <typename T>
@@ -22,6 +23,7 @@ namespace E64{
 
             static void registerComponent(const std::string& name){
                 handlers[name] = { &serialize, &deserialize };
+                clear_fns[name] = {&clear};
                 E64::Log::info("Registered " + name + " Component into Registry");
             }
 
@@ -50,6 +52,12 @@ namespace E64{
 
                 entity_to_idx[e] = registry.size() - 1;
                 idx_to_entity[registry.size() - 1] = e;
+            }
+
+            static void clear(){
+                entity_to_idx.clear();
+                idx_to_entity.clear();
+                registry.clear();
             }
         };
     }

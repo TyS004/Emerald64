@@ -24,7 +24,8 @@ namespace E64{
             virtual void bindIndexBuffers(ECS::MeshComponent* comp){};
             virtual void bindFragmentSamplers(ECS::MeshComponent* comp){};
 
-            virtual void sendUniforms(glm::mat4 mvp){};
+            virtual void pushVertexUniform(const void* data, size_t size, uint32_t slot) = 0;
+            virtual void pushFragmentUniform(const void* data, size_t size, uint32_t slot) = 0;
 
             virtual void beginRenderPass(RenderTarget target){};
             virtual void endRenderPass(){};

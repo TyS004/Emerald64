@@ -20,7 +20,7 @@ namespace Editor{
             void OnUpdate(float dt);
             void OnEvent() {};
             void OnImGuiRender();
-            void OnRender() {};
+            void OnRender();
             void OnAttach();
 
             E64::Layer::LayerType GetLayerType() { return EDITOR_LAYER; }
@@ -38,10 +38,15 @@ namespace Editor{
                 void buildTransformHeader();
                 void buildMeshHeader();
                 void buildCameraHeader();
+                void buildPointLightHeader();
+            
+            void drawSelectedEntityOutline(ImVec2 mouse_pos);
 
             void buildFileManager();
 
             int selected;
+            bool componentAdditionSelected;
+
             float FPS;
             float ms;
             float debug_pad = 15.0f;

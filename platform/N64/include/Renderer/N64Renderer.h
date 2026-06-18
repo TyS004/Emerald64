@@ -26,7 +26,8 @@ namespace E64 {
             void bindIndexBuffers(E64::Mesh* mesh){};
             void bindFragmentSamplers(E64::Mesh* mesh){};
 
-            void sendUniforms(glm::mat4 mvp){};
+            void pushVertexUniform(const void* data, size_t size, uint32_t slot){};
+            void pushFragmentUniform(const void* data, size_t size, uint32_t slot){};
             void sendModelMat4FP(T3DMat4FP* modelMatFP);
 
             void beginRenderPass(E64::RenderTarget target){};

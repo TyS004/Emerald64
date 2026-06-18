@@ -21,7 +21,8 @@ namespace E64 {
             void bindIndexBuffers(E64::ECS::MeshComponent* comp);
             void bindFragmentSamplers(E64::ECS::MeshComponent* comp);
 
-            void sendUniforms(glm::mat4 mvp);
+            void pushVertexUniform(const void* data, size_t size, uint32_t slot);
+            void pushFragmentUniform(const void* data, size_t size, uint32_t slot);
 
             void beginRenderPass(E64::RenderTarget target);
             void endRenderPass();
@@ -39,11 +40,20 @@ namespace E64 {
 
             SDL_GPUCommandBuffer* getCommandBuffer();
             SDL_GPUTexture* getSceneTexture();
+
+            SDLPipeline* getPipeline();
+            void setPipeline(const char* shaderpath, SDL_GPUFillMode fill_mode);
+
             int getDrawCalls();
+
+            void setColorTargetLoadOP(SDL_GPULoadOp load_op);
+            void setDepthTargetLoadOP(SDL_GPULoadOp load_op);
 
         private:
             SDL_Window* window;
             SDL_GPUDevice* device;
+
+            RenderTarget target;
 
             std::unique_ptr<SDLPipeline> pipeline;
 

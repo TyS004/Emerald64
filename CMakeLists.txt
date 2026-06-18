@@ -53,7 +53,7 @@ file(GLOB_RECURSE RUNTIME_SOURCES CONFIGURE_DEPENDS runtime/SDL/*.cpp platform/S
 
 add_executable(E64Runtime ${RUNTIME_SOURCES})
 
-target_include_directories(E64Runtime PUBLIC ./platform/SDL/include)
+target_include_directories(E64Runtime PUBLIC ./platform/SDL/include ./runtime/SDL/include)
 
 target_link_libraries(E64Runtime PRIVATE E64)
 target_precompile_headers(E64Runtime REUSE_FROM E64)

@@ -86,6 +86,35 @@ namespace E64{
             }
         };
 
+        struct PointLightComponent{
+            glm::vec4 color  = {1.0, 1.0, 1.0, 1.0};
+            float intensity  = 1.0f;
+
+            void serialize(json& j) const
+            {
+                j["color"] = {color.r, color.g, color.b, color.a};
+                j["intensity"] = intensity;
+            }
+
+            void deserialize(const json& j)
+            {
+                color.r = j["color"][0];
+                color.g = j["color"][1];
+                color.b = j["color"][2];
+                color.a = j["color"][3];
+
+                intensity = j["intensity"];
+            }
+        };
+
+        struct PointLightUniform{
+            float position[3];
+            float pad1 = 0.0f;
+            float color[4];
+            float intensity;
+            float pad2[3] = {0.0f, 0.0f, 0.0f};
+        };
+
         struct CameraData{
             glm::mat4 proj;
             glm::mat4 view;
@@ -93,9 +122,10 @@ namespace E64{
 
         using ComponentMask = uint32_t;
         template<typename T> struct ComponentBit;
-        template<> struct ComponentBit<TransformComponent> { static constexpr ComponentMask mask = 1 << 0; }; // 0001
-        template<> struct ComponentBit<MeshComponent>      { static constexpr ComponentMask mask = 1 << 1; }; // 0010
-        template<> struct ComponentBit<CameraComponent>    { static constexpr ComponentMask mask = 1 << 2; }; // 0100
+        template<> struct ComponentBit<TransformComponent>  { static constexpr ComponentMask mask = 1 << 0; }; // 0001
+        template<> struct ComponentBit<MeshComponent>       { static constexpr ComponentMask mask = 1 << 1; }; // 0010
+        template<> struct ComponentBit<CameraComponent>     { static constexpr ComponentMask mask = 1 << 2; }; // 0100
+        template<> struct ComponentBit<PointLightComponent> { static constexpr ComponentMask mask = 1 << 3; }; // 1000
     }
 }
 

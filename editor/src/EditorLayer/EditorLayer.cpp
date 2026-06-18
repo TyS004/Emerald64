@@ -16,6 +16,7 @@ Editor::EditorLayer::EditorLayer(){
     camera = new Editor::EditorCamera();
 
     selected = 0;
+    componentAdditionSelected = false;
     
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -75,6 +76,17 @@ void Editor::EditorLayer::OnUpdate(float dt){
     ms = dt * 1000;
 }
 
+void Editor::EditorLayer::OnRender(){
+    // SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+    // if(E64::Engine::ctx->mode == EDITOR){
+    //     renderer->beginRenderPass(RenderTarget::TEXTURE);
+    // }
+    // else{
+    //     renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
+    // }
+    // renderer->endRenderPass();
+}
+
 void Editor::EditorLayer::OnImGuiRender(){
     ImGui_ImplSDLGPU3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
@@ -124,7 +136,7 @@ void Editor::EditorLayer::initStyle(){
     style.GrabRounding = 3.0f;
     style.TabRounding = 3.0f;
 
-    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.00f);
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
 }
 
 void Editor::EditorLayer::buildMainMenuBar(){
@@ -184,8 +196,17 @@ void Editor::EditorLayer::buildViewport(){
         camera->OnResize(viewport_size.x, viewport_size.y);
     }
     SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+    ImVec2 avail = ImGui::GetContentRegionAvail();
     ImGui::Image((ImTextureID)renderer->getSceneTexture(), ImGui::GetContentRegionAvail());
     if(input->debug_mode) buildDebug(viewport_tl);
+
+    if(ImGui::IsItemClicked()){
+        ImVec2 mouse_pos = {ImGui::GetMousePos().x - ImGui::GetWindowPos().x, ImGui::GetMousePos().y - ImGui::GetWindowPos().y};
+        mouse_pos.x = mouse_pos.x / avail.x;
+        mouse_pos.y = mouse_pos.y / avail.y;
+        E64::Log::info(std::to_string(mouse_pos.x) + ", " + std::to_string(mouse_pos.y));
+        drawSelectedEntityOutline(mouse_pos);
+    }
 
     ImGui::End();
 }
@@ -226,7 +247,7 @@ void Editor::EditorLayer::buildSceneSelector(){
 }
 
 void Editor::EditorLayer::buildInspector(){
-    char name[50];
+    char name[50] = "";
     int id = selected;
 
     ImGui::Begin("Inspector");
@@ -234,9 +255,51 @@ void Editor::EditorLayer::buildInspector(){
     ImGui::InputText("Name", name, 50);
     ImGui::InputInt("ID", &selected);
 
-    if(ECS::ComponentManager::hasComponent<ECS::TransformComponent>(selected)) buildTransformHeader();
-    if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(selected))      buildMeshHeader();
-    if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(selected))    buildCameraHeader();
+    if(ECS::ComponentManager::hasComponent<ECS::TransformComponent>(selected))  buildTransformHeader();
+    if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(selected))       buildMeshHeader();
+    if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(selected))     buildCameraHeader();
+    if(ECS::ComponentManager::hasComponent<ECS::PointLightComponent>(selected)) buildPointLightHeader();
+
+    std::vector<std::string> comp_names {};
+    for(auto& [name, fns] : ECS::ComponentRegistryBase::handlers){
+        comp_names.push_back(name);
+    }
+
+    static int selected_idx = 0;
+    std::string selected_comp_name;
+    if (ImGui::BeginCombo("My Dropdown", comp_names[selected_idx].c_str())) 
+    {
+        for (int n = 0; n < comp_names.size(); n++) 
+        {
+            const bool is_selected = (selected_idx == n);
+            if (ImGui::Selectable(comp_names[n].c_str(), is_selected)) 
+            {
+                selected_idx = n;
+            }
+            if (is_selected) 
+            {
+                ImGui::SetItemDefaultFocus();
+                selected_comp_name = comp_names[selected_idx];
+            }
+        }
+        ImGui::EndCombo(); 
+    }
+
+    if(ImGui::Button("+", {25, 25})){
+        if(comp_names[selected_idx] == "Transform"){
+            E64::Log::info("Transform");
+            ECS::ComponentManager::addComponent<ECS::TransformComponent>(selected);
+        }
+        else if(comp_names[selected_idx] == "Mesh"){
+            ECS::ComponentManager::addComponent<ECS::MeshComponent>(selected);
+        }
+        else if(comp_names[selected_idx] == "Camera"){
+            ECS::ComponentManager::addComponent<ECS::CameraComponent>(selected);
+        }
+        else if(comp_names[selected_idx] == "PointLight"){
+            ECS::ComponentManager::addComponent<ECS::PointLightComponent>(selected);
+        }
+    }
 
     ImGui::End();
 }   
@@ -250,11 +313,11 @@ void Editor::EditorLayer::buildTransformHeader(){
         ImGui::DragFloat3("Scale", &transform->scale.x, 0.05f);
 
         ImGui::PushID(0);
-        if(ImGui::SmallButton("-"))
+        if(ImGui::Button("-", {ImGui::GetContentRegionAvail().x - 100, 30.0f}))
         {
             ECS::ComponentManager::removeComponent<ECS::TransformComponent>(selected);
         }
-        if(ImGui::Button("+", ImVec2{ImGui::GetContentRegionAvail().x, 50.0f})){
+        if(ImGui::Button("+", ImVec2{ImGui::GetContentRegionAvail().x - 50, 15.0f})){
             ECS::ComponentManager::addComponent<ECS::TransformComponent>(selected);
         }
         ImGui::PopID();
@@ -263,6 +326,7 @@ void Editor::EditorLayer::buildTransformHeader(){
 
 void Editor::EditorLayer::buildMeshHeader(){
     ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected);
+    E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMeshAsset(mesh_comp->mesh_handle);
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if(ImGui::CollapsingHeader("Mesh"))
@@ -276,7 +340,7 @@ void Editor::EditorLayer::buildMeshHeader(){
         }
 
         ImGui::PushID(1);
-        if(ImGui::SmallButton("-"))
+        if(ImGui::Button("-"))
         {
             ECS::ComponentManager::removeComponent<ECS::MeshComponent>(selected);
         }
@@ -299,6 +363,19 @@ void Editor::EditorLayer::buildCameraHeader(){
     }
 }
 
+void Editor::EditorLayer::buildPointLightHeader(){
+    ECS::PointLightComponent* light = ECS::ComponentManager::getComponent<ECS::PointLightComponent>(selected);
+
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if(ImGui::CollapsingHeader("PointLight")){
+        float color[4] = {light->color.r, light->color.g, light->color.b, light->color.a};
+        ImGui::ColorPicker4("Color", color);
+        light->color = {color[0], color[1], color[2], color[3]};
+
+        ImGui::DragFloat("Intensity", &light->intensity, 0.1f, 0.0f);
+    }
+}
+
 void Editor::EditorLayer::buildFileManager(){
     ImGui::Begin("Files");
 
@@ -316,4 +393,12 @@ void Editor::EditorLayer::buildFileManager(){
     }
 
     ImGui::End();
+}
+
+void Editor::EditorLayer::drawSelectedEntityOutline(ImVec2 mouse_pos){
+    SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+    float* mouse_pos_uniform;
+    mouse_pos_uniform[0] = mouse_pos.x;
+    mouse_pos_uniform[1] = mouse_pos.y;
+    renderer->pushFragmentUniform(mouse_pos_uniform, sizeof(float) * 2, 2);
 }

@@ -1,6 +1,9 @@
 #include "Layer/SceneLayer.h"
 #include "Engine.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+
 #include "AssetManager/AssetManager.h"
 
 #include "Serialization/SceneSerializer.h"
@@ -9,6 +12,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <random>
+#include <cmath>
 
 E64::SceneLayer::SceneLayer(){
     E64::Log::info("Scene Layer Created\n");
@@ -16,6 +20,7 @@ E64::SceneLayer::SceneLayer(){
     ECS::ComponentRegistry<ECS::TransformComponent>::registerComponent("Transform");
     ECS::ComponentRegistry<ECS::MeshComponent>::registerComponent("Mesh");
     ECS::ComponentRegistry<ECS::CameraComponent>::registerComponent("Camera");
+    ECS::ComponentRegistry<ECS::PointLightComponent>::registerComponent("PointLight");
 
     E64::Engine::ctx->asset_manager = std::make_unique<E64::AssetManager>();
     E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>();
@@ -56,7 +61,27 @@ void E64::SceneLayer::OnRender(){
         renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
     }
     renderer->bindPipeline();
-    
+
+    std::vector<ECS::PointLightUniform> light_uniforms{};
+    for(ECS::Entity entity : scene->getEntites()){
+        if(ECS::ComponentManager::hasComponent<ECS::PointLightComponent>(entity) &&
+            ECS::ComponentManager::hasComponent<ECS::TransformComponent>(entity)){
+            ECS::PointLightComponent* light_comp = ECS::ComponentManager::getComponent<ECS::PointLightComponent>(entity);
+            ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
+
+            ECS::PointLightUniform uniform;
+            float position[3] = {transform->position.x, transform->position.y, transform->position.z};
+            float color[4] = {light_comp->color.r, light_comp->color.g, light_comp->color.b, light_comp->color.a};
+            memcpy(uniform.position, position, sizeof(float) * 3);
+            memcpy(uniform.color, color, sizeof(float) * 4);
+            uniform.intensity = light_comp->intensity;
+            light_uniforms.push_back(uniform);
+        }
+    }
+    uint32_t num_pointlights = light_uniforms.size();
+    renderer->pushFragmentUniform(light_uniforms.data(), sizeof(ECS::PointLightUniform) * num_pointlights, 0);
+    renderer->pushFragmentUniform(&num_pointlights, sizeof(uint32_t), 1);
+
     for(ECS::Entity entity : scene->getEntites()){
         if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(entity) &&
             ECS::ComponentManager::hasComponent<ECS::TransformComponent>(entity) &&
@@ -95,13 +120,21 @@ void E64::SceneLayer::OnRender(){
             glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
                 * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
                 * glm::scale(glm::mat4(1.0f), transform->scale);
+                
+            glm::mat4 inv = glm::inverse(model);
+            glm::mat4 transpose = glm::transpose(model);
+            glm::mat4 normalMat = glm::transpose(glm::inverse(model));
 
-            glm::mat4 mvp = scene->getCameraData().proj * scene->getCameraData().view * model;
+            glm::mat4 view = scene->getCameraData().view;
+            glm::mat4 proj = scene->getCameraData().proj;
 
-            renderer->sendUniforms(mvp);
+            renderer->pushVertexUniform(&model, sizeof(glm::mat4), 0);
+            renderer->pushVertexUniform(&view, sizeof(glm::mat4), 1);
+            renderer->pushVertexUniform(&proj, sizeof(glm::mat4), 2);
+            renderer->pushVertexUniform(&normalMat, sizeof(glm::mat4), 3);
+
             renderer->draw(mesh_componet);
         }
     }
-
     renderer->endRenderPass();
 }

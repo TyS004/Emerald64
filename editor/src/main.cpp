@@ -24,8 +24,8 @@ int main(){
     Editor::EditorLayer editor_layer  = Editor::EditorLayer();
     E64::SceneLayer     scene_layer   = E64::SceneLayer();
 
-    E64::Layer::Attach(&editor_layer);
     E64::Layer::Attach(&scene_layer);
+    E64::Layer::Attach(&editor_layer);
     
     E64::Engine::run();
 

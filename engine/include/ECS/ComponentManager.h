@@ -90,15 +90,9 @@ namespace E64{
                 }
                 
                 static void flushComponents(){
-                    ComponentRegistry<TransformComponent>::registry.clear();
-                    ComponentRegistry<TransformComponent>::entity_to_idx.clear();
-                    ComponentRegistry<TransformComponent>::idx_to_entity.clear();
-                    ComponentRegistry<MeshComponent>::registry.clear();
-                    ComponentRegistry<MeshComponent>::entity_to_idx.clear();
-                    ComponentRegistry<MeshComponent>::idx_to_entity.clear();
-                    ComponentRegistry<CameraComponent>::registry.clear();
-                    ComponentRegistry<CameraComponent>::entity_to_idx.clear();
-                    ComponentRegistry<CameraComponent>::idx_to_entity.clear();
+                    for(auto& [name, clear_fn] : ComponentRegistryBase::clear_fns){
+                        clear_fn();
+                    }
                 }
 
                 static void serialize(json& entity_json, ECS::Entity e){
@@ -112,9 +106,8 @@ namespace E64{
                 static void deserialize(const json& entity_json, ECS::Entity e){
                     for(auto& [name, fns] : ComponentRegistryBase::handlers){
                         if(entity_json.contains(name)) {
-                            // E64::Log::info("JSON DESERIALZIE CONTAINS: " + name);
-                            // //E64::Log::info(entity_json[name]);
-                            // E64::Log::info("");
+                            E64::Log::info("JSON DESERIALZIE CONTAINS: " + name);
+                            E64::Log::info("");
                             fns.second(entity_json[name], e);
                         }
                     }

@@ -46,6 +46,7 @@ namespace E64{
         PackedVec3 pos;
         PackedVec4 color;
         PackedVec2 uv;
+        PackedVec3 norm;
     };
 
     using Index = uint32_t;

@@ -18,6 +18,8 @@ namespace E64{
             LayerType GetLayerType() { return SCENE_LAYER; }
         private:
             Scene* scene;
+            
+            float angle;
     };
 }
 

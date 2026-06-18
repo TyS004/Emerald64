@@ -16,7 +16,7 @@ E64::Mesh Editor::AssetImporter::importMesh(std::string path){
         aiProcess_Triangulate           |
         aiProcess_JoinIdenticalVertices |
         aiProcess_SortByPType           |
-        aiProcess_FlipUVs
+        aiProcess_FlipUVs               
     );
 
     if (nullptr == scene) {
@@ -45,14 +45,15 @@ E64::Mesh Editor::AssetImporter::importMesh(std::string path){
     int index_offset = 0;
 
     for(aiMesh* raw_mesh : raw_meshes){
-
         E64::Log::debug(std::to_string(raw_mesh->mNumVertices)  + " Vertices from " + path);
         E64::Log::debug(std::to_string(raw_mesh->mNumFaces)     + " Polygon Count");
         E64::Log::debug(std::to_string(raw_mesh->mNumFaces * 3) + " Index Count");
 
         // --- Vertex Parsing ---
         bool has_uvs = raw_mesh->HasTextureCoords(0);
+        bool has_norms = raw_mesh->HasNormals();
         if (!has_uvs) E64::Log::error("No UVs Found in Mesh");
+        if (!has_norms) E64::Log::error("No Norms Found in Mesh");
 
         int num_poly_verts = raw_mesh->mNumFaces * 3;
         int start_vi = vertices.size();
@@ -72,6 +73,12 @@ E64::Mesh Editor::AssetImporter::importMesh(std::string path){
                 vertices[vi].uv.x = has_uvs ? raw_mesh->mTextureCoords[0][idx].x : 0.f;
                 vertices[vi].uv.y = has_uvs ? raw_mesh->mTextureCoords[0][idx].y : 0.f;
 
+                vertices[vi].norm.x = has_norms ? raw_mesh->mNormals[idx].x : 0.f;
+                vertices[vi].norm.y = has_norms ? raw_mesh->mNormals[idx].y : 0.f;
+                vertices[vi].norm.z = has_norms ? raw_mesh->mNormals[idx].z : 0.f;
+
+                E64::Log::info(std::to_string(vertices[vi].norm.x) + ", " + std::to_string(vertices[vi].norm.y) + ", " + std::to_string(vertices[vi].norm.z));
+
                 vertices[vi].color = { 1.0f, 0.0f, 0.0f, 1.0f };
             }
         }
@@ -83,7 +90,7 @@ E64::Mesh Editor::AssetImporter::importMesh(std::string path){
 
         E64::Log::info(std::to_string(num_poly_verts) + " total indices");
         E64::Log::debug(path);
-    }
+    }   
     mesh.vertices = vertices;
     mesh.indices = indices;
 

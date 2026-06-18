@@ -15,7 +15,7 @@ E64::SDLRenderer::SDLRenderer(){
 
     depth_texture_info = {};
     depth_texture_info.type   = SDL_GPU_TEXTURETYPE_2D;
-    depth_texture_info.format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT;
+    depth_texture_info.format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT;
     depth_texture_info.usage  = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET;
     depth_texture_info.width  = width;
     depth_texture_info.height = height;
@@ -35,7 +35,15 @@ E64::SDLRenderer::SDLRenderer(){
     scene_texture = SDL_CreateGPUTexture(device, &scene_texture_info);
 
     depth_target_info = {};
+    depth_target_info.clear_depth = 1.0f;
+    depth_target_info.texture = depth_texture;
+    depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+    depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
+
     color_target_info = {};
+    color_target_info.clear_color = {75/255.0f, 75/255.0f, 75/255.0f, 255/255.0f};
+    color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+    color_target_info.store_op = SDL_GPU_STOREOP_STORE;
 
     draw_calls = 0;
 
@@ -83,16 +91,8 @@ void E64::SDLRenderer::ResizeViewport(){
 void E64::SDLRenderer::beginRenderPass(E64::RenderTarget target){
     draw_calls = 0;
 
-    color_target_info.clear_color = {75/255.0f, 75/255.0f, 75/255.0f, 255/255.0f};
-    color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
-    color_target_info.store_op = SDL_GPU_STOREOP_STORE;
-    
-    depth_target_info.clear_depth = 1.0f;
-    depth_target_info.texture = depth_texture;
-    depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
-    depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
-
-    switch(target){ 
+    this->target = target;
+    switch(target){
         case E64::SWAPCHAIN:
             color_target_info.texture = swapchain;
             render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, &depth_target_info);
@@ -109,6 +109,17 @@ void E64::SDLRenderer::endRenderPass(){
 }
 
 void E64::SDLRenderer::bindPipeline(){
+    E64::Input* input = E64::Engine::ctx->input;
+    if(input->isKeyPressed(E64::Scancode::F)){
+        SDL_GPUFillMode current_mode = pipeline->getFillMode();
+        if(current_mode == SDL_GPU_FILLMODE_FILL){
+            current_mode = SDL_GPU_FILLMODE_LINE;
+        }
+        else{
+            current_mode = SDL_GPU_FILLMODE_FILL;
+        }
+        pipeline = std::make_unique<E64::SDLPipeline>("../assets/shaders/object", current_mode);
+    }
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
@@ -152,7 +163,9 @@ void E64::SDLRenderer::draw(E64::ECS::MeshComponent* comp){
     bindFragmentSamplers(comp);
     
     draw_calls++;
+    SDL_SetGPUStencilReference(render_pass, 0);
     SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
+    SDL_SetGPUStencilReference(render_pass, 1);
 }
 
 E64::GPUBufferHandle E64::SDLRenderer::createVertexBuffer(std::vector<E64::Vertex> vertices){
@@ -305,8 +318,12 @@ E64::GPUSamplerHandle E64::SDLRenderer::createSampler(){
     return handle;
 }
 
-void E64::SDLRenderer::sendUniforms(glm::mat4 mvp){
-    SDL_PushGPUVertexUniformData(cmd_buf, 0, &mvp, sizeof(mvp));
+void E64::SDLRenderer::pushVertexUniform(const void* data, size_t size, uint32_t slot){
+    SDL_PushGPUVertexUniformData(cmd_buf, slot, data, size);
+}
+
+void E64::SDLRenderer::pushFragmentUniform(const void* data, size_t size, uint32_t slot){
+    SDL_PushGPUFragmentUniformData(cmd_buf, slot, data, size);
 }
 
 void E64::SDLRenderer::submit(){
@@ -323,6 +340,22 @@ SDL_GPUCommandBuffer* E64::SDLRenderer::getCommandBuffer(){
 
 SDL_GPUTexture* E64::SDLRenderer::getSceneTexture(){
     return scene_texture;
+}
+
+E64::SDLPipeline* E64::SDLRenderer::getPipeline(){
+    return pipeline.get();
+}
+
+void E64::SDLRenderer::setPipeline(const char* shaderpath, SDL_GPUFillMode fill_mode){
+    this->pipeline = std::make_unique<E64::SDLPipeline>(shaderpath, fill_mode);
+}
+
+void E64::SDLRenderer::setColorTargetLoadOP(SDL_GPULoadOp load_op){
+    this->color_target_info.load_op = load_op;
+}
+
+void E64::SDLRenderer::setDepthTargetLoadOP(SDL_GPULoadOp load_op){
+    this->depth_target_info.load_op = load_op;
 }
 
 int E64::SDLRenderer::getDrawCalls(){

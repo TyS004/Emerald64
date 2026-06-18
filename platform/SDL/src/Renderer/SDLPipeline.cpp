@@ -4,7 +4,7 @@
 
 #include <cstddef>
 
-E64::SDLPipeline::SDLPipeline(const char* shaderPath){
+E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode){
     SDLWindow* sdl_window = dynamic_cast<E64::SDLWindow*>(E64::Engine::ctx->window);
     this->device = sdl_window->getDevice();
     SDL_Window* window = sdl_window->getWindow();
@@ -12,22 +12,38 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath){
     vert_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
     frag_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
 
-    SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {};
+    pipelineInfo = {};
     pipelineInfo.vertex_shader = vert_shader->getShader();
     pipelineInfo.fragment_shader = frag_shader->getShader();
 
     //BUG WHEN NO CULLING
     pipelineInfo.rasterizer_state.cull_mode = SDL_GPU_CULLMODE_BACK;
 
+    this->fill_mode = fill_mode;
+    pipelineInfo.rasterizer_state.fill_mode = fill_mode;
+
     SDL_GPUDepthStencilState stencil_state = {};
     stencil_state.enable_depth_test = true;
     stencil_state.enable_depth_write = true;
     stencil_state.compare_op = SDL_GPU_COMPAREOP_LESS_OR_EQUAL;
+    stencil_state.enable_stencil_test = true;
+
+    stencil_state.compare_mask = 0xFF;
+    stencil_state.write_mask = 0xFF;
+    
+    stencil_state.front_stencil_state.compare_op = SDL_GPU_COMPAREOP_ALWAYS;
+    stencil_state.front_stencil_state.pass_op = SDL_GPU_STENCILOP_REPLACE;
+    stencil_state.front_stencil_state.fail_op = SDL_GPU_STENCILOP_KEEP;
+    stencil_state.front_stencil_state.depth_fail_op = SDL_GPU_STENCILOP_KEEP;
+    stencil_state.back_stencil_state.compare_op = SDL_GPU_COMPAREOP_ALWAYS;
+    stencil_state.back_stencil_state.pass_op = SDL_GPU_STENCILOP_REPLACE;
+    stencil_state.back_stencil_state.fail_op = SDL_GPU_STENCILOP_KEEP;
+    stencil_state.back_stencil_state.depth_fail_op = SDL_GPU_STENCILOP_KEEP;
 
     pipelineInfo.depth_stencil_state = stencil_state;
     pipelineInfo.target_info.has_depth_stencil_target = true;
-    pipelineInfo.target_info.depth_stencil_format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT;
-    
+    pipelineInfo.target_info.depth_stencil_format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT;
+
     SDL_GPUVertexBufferDescription vertexBufferDesctiptions[1];
     vertexBufferDesctiptions[0].slot = 0;
     vertexBufferDesctiptions[0].input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
@@ -37,7 +53,7 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath){
     pipelineInfo.vertex_input_state.num_vertex_buffers = 1;
     pipelineInfo.vertex_input_state.vertex_buffer_descriptions = vertexBufferDesctiptions;
 
-    SDL_GPUVertexAttribute vertexAttributes[3];
+    SDL_GPUVertexAttribute vertexAttributes[4];
     // a_position
     vertexAttributes[0].buffer_slot = 0; // fetch data from the buffer at slot 0
     vertexAttributes[0].location = 0; // layout (location = 0) in shader
@@ -56,7 +72,13 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath){
     vertexAttributes[2].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2; // vec2
     vertexAttributes[2].offset = offsetof(E64::Vertex, uv);    // 4th float from current buffer position
 
-    pipelineInfo.vertex_input_state.num_vertex_attributes = 3;
+    //a_norm
+    vertexAttributes[3].buffer_slot = 0;
+    vertexAttributes[3].location = 3; // layout (location = 3) in shader
+    vertexAttributes[3].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3; // vec2
+    vertexAttributes[3].offset = offsetof(E64::Vertex, norm);    // 4th float from current buffer position
+
+    pipelineInfo.vertex_input_state.num_vertex_attributes = 4;
     pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;
 
     SDL_GPUTextureFormat fmt = SDL_GetGPUSwapchainTextureFormat(device, window);
@@ -76,4 +98,12 @@ E64::SDLPipeline::~SDLPipeline(){
 
 SDL_GPUGraphicsPipeline* E64::SDLPipeline::getPipeline(){
     return this->pipeline;
+}
+
+void E64::SDLPipeline::rebuildPipeline(){
+    this->pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
+}
+
+SDL_GPUFillMode E64::SDLPipeline::getFillMode(){
+    return this->fill_mode;
 }

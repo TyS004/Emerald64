@@ -62,7 +62,5 @@ E64::Scene* E64::SceneSerializer::deserialize(std::string path){
     }
 
     E64::Log::debug("Loaded Scene: " + scene->getName());
-    //scene->printScene();
-
     return scene;
 }

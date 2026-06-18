@@ -31,7 +31,6 @@ SDL_GPUShader* E64::SDLShader::loadShader(){
         E64::Log::warn(fullPath);
         return nullptr;
     }
-    E64::Log::warn(fullPath);
 
     SDL_GPUShaderCreateInfo info = {};
     info.code = (const Uint8*) code;
@@ -44,12 +43,12 @@ SDL_GPUShader* E64::SDLShader::loadShader(){
     else          info.format = SDL_GPU_SHADERFORMAT_SPIRV;
 
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
-        info.num_uniform_buffers = 1;
+        info.num_uniform_buffers = 4;
         info.num_samplers = 0;
         info.entrypoint = "vertex_main";
     }
     else{
-        info.num_uniform_buffers = 0;
+        info.num_uniform_buffers = 3;
         info.num_samplers = 1;
         info.entrypoint = "fragment_main";
     }

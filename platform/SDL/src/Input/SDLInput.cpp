@@ -1,5 +1,6 @@
 #include "Input/SDLInput.h"
 #include "Layer/PhysicsLayer.h"
+#include "Renderer/SDLRenderer.h"
 
 E64::SDLInput::SDLInput() { 
     buildKeyMap(); 
@@ -35,6 +36,18 @@ void E64::SDLInput::processEvent(SDL_Event& e) {
 
 void E64::SDLInput::OnKeyPressed(Scancode key) {
     if(key == E64::Scancode::Escape) running = false;
+    if(key == E64::Scancode::F){
+        E64::SDLRenderer* renderer = dynamic_cast<E64::SDLRenderer*>(E64::Engine::ctx->renderer);
+        E64::SDLPipeline* pipeline = renderer->getPipeline();
+        SDL_GPUFillMode current_mode = pipeline->getFillMode();
+        if(current_mode == SDL_GPU_FILLMODE_FILL){
+            current_mode = SDL_GPU_FILLMODE_LINE;
+        }
+        else{
+            current_mode = SDL_GPU_FILLMODE_FILL;
+        }
+        renderer->setPipeline("../assets/shaders/object", current_mode);
+    }
 }
 
 void E64::SDLInput::buildKeyMap() {
