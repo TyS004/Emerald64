@@ -47,7 +47,14 @@ E64::SDLRenderer::SDLRenderer(){
 
     draw_calls = 0;
 
-    pipeline = std::make_unique<SDLPipeline>("../assets/shaders/object");
+    pipelines.push_back(std::make_unique<SDLPipeline>("../assets/shaders/object"));
+    pipelines.push_back(std::make_unique<SDLPipeline>("../assets/shaders/object", SDL_GPU_FILLMODE_LINE));
+    pipelines[0].get()->setStencilFrontCompareOP(SDL_GPU_COMPAREOP_ALWAYS);
+    pipelines[0].get()->setStencilFrontPassOP(SDL_GPU_STENCILOP_REPLACE);
+    pipelines[0].get()->buildPipeline();
+    pipelines[1].get()->setStencilFrontCompareOP(SDL_GPU_COMPAREOP_NOT_EQUAL);
+    pipelines[1].get()->setStencilFrontPassOP(SDL_GPU_STENCILOP_KEEP);
+    pipelines[1].get()->buildPipeline();
 
     stbi_set_flip_vertically_on_load(true);
 }
@@ -90,6 +97,7 @@ void E64::SDLRenderer::ResizeViewport(){
 
 void E64::SDLRenderer::beginRenderPass(E64::RenderTarget target){
     draw_calls = 0;
+    current_render_pass++;
 
     this->target = target;
     switch(target){
@@ -109,17 +117,7 @@ void E64::SDLRenderer::endRenderPass(){
 }
 
 void E64::SDLRenderer::bindPipeline(){
-    E64::Input* input = E64::Engine::ctx->input;
-    if(input->isKeyPressed(E64::Scancode::F)){
-        SDL_GPUFillMode current_mode = pipeline->getFillMode();
-        if(current_mode == SDL_GPU_FILLMODE_FILL){
-            current_mode = SDL_GPU_FILLMODE_LINE;
-        }
-        else{
-            current_mode = SDL_GPU_FILLMODE_FILL;
-        }
-        pipeline = std::make_unique<E64::SDLPipeline>("../assets/shaders/object", current_mode);
-    }
+    SDLPipeline* pipeline = pipelines[current_render_pass - 1].get();
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
@@ -163,9 +161,7 @@ void E64::SDLRenderer::draw(E64::ECS::MeshComponent* comp){
     bindFragmentSamplers(comp);
     
     draw_calls++;
-    SDL_SetGPUStencilReference(render_pass, 0);
     SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
-    SDL_SetGPUStencilReference(render_pass, 1);
 }
 
 E64::GPUBufferHandle E64::SDLRenderer::createVertexBuffer(std::vector<E64::Vertex> vertices){
@@ -328,6 +324,7 @@ void E64::SDLRenderer::pushFragmentUniform(const void* data, size_t size, uint32
 
 void E64::SDLRenderer::submit(){
     SDL_SubmitGPUCommandBuffer(cmd_buf);
+    current_render_pass = 0;
 }
 
 void E64::SDLRenderer::drawUI(){
@@ -342,20 +339,52 @@ SDL_GPUTexture* E64::SDLRenderer::getSceneTexture(){
     return scene_texture;
 }
 
-E64::SDLPipeline* E64::SDLRenderer::getPipeline(){
-    return pipeline.get();
+void E64::SDLRenderer::setColorLoadOP(E64::RenderLoadOP OP){
+    switch(OP){
+        case E64::RenderLoadOP::CLEAR:
+            this->color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+            break;
+        case E64::RenderLoadOP::LOAD:
+            this->color_target_info.load_op = SDL_GPU_LOADOP_LOAD;
+            break;
+    }
 }
 
-void E64::SDLRenderer::setPipeline(const char* shaderpath, SDL_GPUFillMode fill_mode){
-    this->pipeline = std::make_unique<E64::SDLPipeline>(shaderpath, fill_mode);
+void E64::SDLRenderer::setColorStoreOP(E64::RenderStoreOP OP){
+    switch(OP){
+        case E64::RenderStoreOP::STORE:
+            this->color_target_info.store_op = SDL_GPU_STOREOP_STORE;
+            break;
+        case E64::RenderStoreOP::RESOLVE:
+            this->color_target_info.store_op = SDL_GPU_STOREOP_RESOLVE;
+            break;
+    }
 }
 
-void E64::SDLRenderer::setColorTargetLoadOP(SDL_GPULoadOp load_op){
-    this->color_target_info.load_op = load_op;
+void E64::SDLRenderer::setDepthLoadOP(E64::RenderLoadOP OP){
+    switch(OP){
+        case E64::RenderLoadOP::CLEAR:
+            this->depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+            break;
+        case E64::RenderLoadOP::LOAD:
+            this->depth_target_info.load_op = SDL_GPU_LOADOP_LOAD;
+            break;
+    }
 }
 
-void E64::SDLRenderer::setDepthTargetLoadOP(SDL_GPULoadOp load_op){
-    this->depth_target_info.load_op = load_op;
+void E64::SDLRenderer::setDepthStoreOP(E64::RenderStoreOP OP){
+    switch(OP){
+        case E64::RenderStoreOP::STORE:
+            this->depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
+            break;
+        case E64::RenderStoreOP::RESOLVE:
+            this->depth_target_info.store_op = SDL_GPU_STOREOP_RESOLVE;
+            break;
+    }
+}
+
+void E64::SDLRenderer::setStencilReference(int ref){
+    SDL_SetGPUStencilReference(render_pass, ref);
 }
 
 int E64::SDLRenderer::getDrawCalls(){

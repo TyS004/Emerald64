@@ -77,14 +77,28 @@ void Editor::EditorLayer::OnUpdate(float dt){
 }
 
 void Editor::EditorLayer::OnRender(){
-    // SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
-    // if(E64::Engine::ctx->mode == EDITOR){
-    //     renderer->beginRenderPass(RenderTarget::TEXTURE);
-    // }
-    // else{
-    //     renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
-    // }
-    // renderer->endRenderPass();
+    SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+    Scene* scene = E64::Engine::ctx->active_scene.get();
+    ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(selected);
+
+    renderer->setColorLoadOP(E64::RenderLoadOP::LOAD);
+    renderer->setDepthLoadOP(E64::RenderLoadOP::LOAD);
+    renderer->beginRenderPass(RenderTarget::TEXTURE);
+
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
+                * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
+                * glm::scale(glm::mat4(1.0f), transform->scale * 1.15f);
+    glm::mat4 view = scene->getCameraData().view;
+    glm::mat4 proj = scene->getCameraData().proj;
+
+    renderer->pushVertexUniform(&model, sizeof(glm::mat4), 0);
+    renderer->pushVertexUniform(&view, sizeof(glm::mat4), 1);
+    renderer->pushVertexUniform(&proj, sizeof(glm::mat4), 2);
+    
+    renderer->bindPipeline();
+    renderer->draw(ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected));
+
+    renderer->endRenderPass();
 }
 
 void Editor::EditorLayer::OnImGuiRender(){

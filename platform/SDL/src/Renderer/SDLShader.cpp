@@ -60,9 +60,9 @@ SDL_GPUShader* E64::SDLShader::loadShader(){
         E64::Log::warn("Failed to Create Shader");
         return nullptr;
     }
-    std::string msg = "Successfully Loaded Shader ";
-    msg += fullPath;
-    E64::Log::info(msg.c_str());
+    // std::string msg = "Successfully Loaded Shader ";
+    // msg += fullPath;
+    // E64::Log::info(msg.c_str());
     return shader;
 }
 

@@ -12,6 +12,16 @@ namespace E64{
         TEXTURE
     };
 
+    enum RenderLoadOP{
+        CLEAR,
+        LOAD
+    };
+
+    enum RenderStoreOP{
+        STORE,
+        RESOLVE
+    };
+
     class IRenderer{
         public:
             virtual void OnImGuiResize(float width, float height){};
@@ -30,7 +40,14 @@ namespace E64{
             virtual void beginRenderPass(RenderTarget target){};
             virtual void endRenderPass(){};
             
-            virtual void draw(ECS::MeshComponent* comp){};
+            virtual void setColorLoadOP(RenderLoadOP OP) {};
+            virtual void setColorStoreOP(RenderStoreOP OP) {};
+            virtual void setDepthLoadOP(RenderLoadOP OP) {};
+            virtual void setDepthStoreOP(RenderStoreOP OP) {};
+
+            virtual void setStencilReference(int ref) {};
+
+            virtual void draw(ECS::MeshComponent* comp) {};
             virtual void drawUI(){};
             virtual void submit(){};
 

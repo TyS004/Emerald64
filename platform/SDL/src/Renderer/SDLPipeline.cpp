@@ -22,7 +22,7 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode)
     this->fill_mode = fill_mode;
     pipelineInfo.rasterizer_state.fill_mode = fill_mode;
 
-    SDL_GPUDepthStencilState stencil_state = {};
+    stencil_state = {};
     stencil_state.enable_depth_test = true;
     stencil_state.enable_depth_write = true;
     stencil_state.compare_op = SDL_GPU_COMPAREOP_LESS_OR_EQUAL;
@@ -35,6 +35,7 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode)
     stencil_state.front_stencil_state.pass_op = SDL_GPU_STENCILOP_REPLACE;
     stencil_state.front_stencil_state.fail_op = SDL_GPU_STENCILOP_KEEP;
     stencil_state.front_stencil_state.depth_fail_op = SDL_GPU_STENCILOP_KEEP;
+
     stencil_state.back_stencil_state.compare_op = SDL_GPU_COMPAREOP_ALWAYS;
     stencil_state.back_stencil_state.pass_op = SDL_GPU_STENCILOP_REPLACE;
     stencil_state.back_stencil_state.fail_op = SDL_GPU_STENCILOP_KEEP;
@@ -44,7 +45,6 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode)
     pipelineInfo.target_info.has_depth_stencil_target = true;
     pipelineInfo.target_info.depth_stencil_format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT;
 
-    SDL_GPUVertexBufferDescription vertexBufferDesctiptions[1];
     vertexBufferDesctiptions[0].slot = 0;
     vertexBufferDesctiptions[0].input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
     vertexBufferDesctiptions[0].instance_step_rate = 0;
@@ -53,7 +53,6 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode)
     pipelineInfo.vertex_input_state.num_vertex_buffers = 1;
     pipelineInfo.vertex_input_state.vertex_buffer_descriptions = vertexBufferDesctiptions;
 
-    SDL_GPUVertexAttribute vertexAttributes[4];
     // a_position
     vertexAttributes[0].buffer_slot = 0; // fetch data from the buffer at slot 0
     vertexAttributes[0].location = 0; // layout (location = 0) in shader
@@ -81,26 +80,35 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode)
     pipelineInfo.vertex_input_state.num_vertex_attributes = 4;
     pipelineInfo.vertex_input_state.vertex_attributes = vertexAttributes;
 
-    SDL_GPUTextureFormat fmt = SDL_GetGPUSwapchainTextureFormat(device, window);
-    SDL_GPUColorTargetDescription colorTargetDesc = {};
+    fmt = SDL_GetGPUSwapchainTextureFormat(device, window);
+    colorTargetDesc = {};
     colorTargetDesc.format = fmt;
     pipelineInfo.target_info.num_color_targets = 1;
     pipelineInfo.target_info.color_target_descriptions = &colorTargetDesc;
 
     pipelineInfo.primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST;
 
-    pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
+    this->pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
 }
 
 E64::SDLPipeline::~SDLPipeline(){
-    //SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
+    SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
 }
 
 SDL_GPUGraphicsPipeline* E64::SDLPipeline::getPipeline(){
     return this->pipeline;
 }
 
-void E64::SDLPipeline::rebuildPipeline(){
+void E64::SDLPipeline::setStencilFrontCompareOP(SDL_GPUCompareOp OP){
+    this->stencil_state.front_stencil_state.compare_op = OP;
+}
+
+void E64::SDLPipeline::setStencilFrontPassOP(SDL_GPUStencilOp OP){
+    this->stencil_state.front_stencil_state.pass_op = OP;
+}
+
+void E64::SDLPipeline::buildPipeline(){
+    SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
     this->pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
 }
 

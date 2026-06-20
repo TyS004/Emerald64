@@ -15,16 +15,25 @@ namespace E64 {
             ~SDLPipeline();
 
             SDL_GPUGraphicsPipeline* getPipeline();
-            void rebuildPipeline();
+            void buildPipeline();
 
             SDL_GPUFillMode getFillMode();
+
+            void setStencilFrontCompareOP(SDL_GPUCompareOp OP);
+            void setStencilFrontPassOP(SDL_GPUStencilOp OP);
         private:
             SDL_GPUDevice* device;
+
             SDLShader* vert_shader;
             SDLShader* frag_shader;
 
             SDL_GPUFillMode fill_mode;
 
+            SDL_GPUDepthStencilState stencil_state;
+            SDL_GPUVertexBufferDescription vertexBufferDesctiptions[1];
+            SDL_GPUVertexAttribute vertexAttributes[4];
+            SDL_GPUColorTargetDescription colorTargetDesc;
+            SDL_GPUTextureFormat fmt;
             SDL_GPUGraphicsPipelineCreateInfo pipelineInfo;
             SDL_GPUGraphicsPipeline* pipeline;
     };

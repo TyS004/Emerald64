@@ -54,6 +54,8 @@ void E64::SceneLayer::OnRender(){
 
     E64::IRenderer* renderer = E64::Engine::ctx->renderer;
 
+    renderer->setColorLoadOP(E64::RenderLoadOP::CLEAR);
+    renderer->setDepthLoadOP(E64::RenderLoadOP::CLEAR);
     if(E64::Engine::ctx->mode == EDITOR){
         renderer->beginRenderPass(RenderTarget::TEXTURE);
     }
@@ -134,6 +136,7 @@ void E64::SceneLayer::OnRender(){
             renderer->pushVertexUniform(&normalMat, sizeof(glm::mat4), 3);
 
             renderer->draw(mesh_componet);
+            renderer->setStencilReference(1);
         }
     }
     renderer->endRenderPass();

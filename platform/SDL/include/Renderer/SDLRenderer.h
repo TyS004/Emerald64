@@ -41,21 +41,25 @@ namespace E64 {
             SDL_GPUCommandBuffer* getCommandBuffer();
             SDL_GPUTexture* getSceneTexture();
 
-            SDLPipeline* getPipeline();
-            void setPipeline(const char* shaderpath, SDL_GPUFillMode fill_mode);
-
             int getDrawCalls();
 
-            void setColorTargetLoadOP(SDL_GPULoadOp load_op);
-            void setDepthTargetLoadOP(SDL_GPULoadOp load_op);
+            void setColorLoadOP(E64::RenderLoadOP OP);
+            void setColorStoreOP(E64::RenderStoreOP OP);
+            void setDepthLoadOP(E64::RenderLoadOP OP);
+            void setDepthStoreOP(E64::RenderStoreOP OP);
+
+            void setStencilReference(int ref);
 
         private:
             SDL_Window* window;
             SDL_GPUDevice* device;
 
+            int current_render_pass = 0;
+
             RenderTarget target;
 
-            std::unique_ptr<SDLPipeline> pipeline;
+            std::vector<std::unique_ptr<SDLPipeline>> pipelines;
+            //std::vector<SDLPipeline> pipelines;
 
             SDL_GPURenderPass* render_pass;
 
