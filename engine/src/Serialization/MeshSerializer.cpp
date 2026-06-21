@@ -10,11 +10,12 @@ E64::MeshSerializer::~MeshSerializer(){
 }
 
 float swap_float(float f){
-    #ifdef E64_APPLE
+    #ifndef E64_WIN32
         uint32_t val;
         memcpy(&val, &f, sizeof(float));
         val = __builtin_bswap32(val);
         memcpy(&f, &val, sizeof(float));
+        return f;
     #else 
         return f;
     #endif
@@ -50,9 +51,11 @@ E64::Mesh E64::MeshSerializer::deserialize(std::string path){
 
     uint32_t vcount = 0;
     file.read(reinterpret_cast<char*>(&vcount), sizeof(uint32_t));
-    #ifdef E64_APPLE
-        if(E64::Engine::ctx->mode == N64_RUNTIME) vcount = __builtin_bswap32(vcount);
-    #endif
+    if(E64::Engine::ctx->mode == N64_RUNTIME){
+        #ifndef E64_WIN32
+            vcount = __builtin_bswap32(vcount);
+        #endif
+    }
     mesh.vertices.resize(vcount);
     file.read(reinterpret_cast<char*>(mesh.vertices.data()), sizeof(Vertex) * vcount);
     if(E64::Engine::ctx->mode == N64_RUNTIME)
@@ -74,19 +77,21 @@ E64::Mesh E64::MeshSerializer::deserialize(std::string path){
 
     uint32_t icount = 0;
     file.read(reinterpret_cast<char*>(&icount), sizeof(uint32_t));
-    #ifdef E64_APPLE
-        if(E64::Engine::ctx->mode == N64_RUNTIME) icount = __builtin_bswap32(icount);
-    #endif
-        mesh.indices.resize(icount);
+    if(E64::Engine::ctx->mode == N64_RUNTIME){
+        #ifndef E64_WIN32
+            icount = __builtin_bswap32(icount);
+        #endif
+    }
+    mesh.indices.resize(icount);
 
-        file.read(reinterpret_cast<char*>(mesh.indices.data()), sizeof(uint32_t) * icount);
-    #ifdef E64_APPLE
-        if(E64::Engine::ctx->mode == N64_RUNTIME){
+    file.read(reinterpret_cast<char*>(mesh.indices.data()), sizeof(uint32_t) * icount);
+    if(E64::Engine::ctx->mode == N64_RUNTIME){
+        #ifndef E64_WIN32
             for(uint32_t& i : mesh.indices){
                 i = __builtin_bswap32(i);
             }
-        }
-    #endif
+        #endif
+    }
     E64::Log::info("Vertex Count: " + std::to_string(mesh.vertices.size()));
     E64::Log::info("Index Count: " + std::to_string(mesh.indices.size()));
 
