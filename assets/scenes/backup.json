@@ -1,0 +1,758 @@
+{
+  "entities": [
+    {
+      "Mesh": {
+        "mesh_path": [
+          "meshes/yoshi/mesh/yoshi_from_mario_party_on_the_nintendo_64.e64mesh"
+        ],
+        "texture_path": [
+          "meshes/yoshi/texture/Material.200_Yoshi_grp.png_baseColor.png"
+        ]
+      },
+      "Transform": {
+        "position": [
+          -16.649999618530273,
+          -22.850000381469727,
+          -4.0
+        ],
+        "rotation": [
+          0.0,
+          -3.140000104904175,
+          0.0
+        ],
+        "scale": [
+          7.0,
+          7.0,
+          7.0
+        ]
+      },
+      "id": 0
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "meshes/sphere.e64mesh"
+        ],
+        "texture_path": [
+          "textures/grass_tex.png"
+        ]
+      },
+      "Transform": {
+        "position": [
+          -6.5,
+          -17.149999618530273,
+          -4.949999809265137
+        ],
+        "rotation": [
+          0.0,
+          -2.8399999141693115,
+          -5.090000152587891
+        ],
+        "scale": [
+          10.0,
+          10.0,
+          10.0
+        ]
+      },
+      "id": 1
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "PointLight": {
+        "color": [
+          0.891273558139801,
+          0.04123711585998535,
+          1.0,
+          1.0
+        ],
+        "intensity": 7.0
+      },
+      "Transform": {
+        "position": [
+          -30.399999618530273,
+          -6.25,
+          2.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 2
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "PointLight": {
+        "color": [
+          1.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "intensity": 7.0
+      },
+      "Transform": {
+        "position": [
+          11.699999809265137,
+          -4.650000095367432,
+          -6.099999904632568
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 3
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "PointLight": {
+        "color": [
+          0.0,
+          1.0,
+          0.10309267044067383,
+          1.0
+        ],
+        "intensity": 6.0
+      },
+      "Transform": {
+        "position": [
+          -18.049999237060547,
+          -3.6500000953674316,
+          -27.25
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 4
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "textures/grass_tex.png"
+        ]
+      },
+      "Transform": {
+        "position": [
+          -3.0,
+          -23.200000762939453,
+          6.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          100.0,
+          1.0,
+          100.0
+        ]
+      },
+      "id": 5
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          7.0,
+          -4.0,
+          4.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 6
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          0.0,
+          -8.0,
+          7.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 7
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          2.0,
+          -5.0,
+          -6.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 8
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          -9.0,
+          1.0,
+          7.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 9
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          3.0,
+          10.0,
+          -10.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 10
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          2.0,
+          -2.0,
+          8.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 11
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          0.0,
+          3.0,
+          -9.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 12
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          3.0,
+          0.0,
+          -4.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 13
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          5.0,
+          9.0,
+          9.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 14
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          6.0,
+          -2.0,
+          -6.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 15
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          2.0,
+          -3.0,
+          -2.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 16
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          6.0,
+          9.0,
+          -3.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 17
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          -9.0,
+          10.0,
+          -9.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 18
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          8.0,
+          -3.0,
+          -6.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 19
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          6.0,
+          -8.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 20
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          5.0,
+          2.0,
+          -6.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 21
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          0.0,
+          3.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 22
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          9.0,
+          -7.0,
+          10.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 23
+    },
+    {
+      "Mesh": {
+        "mesh_path": [
+          "default"
+        ],
+        "texture_path": [
+          "default"
+        ]
+      },
+      "Transform": {
+        "position": [
+          7.0,
+          -6.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 24
+    },
+    {
+      "Camera": {
+        "aspect_ratio": 1.3333333730697632,
+        "far_plane": 100.0,
+        "fov": 0.7853981852531433,
+        "near_plane": 0.10000000149011612
+      },
+      "Transform": {
+        "position": [
+          0.0,
+          10.0,
+          -50.0
+        ],
+        "rotation": [
+          90.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "id": 25
+    }
+  ],
+  "name": "Test_Scene"
+}

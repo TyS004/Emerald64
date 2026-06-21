@@ -414,7 +414,7 @@ void Editor::EditorLayer::buildFileManager(){
 }
 
 void Editor::EditorLayer::drawSelectedEntityOutline(ImVec2 mouse_pos){
-    SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+    //SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
     //float* mouse_pos_uniform;
     //mouse_pos_uniform[0] = mouse_pos.x;
     //mouse_pos_uniform[1] = mouse_pos.y;

@@ -85,8 +85,8 @@ void E64::SceneLayer::OnRender(){
         }
     }
     uint32_t num_pointlights = light_uniforms.size();
-    /*renderer->pushFragmentUniform(light_uniforms.data(), sizeof(ECS::PointLightUniform) * num_pointlights, 0);
-    renderer->pushFragmentUniform(&num_pointlights, sizeof(uint32_t), 1);*/
+    renderer->pushFragmentUniform(light_uniforms.data(), sizeof(ECS::PointLightUniform) * num_pointlights, 0);
+    renderer->pushFragmentUniform(&num_pointlights, sizeof(uint32_t), 1);
 
     for(ECS::Entity entity : scene->getEntites()){
         if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(entity) &&

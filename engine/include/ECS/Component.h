@@ -107,12 +107,12 @@ namespace E64{
             }
         };
 
-        struct PointLightUniform{
+        struct PointLightUniform {
             float position[3];
             float pad1 = 0.0f;
             float color[4];
             float intensity;
-            float pad2[3] = {0.0f, 0.0f, 0.0f};
+            float pad2[3] = { 0.0f, 0.0f, 0.0f };
         };
 
         struct CameraData{

@@ -47,7 +47,7 @@ VSOutput main(VSInput input)
     output.position  = mul(proj, mul(view, world_pos));
     output.color     = input.color;
     output.uv        = input.uv;
-    output.norm      = float4(input.norm, 1.0);
+    output.norm      = mul(normal_mat, float4(input.norm, 1.0));
     output.model_pos = world_pos;
 
     return output;
