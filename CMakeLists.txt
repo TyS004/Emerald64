@@ -11,6 +11,7 @@ set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_OBJ_IMPORTER ON CACHE BOOL "" FORCE)
+set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "Disable warnings-as-errors for Assimp" FORCE)
 set(GLM_BUILD_LIBRARY OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(vendor/assimp)
@@ -52,7 +53,7 @@ target_include_directories(E64Runtime PUBLIC ./platform/SDL/include ./runtime/SD
 target_link_libraries(E64Runtime PRIVATE E64)
 
 if(APPLE)
-    target_compile_definitions(E64 PRIVATE E64_APPLE)
+    target_compile_definitions(E64 PUBLIC E64_APPLE)
 elseif(WIN32)
     target_compile_definitions(E64 PUBLIC E64_WIN32)
 endif()
