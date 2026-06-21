@@ -4,7 +4,7 @@
 #include "ctx.h"
 
 namespace E64{
-    class Engine{
+    class E64_API Engine{
     public:
         static void run();
         static void exit();

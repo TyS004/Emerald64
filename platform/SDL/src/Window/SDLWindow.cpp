@@ -30,11 +30,18 @@ void E64::SDLWindow::create(const char* name, int width, int height){
     E64::SDLWindow::width = width;
     E64::SDLWindow::height = height;
 
-    if(__APPLE__) device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
-    else          device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, nullptr);
-    if(!device) { E64::Log::error(SDL_GetError()); SDL_Quit(); }
+    #ifdef E64_APPLE
+        device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
+    #else
+        device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_DXIL, true, nullptr);
+    #endif
 
-    SDL_ClaimWindowForGPUDevice(device, window);
+    if (!device) { E64::Log::error(SDL_GetError()); SDL_Quit(); }
+
+    if (!SDL_ClaimWindowForGPUDevice(device, window)) {
+        E64::Log::error("Couldnt Claim Window!");
+        exit(1);
+    }
     SDL_SetGPUSwapchainParameters(
         device,
         window,

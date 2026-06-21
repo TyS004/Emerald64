@@ -11,12 +11,9 @@ set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_OBJ_IMPORTER ON CACHE BOOL "" FORCE)
+set(GLM_BUILD_LIBRARY OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(vendor/assimp)
-target_compile_options(assimp PRIVATE 
-    -Wno-unsafe-buffer-usage-in-libc-call
-    -Wno-unsafe-buffer-usage
-)
 add_subdirectory(./vendor/SDL)
 add_subdirectory(./vendor/glm)
 add_subdirectory(./vendor/imgui)
@@ -31,8 +28,7 @@ include_directories(E64 PRIVATE ./vendor/json)
 include_directories(E64 PRIVATE ./vendor/stb_img)
 
 target_link_libraries(E64 PUBLIC SDL3::SDL3 glm::glm  ImGui::ImGui)
-
-target_precompile_headers(E64 PRIVATE engine/src/pch.h)
+target_compile_definitions(E64 PRIVATE E64_BUILD_DLL)
 
 # ── Editor (EXE) ──────────────────────────────
 file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS editor/src/*.cpp platform/SDL/src/*.cpp)
@@ -46,8 +42,6 @@ target_link_libraries(E64 PRIVATE assimp)
 target_link_libraries(E64Editor PRIVATE assimp)
 target_link_libraries(E64Editor PRIVATE E64)
 
-target_precompile_headers(E64Editor REUSE_FROM E64)
-
 # ── Runtime (EXE) ──────────────────────────────
 file(GLOB_RECURSE RUNTIME_SOURCES CONFIGURE_DEPENDS runtime/SDL/*.cpp platform/SDL/src/*.cpp)
 
@@ -56,10 +50,11 @@ add_executable(E64Runtime ${RUNTIME_SOURCES})
 target_include_directories(E64Runtime PUBLIC ./platform/SDL/include ./runtime/SDL/include)
 
 target_link_libraries(E64Runtime PRIVATE E64)
-target_precompile_headers(E64Runtime REUSE_FROM E64)
 
 if(APPLE)
     target_compile_definitions(E64 PRIVATE E64_APPLE)
 elseif(WIN32)
-    target_compile_definitions(E64 PRIVATE E64_WIN32)
+    target_compile_definitions(E64 PUBLIC E64_WIN32)
 endif()
+
+set_target_properties(E64 PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)

@@ -23,6 +23,7 @@ E64::SDLRenderer::SDLRenderer(){
     depth_texture_info.num_levels = 1;
     depth_texture_info.sample_count = SDL_GPU_SAMPLECOUNT_1;
     depth_texture = SDL_CreateGPUTexture(device, &depth_texture_info);
+    if (!depth_texture) { E64::Log::error("Failed to Create Depth Texture!"); exit(1); }
 
     scene_texture_info = {};
     scene_texture_info.type   = SDL_GPU_TEXTURETYPE_2D;
@@ -33,6 +34,7 @@ E64::SDLRenderer::SDLRenderer(){
     scene_texture_info.layer_count_or_depth = 1;
     scene_texture_info.num_levels = 1;
     scene_texture = SDL_CreateGPUTexture(device, &scene_texture_info);
+    if (!scene_texture) { E64::Log::error("Failed to Create Scene Texture!"); exit(1); }
 
     depth_target_info = {};
     depth_target_info.clear_depth = 1.0f;
@@ -47,8 +49,9 @@ E64::SDLRenderer::SDLRenderer(){
 
     draw_calls = 0;
 
-    pipelines.push_back(std::make_unique<SDLPipeline>("../assets/shaders/object"));
-    pipelines.push_back(std::make_unique<SDLPipeline>("../assets/shaders/object", SDL_GPU_FILLMODE_LINE));
+    std::string shader_path = E64::Engine::ctx->root_dir.string() + "/shaders/object";
+    pipelines.push_back(std::make_unique<SDLPipeline>(shader_path.c_str()));
+    pipelines.push_back(std::make_unique<SDLPipeline>(shader_path.c_str(), SDL_GPU_FILLMODE_LINE));
     pipelines[0].get()->setStencilFrontCompareOP(SDL_GPU_COMPAREOP_ALWAYS);
     pipelines[0].get()->setStencilFrontPassOP(SDL_GPU_STENCILOP_REPLACE);
     pipelines[0].get()->buildPipeline();
@@ -69,6 +72,7 @@ void E64::SDLRenderer::startFrame(){
     if (!swapchain) {
         SDL_CancelGPUCommandBuffer(cmd_buf);
         cmd_buf = nullptr;
+        E64::Log::error("SwapChain Could not Be Aquired!");
     }
 }
 
@@ -81,17 +85,41 @@ void E64::SDLRenderer::OnImGuiResize(float width, float height){
 void E64::SDLRenderer::ResizeViewport(){
     if(width == 0 || height == 0) return;
 
+    SDL_WaitForGPUIdle(device);
     if (depth_texture)
         SDL_ReleaseGPUTexture(device, depth_texture);
     if (scene_texture)
         SDL_ReleaseGPUTexture(device, scene_texture);
 
-    depth_texture_info.width  = width;
-    depth_texture_info.height = height; 
+    depth_texture_info = {};
+    depth_texture_info.type = SDL_GPU_TEXTURETYPE_2D;
+    depth_texture_info.format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT;
+    depth_texture_info.usage = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET;
+    depth_texture_info.width = width;
+    depth_texture_info.height = height;
+    depth_texture_info.layer_count_or_depth = 1;
+    depth_texture_info.num_levels = 1;
+    depth_texture_info.sample_count = SDL_GPU_SAMPLECOUNT_1;
     depth_texture = SDL_CreateGPUTexture(device, &depth_texture_info);
 
-    scene_texture_info.width  = width;
+    depth_target_info = {};
+    depth_target_info.clear_depth = 1.0f;
+    depth_target_info.texture = depth_texture;
+    depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+    depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
+
+    if (depth_texture == nullptr) {
+        E64::Log::error("Terxture is Nullptr");
+    }
+
+    scene_texture_info = {};
+    scene_texture_info.type = SDL_GPU_TEXTURETYPE_2D;
+    scene_texture_info.format = SDL_GetGPUSwapchainTextureFormat(device, window);
+    scene_texture_info.usage = SDL_GPU_TEXTUREUSAGE_COLOR_TARGET | SDL_GPU_TEXTUREUSAGE_SAMPLER;
+    scene_texture_info.width = width;
     scene_texture_info.height = height;
+    scene_texture_info.layer_count_or_depth = 1;
+    scene_texture_info.num_levels = 1;
     scene_texture = SDL_CreateGPUTexture(device, &scene_texture_info);
 }
 
@@ -103,6 +131,7 @@ void E64::SDLRenderer::beginRenderPass(E64::RenderTarget target){
     switch(target){
         case E64::SWAPCHAIN:
             color_target_info.texture = swapchain;
+            if (!swapchain) { E64::Log::error("Swapchain Nullptr Before Render Pass Begin!"); exit(1); }
             render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, &depth_target_info);
             break;
         case E64::TEXTURE:
@@ -194,7 +223,9 @@ E64::GPUBufferHandle E64::SDLRenderer::createVertexBuffer(std::vector<E64::Verte
     SDL_UploadToGPUBuffer(copyPass, &location, &region, true);
 
     SDL_EndGPUCopyPass(copyPass);
-    SDL_SubmitGPUCommandBuffer(cmdBuffer);
+    if (!SDL_SubmitGPUCommandBuffer(cmdBuffer)) {
+        E64::Log::error("Error Submitting Cmd Buffer When Uploading VBO");
+    }
 
     E64::GPUBufferHandle handle = SDLGPURegistry::vbo_handle;
     SDLGPURegistry::vbo_registry[SDLGPURegistry::vbo_handle++] = vertex_buffer;
@@ -233,7 +264,9 @@ E64::GPUBufferHandle E64::SDLRenderer::createIndexBuffer(std::vector<E64::Index>
 
     SDL_UploadToGPUBuffer(copy_pass, &location, &region, true);
     SDL_EndGPUCopyPass(copy_pass);
-    SDL_SubmitGPUCommandBuffer(cmd_buffer);
+    if (!SDL_SubmitGPUCommandBuffer(cmd_buffer)) {
+        E64::Log::error("Error Submitting Cmd Buffer When Uploading IBO");
+    }
 
     E64::GPUBufferHandle handle = SDLGPURegistry::ibo_handle;
     SDLGPURegistry::ibo_registry[SDLGPURegistry::ibo_handle++] = index_buffer;
@@ -244,6 +277,9 @@ E64::GPUBufferHandle E64::SDLRenderer::createIndexBuffer(std::vector<E64::Index>
 
 E64::GPUTextureHandle E64::SDLRenderer::createTexture(unsigned char* img_data, int width, int height){
     int img_size = width * height * 4;
+    if (img_size == 0) {
+        E64::Log::error("Texture Not Created!");
+    }
 
     SDL_GPUTextureCreateInfo info = {};
     info.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM;
@@ -284,7 +320,9 @@ E64::GPUTextureHandle E64::SDLRenderer::createTexture(unsigned char* img_data, i
     
     SDL_UploadToGPUTexture(copy_pass, &textureTransferInfo, &region, true);
     SDL_EndGPUCopyPass(copy_pass);
-    SDL_SubmitGPUCommandBuffer(cmd_buffer);
+    if (!SDL_SubmitGPUCommandBuffer(cmd_buffer)) {
+        E64::Log::error("Error Submitting Cmd Buffer When Uploading Texture");
+    }
 
     E64::GPUTextureHandle handle = SDLGPURegistry::texture_handle;
     SDLGPURegistry::texture_registry[SDLGPURegistry::texture_handle++] = texture;
@@ -323,7 +361,9 @@ void E64::SDLRenderer::pushFragmentUniform(const void* data, size_t size, uint32
 }
 
 void E64::SDLRenderer::submit(){
-    SDL_SubmitGPUCommandBuffer(cmd_buf);
+    if (!SDL_SubmitGPUCommandBuffer(cmd_buf)) {
+        E64::Log::error("Error Submitting Cmd Buffer At End of Render Pass");
+    }
     current_render_pass = 0;
 }
 

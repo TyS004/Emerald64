@@ -121,7 +121,7 @@ namespace E64{
         int height;
         int channels;
 
-        unsigned char* img_data = stbi_load("../assets/textures/test.png", &width, &height, &channels, STBI_rgb_alpha);
+        unsigned char* img_data = nullptr;
     };
 }
 

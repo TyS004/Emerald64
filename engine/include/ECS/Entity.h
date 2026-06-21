@@ -4,12 +4,13 @@
 #include <unordered_map>
 
 #include "ECS/Component.h"
+#include "E64Core.h"
 
 namespace E64{
     namespace ECS{
         using Entity = uint32_t;
 
-        class EntityManager{
+        class E64_API EntityManager{
             public:
                 static Entity createEntity();
                 static void registerEntity(ECS::Entity e);

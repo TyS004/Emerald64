@@ -1,8 +1,11 @@
 #include "Layer/SceneLayer.h"
 #include "Engine.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 #include "AssetManager/AssetManager.h"
 
@@ -35,11 +38,12 @@ E64::SceneLayer::SceneLayer(){
         E64::Log::info("Loading Scene");
         //Scene
         SceneSerializer scene_serializer;
-        scene = scene_serializer.deserialize("../assets/scenes/scene.json");
+        scene = scene_serializer.deserialize(E64::Engine::ctx->asset_manager->getProjectDir() + "/scenes/scene.json");
         if(!scene){ E64::Log::error("Scene Could Not Be Loaded"); }
         else{ E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene)); }
 
         E64::Log::info("SCENE: " + scene->getName() + " LOADED");
+        scene->printScene();
     }
     scene->printScene();
 }
@@ -59,7 +63,7 @@ void E64::SceneLayer::OnRender(){
     if(E64::Engine::ctx->mode == EDITOR){
         renderer->beginRenderPass(RenderTarget::TEXTURE);
     }
-    else{
+    else if(E64::Engine::ctx->mode == DESKTOP_RUNTIME){
         renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
     }
     renderer->bindPipeline();
@@ -81,8 +85,8 @@ void E64::SceneLayer::OnRender(){
         }
     }
     uint32_t num_pointlights = light_uniforms.size();
-    renderer->pushFragmentUniform(light_uniforms.data(), sizeof(ECS::PointLightUniform) * num_pointlights, 0);
-    renderer->pushFragmentUniform(&num_pointlights, sizeof(uint32_t), 1);
+    /*renderer->pushFragmentUniform(light_uniforms.data(), sizeof(ECS::PointLightUniform) * num_pointlights, 0);
+    renderer->pushFragmentUniform(&num_pointlights, sizeof(uint32_t), 1);*/
 
     for(ECS::Entity entity : scene->getEntites()){
         if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(entity) &&

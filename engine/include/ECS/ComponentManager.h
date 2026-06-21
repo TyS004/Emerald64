@@ -106,8 +106,8 @@ namespace E64{
                 static void deserialize(const json& entity_json, ECS::Entity e){
                     for(auto& [name, fns] : ComponentRegistryBase::handlers){
                         if(entity_json.contains(name)) {
-                            E64::Log::info("JSON DESERIALZIE CONTAINS: " + name);
-                            E64::Log::info("");
+                            /*E64::Log::info("JSON DESERIALZIE CONTAINS: " + name);
+                            E64::Log::info("");*/
                             fns.second(entity_json[name], e);
                         }
                     }

@@ -2,8 +2,6 @@
 
 #include "Layer/Layer.h"
 
-#include <unistd.h>
-
 bool E64::Engine::running = true;
 std::unique_ptr<E64::EngineCtx> E64::Engine::ctx = std::make_unique<E64::EngineCtx>();
 

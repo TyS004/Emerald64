@@ -10,6 +10,8 @@ int tex_id = 0;
 E64::AssetManager::AssetManager(){
     E64::Log::info("ASSET MANAGER INSTANTIATED\n");
 
+    project_dir = E64::Engine::ctx->root_dir;
+
     loadMeshAsset("default");
     loadTextureAsset("default");
 }
@@ -20,7 +22,7 @@ E64::AssetManager::~AssetManager(){
 
 E64::AssetHandle E64::AssetManager::loadMeshAsset(std::string path){
     if(mesh_handle_repository.count(path) > 0){
-        E64::Log::info("Mesh Already Registered");
+        E64::Log::info("Mesh Already Registered : Returning Handle to Mesh from Repository");
         return mesh_handle_repository.at(path);
     }
     
@@ -28,7 +30,7 @@ E64::AssetHandle E64::AssetManager::loadMeshAsset(std::string path){
     if(path != "default"){
         std::filesystem::path absolute_path = E64::Engine::ctx->root_dir.string() + path;
         E64::MeshSerializer serializer;
-        mesh = serializer.deserialize(absolute_path);
+        mesh = serializer.deserialize(absolute_path.string());
     }
     mesh.batch();
 
@@ -46,14 +48,18 @@ E64::AssetHandle E64::AssetManager::loadMeshAsset(std::string path){
 
 E64::AssetHandle E64::AssetManager::loadTextureAsset(std::string path){
     if(texture_handle_repository.count(path) > 0){
-        E64::Log::info("Texture Already Registered");
+        E64::Log::info("Texture Already Registered : Returning Handle to Texture from Repository");
         return texture_handle_repository.at(path);
     }
 
     Texture texture{};
+    texture.img_data = stbi_load(std::string(E64::Engine::ctx->root_dir.string() + "/textures/test.png").c_str(), &texture.width, &texture.height, &texture.channels, STBI_rgb_alpha);
     if(path != "default"){
-        std::filesystem::path absolute_path = E64::Engine::ctx->root_dir.string() + path;
-        texture.img_data = stbi_load(absolute_path.c_str(), &texture.width, &texture.height, &texture.channels, STBI_rgb_alpha);
+        std::filesystem::path absolute_path = project_dir.string() + path;
+        texture.img_data = stbi_load(absolute_path.string().c_str(), &texture.width, &texture.height, &texture.channels, STBI_rgb_alpha);
+        if (texture.img_data == nullptr) {
+            return texture_handle_repository.at("default");
+        }
     }
     texture.texture = E64::Engine::ctx->renderer->createTexture(texture.img_data, texture.width, texture.height);
     texture.sampler = E64::Engine::ctx->renderer->createSampler();
@@ -99,4 +105,12 @@ std::vector<E64::AssetHandle> E64::AssetManager::getHandles(){
 
 std::unordered_map<std::string, E64::AssetHandle> E64::AssetManager::getHandleRepository(){
     return mesh_handle_repository;
+}
+
+std::string E64::AssetManager::getProjectDir() {
+    return this->project_dir.string();
+}
+
+void E64::AssetManager::setProjectDir(std::filesystem::path dir) {
+    this->project_dir = dir;
 }

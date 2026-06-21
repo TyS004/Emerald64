@@ -1,4 +1,5 @@
 #include "Renderer/SDLShader.h"
+#include <Logger/Logger.h>
 
 #include <string>
 
@@ -16,12 +17,18 @@ E64::SDLShader::~SDLShader(){
 SDL_GPUShader* E64::SDLShader::loadShader(){
     char fullPath[256];
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
-        if(__APPLE__) snprintf(fullPath, sizeof(fullPath), "%s_vert.metal", path);
-        else          snprintf(fullPath, sizeof(fullPath), "%s_vert.spv", path);
+        #ifdef E64_APPLE
+            snprintf(fullPath, sizeof(fullPath), "%s_vert.metal", path);
+        #else
+            snprintf(fullPath, sizeof(fullPath), "%s_vert.dxil", path);
+        #endif
     }
     else{
-        if(__APPLE__) snprintf(fullPath, sizeof(fullPath), "%s_frag.metal", path);
-        else          snprintf(fullPath, sizeof(fullPath), "%s_frag.spv", path);
+        #ifdef E64_APPLE
+            snprintf(fullPath, sizeof(fullPath), "%s_frag.metal", path);
+        #else
+            snprintf(fullPath, sizeof(fullPath), "%s_frag.dxil", path);
+        #endif
     }
 
     size_t codeSize;
@@ -39,18 +46,29 @@ SDL_GPUShader* E64::SDLShader::loadShader(){
     info.num_storage_buffers = 0;
     info.num_storage_textures = 0;
 
-    if(__APPLE__) info.format = SDL_GPU_SHADERFORMAT_MSL;
-    else          info.format = SDL_GPU_SHADERFORMAT_SPIRV;
+    #ifdef E64_APPLE
+        info.format = SDL_GPU_SHADERFORMAT_MSL;
+    #else
+        info.format = SDL_GPU_SHADERFORMAT_DXIL;
+    #endif
 
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
         info.num_uniform_buffers = 4;
         info.num_samplers = 0;
-        info.entrypoint = "vertex_main";
+        #ifdef E64_APPLE
+                info.entrypoint = "vertex_main";
+        #else
+                info.entrypoint = "main";
+        #endif 
     }
     else{
-        info.num_uniform_buffers = 3;
+        info.num_uniform_buffers = 0;
         info.num_samplers = 1;
-        info.entrypoint = "fragment_main";
+        #ifdef E64_APPLE
+                info.entrypoint = "fragment_main";
+        #else
+                info.entrypoint = "main";
+        #endif 
     }
 
     SDL_GPUShader* shader = SDL_CreateGPUShader(device, &info);

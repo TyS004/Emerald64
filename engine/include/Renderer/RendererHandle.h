@@ -8,11 +8,11 @@
 namespace E64{
     using CommandBufferHandle = uint32_t;
 
-    using GPUBufferHandle = uint32_t;
-    using GPUTextureHandle = uint32_t;
-    using GPUSamplerHandle = uint32_t;
+    using GPUBufferHandle = int32_t;
+    using GPUTextureHandle = int32_t;
+    using GPUSamplerHandle = int32_t;
 
-    struct __attribute__((packed)) PackedVec3 {
+    /*struct __attribute__((packed)) PackedVec3 {
         float x, y, z;
         PackedVec3() : x(0), y(0), z(0) {}
         PackedVec3(float x, float y, float z) : x(x), y(y), z(z) {}
@@ -41,12 +41,13 @@ namespace E64{
             x = *it++; y = *it++;
         }
     };
-    
-    struct __attribute__((packed)) Vertex{
-        PackedVec3 pos;
-        PackedVec4 color;
-        PackedVec2 uv;
-        PackedVec3 norm;
+    */
+
+    struct Vertex{
+        glm::vec3 pos;
+        glm::vec4 color;
+        glm::vec2 uv;
+        glm::vec3 norm;
     };
 
     using Index = uint32_t;

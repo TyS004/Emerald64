@@ -6,16 +6,17 @@
 #include "Window/Window.h"
 #include "ECS/Scene.h"
 #include "AssetManager/AssetManager.h"
+#include "E64Core.h"
 
 namespace E64{
-    enum E64_MODE{
+    enum E64_API E64_MODE{
         EDITOR,
         DESKTOP_RUNTIME,
         N64_RUNTIME,
         NONE
     };
 
-    struct EngineCtx{
+    struct E64_API EngineCtx{
         Window* window;
         IRenderer* renderer;
         Input* input;

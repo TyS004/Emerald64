@@ -96,7 +96,7 @@ E64::Mesh Editor::AssetImporter::importMesh(std::string path){
 
     E64::MeshSerializer serializer;
     std::filesystem::path fs_path = path;
-    serializer.serialize(mesh, fs_path.replace_extension(".e64mesh"));
+    serializer.serialize(mesh, fs_path.replace_extension(".e64mesh").string());
 
     return mesh;
 }

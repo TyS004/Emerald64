@@ -1,7 +1,7 @@
 #ifndef ASSETMANAGER_H
 #define ASSETMANAGER_H
 
-#include "AssetHandle.h"
+#include "AssetManager/AssetHandle.h"
 #include "AssetManager/Assets.h"
 #include "ECS/Component.h"
 
@@ -20,6 +20,9 @@ namespace E64{
             std::vector<Mesh*> getAssets();
             std::vector<AssetHandle> getHandles();
             std::unordered_map<std::string, E64::AssetHandle> getHandleRepository();
+
+            std::string getProjectDir();
+            void setProjectDir(std::filesystem::path dir);
 
         private:
             std::unordered_map<AssetHandle, std::unique_ptr<Mesh>> mesh_repository;

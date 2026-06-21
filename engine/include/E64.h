@@ -15,3 +15,5 @@
 
 #include "Serialization/SceneSerializer.h"
 #include "Serialization/MeshSerializer.h"
+
+#include "Logger/Logger.h"
