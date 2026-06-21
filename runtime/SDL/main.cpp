@@ -8,7 +8,11 @@
 
 int main(){
     E64::Engine::ctx->mode = E64::E64_MODE::DESKTOP_RUNTIME;
-    E64::Engine::ctx->root_dir = "../../../assets/";
+    #ifdef E64_APPLE
+        E64::Engine::ctx->root_dir = "../assets/";
+    #else
+        E64::Engine::ctx->root_dir = "../../../assets/";
+    #endif
 
     E64::SDLWindow* window = new E64::SDLWindow();
     window->create("E64 Runtime", 800, 600);

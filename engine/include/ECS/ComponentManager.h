@@ -13,12 +13,11 @@ namespace E64{
             public:
                 template <typename T>   
                 static T* getComponent(Entity e){
-                    if(e < 0) return nullptr;
                     if(!(EntityManager::entity_index[e] & ComponentBit<T>::mask)) { 
                         E64::Log::error("Component Not Found : ComponentManager::getComponent");
                         return nullptr; 
                     }
-                    uint32_t i = ComponentRegistry<T>::entity_to_idx[e];
+                    uint32_t i = ComponentRegistry<T>::entity_to_idx.at(e);
                     return &ComponentRegistry<T>::registry.at(i);
                 }
                 
@@ -29,16 +28,11 @@ namespace E64{
                 
                 template <typename T>
                 static bool hasComponent(Entity e){
-                    if(e < 0) return false;
                     return EntityManager::entity_index[e] & ComponentBit<T>::mask;
                 }
                 
                 template <typename T>
                 static void addComponent(Entity e, T comp){
-                    if(e < 0) { 
-                        E64::Log::error("Entity Invalid!");
-                        return; 
-                    }
                     if(hasComponent<T>(e)) { 
                         E64::Log::error("Entity Already has this Component!");
                         return; 
@@ -54,7 +48,6 @@ namespace E64{
                 template <typename T>
                 static void addComponent(Entity e){
                     T comp {};
-                    if(e < 0) { E64::Log::error("Entity Invalid!"); return; }
                     if(hasComponent<T>(e)) { 
                         E64::Log::error("Entity Already has this Component!");
                         return; 
@@ -69,8 +62,6 @@ namespace E64{
 
                 template <typename T>
                 static void removeComponent(Entity e){
-                    if(e < 0) { E64::Log::error("Entity Invalid!"); return; }
-
                     E64::Log::debug("Removing Component From Entity: " + std::to_string(e));
 
                     std::vector<T>* registry = &ComponentRegistry<T>::registry;

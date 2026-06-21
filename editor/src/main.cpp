@@ -7,7 +7,11 @@
 
 int main(){
     E64::Engine::ctx->mode = E64::E64_MODE::EDITOR;
-    E64::Engine::ctx->root_dir = "../assets/";
+    #ifdef E64_APPLE
+        E64::Engine::ctx->root_dir = "../assets/";
+    #else
+        E64::Engine::ctx->root_dir = "../../../assets/";
+    #endif
     
     std::cout << "Starting Editor" << std::endl;
 

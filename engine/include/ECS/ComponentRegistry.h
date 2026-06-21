@@ -4,9 +4,11 @@
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
 
+#include "E64Core.h"
+
 namespace E64{
     namespace ECS{
-        struct ComponentRegistryBase{
+        struct E64_API ComponentRegistryBase{
             inline static std::unordered_map
                             <std::string,
                                 std::pair<std::function<void(json&, ECS::Entity)>,
@@ -15,7 +17,7 @@ namespace E64{
         };
         
         template <typename T>
-        struct ComponentRegistry : ComponentRegistryBase{
+        struct E64_API ComponentRegistry : ComponentRegistryBase{
             inline static std::vector<T> registry {};
 
             inline static std::unordered_map<ECS::Entity, uint32_t> entity_to_idx;

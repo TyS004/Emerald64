@@ -66,14 +66,14 @@ void Editor::EditorInput::OnFileDropped(const char* path) {
         }
 
         AssetImporter importer;
-        E64::Mesh mesh = importer.importMesh(fs_path);
+        E64::Mesh mesh = importer.importMesh(fs_path.string());
 
-        std::filesystem::path base = "/Users/tylerstier/Desktop/Emerald64/assets";
-        std::filesystem::path rel = std::filesystem::relative(path, base);
-        E64::AssetHandle handle = E64::Engine::ctx->asset_manager->loadMeshAsset(rel.replace_extension(".e64mesh"));
+        std::filesystem::path rel = std::filesystem::relative(path, E64::Engine::ctx->root_dir);
+        E64::AssetHandle handle = E64::Engine::ctx->asset_manager->loadMeshAsset(rel.replace_extension(".e64mesh").string());
         mesh_comp->mesh_handle = handle;
-        mesh_comp->mesh_path = rel.replace_extension(".e64mesh");
+        mesh_comp->mesh_path = rel.replace_extension(".e64mesh").string();
     }
+
     else if (ext == ".png" || ext == ".jpg" || ext == ".bmp") {
         E64::ECS::MeshComponent* mesh_comp = E64::ECS::ComponentManager::getComponent<E64::ECS::MeshComponent>(selected_entity);
         if(!mesh_comp){
@@ -81,10 +81,9 @@ void Editor::EditorInput::OnFileDropped(const char* path) {
             return;
         }
         
-        std::filesystem::path base = "/Users/tylerstier/Desktop/Emerald64/assets";
-        std::filesystem::path rel = std::filesystem::relative(path, base);
-        E64::AssetHandle handle = E64::Engine::ctx->asset_manager->loadTextureAsset(rel);
+        std::filesystem::path rel = std::filesystem::relative(path, E64::Engine::ctx->root_dir);
+        E64::AssetHandle handle = E64::Engine::ctx->asset_manager->loadTextureAsset(rel.string());
         mesh_comp->tex_handle = handle;
-        mesh_comp->texture_path = rel;
+        mesh_comp->texture_path = rel.string();
     }
 }

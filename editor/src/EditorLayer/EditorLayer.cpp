@@ -55,7 +55,7 @@ Editor::EditorLayer::EditorLayer(){
 
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     
-    font = io.Fonts->AddFontFromFileTTF("../assets/fonts/Switzer-Variable.ttf", 16.0f * retina_scale, &cfg);
+    font = io.Fonts->AddFontFromFileTTF(std::string(E64::Engine::ctx->root_dir.string() + "fonts/Switzer-Variable.ttf").c_str(), 16.0f * retina_scale, &cfg);
     io.FontGlobalScale = 1.0f / retina_scale;
 }
 
@@ -77,28 +77,32 @@ void Editor::EditorLayer::OnUpdate(float dt){
 }
 
 void Editor::EditorLayer::OnRender(){
-    SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
-    Scene* scene = E64::Engine::ctx->active_scene.get();
-    ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(selected);
+    if (ECS::ComponentManager::hasComponent<ECS::TransformComponent>(selected) && 
+        ECS::ComponentManager::hasComponent<ECS::MeshComponent>(selected)) {
+        SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+        Scene* scene = E64::Engine::ctx->active_scene.get();
+        ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(selected);
+        ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected);
 
-    renderer->setColorLoadOP(E64::RenderLoadOP::LOAD);
-    renderer->setDepthLoadOP(E64::RenderLoadOP::LOAD);
-    renderer->beginRenderPass(RenderTarget::TEXTURE);
+        renderer->setColorLoadOP(E64::RenderLoadOP::LOAD);
+        renderer->setDepthLoadOP(E64::RenderLoadOP::LOAD);
+        renderer->beginRenderPass(RenderTarget::TEXTURE);
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
-                * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
-                * glm::scale(glm::mat4(1.0f), transform->scale * 1.15f);
-    glm::mat4 view = scene->getCameraData().view;
-    glm::mat4 proj = scene->getCameraData().proj;
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
+            * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
+            * glm::scale(glm::mat4(1.0f), transform->scale * 1.15f);
+        glm::mat4 view = scene->getCameraData().view;
+        glm::mat4 proj = scene->getCameraData().proj;
 
-    renderer->pushVertexUniform(&model, sizeof(glm::mat4), 0);
-    renderer->pushVertexUniform(&view, sizeof(glm::mat4), 1);
-    renderer->pushVertexUniform(&proj, sizeof(glm::mat4), 2);
-    
-    renderer->bindPipeline();
-    renderer->draw(ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected));
+        renderer->pushVertexUniform(&model, sizeof(glm::mat4), 0);
+        renderer->pushVertexUniform(&view, sizeof(glm::mat4), 1);
+        renderer->pushVertexUniform(&proj, sizeof(glm::mat4), 2);
 
-    renderer->endRenderPass();
+        renderer->bindPipeline();
+        renderer->draw(mesh_comp);
+
+        renderer->endRenderPass();
+    }
 }
 
 void Editor::EditorLayer::OnImGuiRender(){
@@ -159,11 +163,11 @@ void Editor::EditorLayer::buildMainMenuBar(){
         {
             if(ImGui::MenuItem("Save Scene", "(CTRL + S)")){
                 E64::SceneSerializer serializer;
-                serializer.serialize("../assets/scenes/scene.json");
+                serializer.serialize(E64::Engine::ctx->root_dir.string() + "scenes/scene.json");
             }
             if(ImGui::MenuItem("Load Scene")){
                 E64::SceneSerializer serializer;
-                E64::Scene* scene = serializer.deserialize("../assets/scenes/scene.json");
+                E64::Scene* scene = serializer.deserialize(E64::Engine::ctx->root_dir.string() + "scenes/scene.json");
                 E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>(std::move(*scene));
             }
             ImGui::EndMenu();
@@ -411,8 +415,8 @@ void Editor::EditorLayer::buildFileManager(){
 
 void Editor::EditorLayer::drawSelectedEntityOutline(ImVec2 mouse_pos){
     SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
-    float* mouse_pos_uniform;
-    mouse_pos_uniform[0] = mouse_pos.x;
-    mouse_pos_uniform[1] = mouse_pos.y;
-    renderer->pushFragmentUniform(mouse_pos_uniform, sizeof(float) * 2, 2);
+    //float* mouse_pos_uniform;
+    //mouse_pos_uniform[0] = mouse_pos.x;
+    //mouse_pos_uniform[1] = mouse_pos.y;
+    //renderer->pushFragmentUniform(mouse_pos_uniform, sizeof(float) * 2, 2);
 }
