@@ -11,6 +11,7 @@ namespace E64 {
         public:
             SDLPipeline() {}
             SDLPipeline(const char* shader_path, SDL_GPUFillMode mode = SDL_GPU_FILLMODE_FILL);
+            SDLPipeline(const char* vertexShaderPath, const char* fragementShaderPath, SDL_GPUFillMode mode = SDL_GPU_FILLMODE_FILL);
 
             ~SDLPipeline();
 
@@ -19,8 +20,9 @@ namespace E64 {
 
             SDL_GPUFillMode getFillMode();
 
-            void setStencilFrontCompareOP(SDL_GPUCompareOp OP);
-            void setStencilFrontPassOP(SDL_GPUStencilOp OP);
+            SDL_GPUDepthStencilState* getDepthStencilState();
+            SDL_GPUGraphicsPipelineCreateInfo* getPipelineInfo();
+
         private:
             SDL_GPUDevice* device;
 

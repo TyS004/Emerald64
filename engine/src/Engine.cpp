@@ -27,7 +27,7 @@ void E64::Engine::run(){
         for(Layer* layer : E64::Layer::layers){
             layer->OnUpdate(dt);
         }
-        for(Layer* layer : E64::Layer::layers){
+        for (Layer* layer : E64::Layer::layers) {
             layer->OnRender();
         }
         for(Layer* layer : E64::Layer::layers){

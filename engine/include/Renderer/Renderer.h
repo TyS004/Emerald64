@@ -29,7 +29,7 @@ namespace E64{
 
             virtual void startFrame(){};
 
-            virtual void bindPipeline(){};
+            virtual void bindPipeline(int pipeline_idx){};
             virtual void bindVertexBuffers(ECS::MeshComponent* comp){};
             virtual void bindIndexBuffers(ECS::MeshComponent* comp){};
             virtual void bindFragmentSamplers(ECS::MeshComponent* comp){};
@@ -43,6 +43,7 @@ namespace E64{
             virtual void setColorLoadOP(RenderLoadOP OP) {};
             virtual void setColorStoreOP(RenderStoreOP OP) {};
             virtual void setDepthLoadOP(RenderLoadOP OP) {};
+            virtual void setStencilLoadOP(RenderLoadOP OP) {};
             virtual void setDepthStoreOP(RenderStoreOP OP) {};
 
             virtual void setStencilReference(int ref) {};

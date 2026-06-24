@@ -57,16 +57,16 @@ void E64::SceneLayer::OnRender(){
     if(!scene) { E64::Log::error("NO SCENE"); return; }
 
     E64::IRenderer* renderer = E64::Engine::ctx->renderer;
-
     renderer->setColorLoadOP(E64::RenderLoadOP::CLEAR);
+    renderer->setStencilLoadOP(E64::RenderLoadOP::CLEAR);
     renderer->setDepthLoadOP(E64::RenderLoadOP::CLEAR);
-    if(E64::Engine::ctx->mode == EDITOR){
+    if (E64::Engine::ctx->mode == EDITOR) {
         renderer->beginRenderPass(RenderTarget::TEXTURE);
     }
-    else if(E64::Engine::ctx->mode == DESKTOP_RUNTIME){
+    else if (E64::Engine::ctx->mode == DESKTOP_RUNTIME) {
         renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
     }
-    renderer->bindPipeline();
+    renderer->bindPipeline(0);
 
     std::vector<ECS::PointLightUniform> light_uniforms{};
     for(ECS::Entity entity : scene->getEntites()){
@@ -140,7 +140,6 @@ void E64::SceneLayer::OnRender(){
             renderer->pushVertexUniform(&normalMat, sizeof(glm::mat4), 3);
 
             renderer->draw(mesh_componet);
-            renderer->setStencilReference(1);
         }
     }
     renderer->endRenderPass();

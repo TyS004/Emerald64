@@ -16,7 +16,7 @@ namespace E64 {
 
             void startFrame();
 
-            void bindPipeline();
+            void bindPipeline(int pipeline_idx);
             void bindVertexBuffers(E64::ECS::MeshComponent* comp);
             void bindIndexBuffers(E64::ECS::MeshComponent* comp);
             void bindFragmentSamplers(E64::ECS::MeshComponent* comp);
@@ -46,7 +46,12 @@ namespace E64 {
             void setColorLoadOP(E64::RenderLoadOP OP);
             void setColorStoreOP(E64::RenderStoreOP OP);
             void setDepthLoadOP(E64::RenderLoadOP OP);
+            void setStencilLoadOP(E64::RenderLoadOP OP);
             void setDepthStoreOP(E64::RenderStoreOP OP);
+
+            SDL_GPUColorTargetInfo* getColorTargetInfo();
+
+            std::vector<std::unique_ptr<SDLPipeline>>* getPipelines();
 
             void setStencilReference(int ref);
 
@@ -59,7 +64,6 @@ namespace E64 {
             RenderTarget target;
 
             std::vector<std::unique_ptr<SDLPipeline>> pipelines;
-            //std::vector<SDLPipeline> pipelines;
 
             SDL_GPURenderPass* render_pass;
 

@@ -56,6 +56,37 @@ if(APPLE)
     target_compile_definitions(E64 PUBLIC E64_APPLE)
 elseif(WIN32)
     target_compile_definitions(E64 PUBLIC E64_WIN32)
+
+    find_program(DXC_EXECUTABLE dxc REQUIRED)
+
+    file(GLOB SHADER_FILES "${CMAKE_SOURCE_DIR}/assets/shaders/*.hlsl")
+
+    foreach(SHADER ${SHADER_FILES})
+        get_filename_component(SHADER_NAME ${SHADER} NAME_WE)
+
+        if(SHADER_NAME MATCHES "_frag$")
+            set(PROFILE "ps_6_0")
+            set(ENTRY "main")
+        elseif(SHADER_NAME MATCHES "_vert$")
+            set(PROFILE "vs_6_0")
+            set(ENTRY "main")
+        else()
+            message(WARNING "Skipping ${SHADER_NAME}: no _frag or _vert suffix")
+            continue()
+        endif()
+
+        set(OUTPUT_DXIL "${CMAKE_SOURCE_DIR}/assets/shaders/${SHADER_NAME}.dxil")
+
+        add_custom_command(
+            OUTPUT ${OUTPUT_DXIL}
+            COMMAND ${DXC_EXECUTABLE} -T ${PROFILE} -E ${ENTRY} -Fo ${OUTPUT_DXIL} ${SHADER}
+            DEPENDS ${SHADER}
+            VERBATIM
+        )
+        list(APPEND SHADER_OUTPUTS ${OUTPUT_DXIL})
+    endforeach()
+
+    add_custom_target(Shaders ALL DEPENDS ${SHADER_OUTPUTS})
 endif()
 
 set_target_properties(E64 PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)

@@ -17,6 +17,8 @@ Editor::EditorLayer::EditorLayer(){
 
     selected = 0;
     componentAdditionSelected = false;
+    mouse_pos_uniform[0] = -1.0f;
+    mouse_pos_uniform[1] = -1.0f;
     
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -79,26 +81,38 @@ void Editor::EditorLayer::OnUpdate(float dt){
 void Editor::EditorLayer::OnRender(){
     if (ECS::ComponentManager::hasComponent<ECS::TransformComponent>(selected) && 
         ECS::ComponentManager::hasComponent<ECS::MeshComponent>(selected)) {
-        SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
         Scene* scene = E64::Engine::ctx->active_scene.get();
         ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(selected);
         ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected);
 
+        SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
         renderer->setColorLoadOP(E64::RenderLoadOP::LOAD);
         renderer->setDepthLoadOP(E64::RenderLoadOP::LOAD);
+        renderer->setStencilLoadOP(E64::RenderLoadOP::LOAD);
+
         renderer->beginRenderPass(RenderTarget::TEXTURE);
 
         glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
             * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
-            * glm::scale(glm::mat4(1.0f), transform->scale * 1.15f);
+            * glm::scale(glm::mat4(1.0f), transform->scale);
         glm::mat4 view = scene->getCameraData().view;
         glm::mat4 proj = scene->getCameraData().proj;
 
         renderer->pushVertexUniform(&model, sizeof(glm::mat4), 0);
-        renderer->pushVertexUniform(&view, sizeof(glm::mat4), 1);
-        renderer->pushVertexUniform(&proj, sizeof(glm::mat4), 2);
+        renderer->pushVertexUniform(&view,  sizeof(glm::mat4), 1);
+        renderer->pushVertexUniform(&proj,  sizeof(glm::mat4), 2);
 
-        renderer->bindPipeline();
+        renderer->bindPipeline(1);
+        renderer->setStencilReference(1);
+        renderer->draw(mesh_comp);
+
+        model = glm::translate(glm::mat4(1.0f), transform->position)
+            * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
+            * glm::scale(glm::mat4(1.0f), transform->scale * 1.05f);
+        renderer->pushVertexUniform(&model, sizeof(glm::mat4), 0);
+
+        renderer->bindPipeline(2);
+        renderer->setStencilReference(1);
         renderer->draw(mesh_comp);
 
         renderer->endRenderPass();
@@ -218,13 +232,15 @@ void Editor::EditorLayer::buildViewport(){
     ImGui::Image((ImTextureID)renderer->getSceneTexture(), ImGui::GetContentRegionAvail());
     if(input->debug_mode) buildDebug(viewport_tl);
 
+    ImVec2 viewport_mouse_pos = { ImGui::GetMousePos().x - ImGui::GetWindowPos().x, ImGui::GetMousePos().y - ImGui::GetWindowPos().y };
+    viewport_mouse_pos.x = viewport_mouse_pos.x / avail.x;
+    viewport_mouse_pos.y = viewport_mouse_pos.y / avail.y;
     if(ImGui::IsItemClicked()){
-        ImVec2 mouse_pos = {ImGui::GetMousePos().x - ImGui::GetWindowPos().x, ImGui::GetMousePos().y - ImGui::GetWindowPos().y};
-        mouse_pos.x = mouse_pos.x / avail.x;
-        mouse_pos.y = mouse_pos.y / avail.y;
-        E64::Log::info(std::to_string(mouse_pos.x) + ", " + std::to_string(mouse_pos.y));
-        drawSelectedEntityOutline(mouse_pos);
+        mouse_pos_uniform[0] = viewport_mouse_pos.x;
+        mouse_pos_uniform[1] = viewport_mouse_pos.y;
+        E64::Log::info(std::to_string(viewport_mouse_pos.x) + ", " + std::to_string(viewport_mouse_pos.y));
     }
+    renderer->pushFragmentUniform(mouse_pos_uniform, sizeof(float) * 2, 2);
 
     ImGui::End();
 }
@@ -328,7 +344,7 @@ void Editor::EditorLayer::buildTransformHeader(){
         ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(selected);
         ImGui::DragFloat3("Position", &transform->position.x, 0.05f);
         ImGui::DragFloat3("Rotation", &transform->euler.x, 0.01f);
-        ImGui::DragFloat3("Scale", &transform->scale.x, 0.05f);
+        ImGui::DragFloat3("Scale", &transform->scale.x, 0.05f, 0.0f, INT_MAX);
 
         ImGui::PushID(0);
         if(ImGui::Button("-", {ImGui::GetContentRegionAvail().x - 100, 30.0f}))
@@ -411,12 +427,4 @@ void Editor::EditorLayer::buildFileManager(){
     }
 
     ImGui::End();
-}
-
-void Editor::EditorLayer::drawSelectedEntityOutline(ImVec2 mouse_pos){
-    //SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
-    //float* mouse_pos_uniform;
-    //mouse_pos_uniform[0] = mouse_pos.x;
-    //mouse_pos_uniform[1] = mouse_pos.y;
-    //renderer->pushFragmentUniform(mouse_pos_uniform, sizeof(float) * 2, 2);
 }

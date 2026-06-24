@@ -33,8 +33,12 @@ void Editor::EditorInput::OnKeyPressed(E64::Scancode key) {
         case E64::Scancode::F1:
             debug_mode = !debug_mode;
             break;
-        case E64::Scancode::F12:
-            std::system("./E64Runtime");
+        case E64::Scancode::F10:
+        #ifdef E64_APPLE
+                    std::system("./E64Runtime");
+        #else
+                    std::system("E64Runtime");
+        #endif
             break;
         default:
             break;

@@ -25,6 +25,16 @@ E64::SDLRenderer::SDLRenderer(){
     depth_texture = SDL_CreateGPUTexture(device, &depth_texture_info);
     if (!depth_texture) { E64::Log::error("Failed to Create Depth Texture!"); exit(1); }
 
+    depth_target_info = {};
+    depth_target_info.clear_depth = 1.0f;
+    depth_target_info.texture = depth_texture;
+    depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+    depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
+
+    depth_target_info.stencil_load_op = SDL_GPU_LOADOP_CLEAR;
+    depth_target_info.stencil_store_op = SDL_GPU_STOREOP_STORE;
+    depth_target_info.clear_stencil = 0;
+
     scene_texture_info = {};
     scene_texture_info.type   = SDL_GPU_TEXTURETYPE_2D;
     scene_texture_info.format = SDL_GetGPUSwapchainTextureFormat(device, window);
@@ -36,12 +46,6 @@ E64::SDLRenderer::SDLRenderer(){
     scene_texture = SDL_CreateGPUTexture(device, &scene_texture_info);
     if (!scene_texture) { E64::Log::error("Failed to Create Scene Texture!"); exit(1); }
 
-    depth_target_info = {};
-    depth_target_info.clear_depth = 1.0f;
-    depth_target_info.texture = depth_texture;
-    depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
-    depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
-
     color_target_info = {};
     color_target_info.clear_color = {75/255.0f, 75/255.0f, 75/255.0f, 255/255.0f};
     color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
@@ -49,15 +53,34 @@ E64::SDLRenderer::SDLRenderer(){
 
     draw_calls = 0;
 
-    std::string shader_path = E64::Engine::ctx->root_dir.string() + "/shaders/object";
-    pipelines.push_back(std::make_unique<SDLPipeline>(shader_path.c_str()));
-    pipelines.push_back(std::make_unique<SDLPipeline>(shader_path.c_str(), SDL_GPU_FILLMODE_LINE));
-    pipelines[0].get()->setStencilFrontCompareOP(SDL_GPU_COMPAREOP_ALWAYS);
-    pipelines[0].get()->setStencilFrontPassOP(SDL_GPU_STENCILOP_REPLACE);
-    pipelines[0].get()->buildPipeline();
-    pipelines[1].get()->setStencilFrontCompareOP(SDL_GPU_COMPAREOP_NOT_EQUAL);
-    pipelines[1].get()->setStencilFrontPassOP(SDL_GPU_STENCILOP_KEEP);
-    pipelines[1].get()->buildPipeline();
+    std::string object_shader_path = E64::Engine::ctx->root_dir.string() + "shaders/object";
+    std::string outline_shader_path = E64::Engine::ctx->root_dir.string() + "shaders/outline";
+    pipelines.push_back(std::make_unique<SDLPipeline>(object_shader_path.c_str()));
+    pipelines.push_back(std::make_unique<SDLPipeline>(object_shader_path.c_str()));
+    pipelines.push_back(std::make_unique<SDLPipeline>(object_shader_path.c_str(), outline_shader_path.c_str()));
+
+    SDLPipeline* pipeline_stencil_write = pipelines.at(1).get();
+    pipeline_stencil_write->getDepthStencilState()->enable_stencil_test = true;
+    pipeline_stencil_write->buildPipeline();
+
+    SDLPipeline* pipeline = pipelines.at(2).get();
+    SDL_GPUGraphicsPipelineCreateInfo* pipelineInfo = pipeline->getPipelineInfo();
+    SDL_GPUDepthStencilState* depth_stencil_state = pipeline->getDepthStencilState();
+    SDL_GPUStencilOpState outline_state{};
+    outline_state.compare_op = SDL_GPU_COMPAREOP_NOT_EQUAL;
+    outline_state.pass_op = SDL_GPU_STENCILOP_KEEP;
+    outline_state.depth_fail_op = SDL_GPU_STENCILOP_KEEP;
+    outline_state.fail_op = SDL_GPU_STENCILOP_KEEP;
+    depth_stencil_state->front_stencil_state = outline_state;
+    depth_stencil_state->back_stencil_state = outline_state;
+
+    depth_stencil_state->enable_depth_test = true;
+    depth_stencil_state->enable_depth_write = true;
+    depth_stencil_state->enable_stencil_test = true;
+
+    depth_stencil_state->compare_mask = 0xFF;
+
+    pipeline->buildPipeline();
 
     stbi_set_flip_vertically_on_load(true);
 }
@@ -108,6 +131,10 @@ void E64::SDLRenderer::ResizeViewport(){
     depth_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
     depth_target_info.store_op = SDL_GPU_STOREOP_STORE;
 
+    depth_target_info.stencil_load_op = SDL_GPU_LOADOP_CLEAR;
+    depth_target_info.stencil_store_op = SDL_GPU_STOREOP_STORE;
+    depth_target_info.clear_stencil = 0;
+
     if (depth_texture == nullptr) {
         E64::Log::error("Terxture is Nullptr");
     }
@@ -145,8 +172,8 @@ void E64::SDLRenderer::endRenderPass(){
     SDL_EndGPURenderPass(render_pass);
 }
 
-void E64::SDLRenderer::bindPipeline(){
-    SDLPipeline* pipeline = pipelines[current_render_pass - 1].get();
+void E64::SDLRenderer::bindPipeline(int pipeline_idx){
+    SDLPipeline* pipeline = pipelines[pipeline_idx].get();
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
@@ -379,6 +406,10 @@ SDL_GPUTexture* E64::SDLRenderer::getSceneTexture(){
     return scene_texture;
 }
 
+std::vector<std::unique_ptr<E64::SDLPipeline>>* E64::SDLRenderer::getPipelines() {
+    return &pipelines;
+}
+
 void E64::SDLRenderer::setColorLoadOP(E64::RenderLoadOP OP){
     switch(OP){
         case E64::RenderLoadOP::CLEAR:
@@ -412,6 +443,17 @@ void E64::SDLRenderer::setDepthLoadOP(E64::RenderLoadOP OP){
     }
 }
 
+void E64::SDLRenderer::setStencilLoadOP(E64::RenderLoadOP OP) {
+    switch (OP) {
+    case E64::RenderLoadOP::CLEAR:
+        this->depth_target_info.stencil_load_op = SDL_GPU_LOADOP_CLEAR;
+        break;
+    case E64::RenderLoadOP::LOAD:
+        this->depth_target_info.stencil_load_op = SDL_GPU_LOADOP_LOAD;
+        break;
+    }
+}
+
 void E64::SDLRenderer::setDepthStoreOP(E64::RenderStoreOP OP){
     switch(OP){
         case E64::RenderStoreOP::STORE:
@@ -421,6 +463,10 @@ void E64::SDLRenderer::setDepthStoreOP(E64::RenderStoreOP OP){
             this->depth_target_info.store_op = SDL_GPU_STOREOP_RESOLVE;
             break;
     }
+}
+
+SDL_GPUColorTargetInfo* E64::SDLRenderer::getColorTargetInfo() {
+    return &this->color_target_info;
 }
 
 void E64::SDLRenderer::setStencilReference(int ref){

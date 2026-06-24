@@ -62,7 +62,7 @@ SDL_GPUShader* E64::SDLShader::loadShader(){
         #endif 
     }
     else{
-        info.num_uniform_buffers = 2;
+        info.num_uniform_buffers = 3;
         info.num_samplers = 1;
         #ifdef E64_APPLE
                 info.entrypoint = "fragment_main";

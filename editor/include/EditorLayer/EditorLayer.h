@@ -39,8 +39,6 @@ namespace Editor{
                 void buildMeshHeader();
                 void buildCameraHeader();
                 void buildPointLightHeader();
-            
-            void drawSelectedEntityOutline(ImVec2 mouse_pos);
 
             void buildFileManager();
 
@@ -52,6 +50,7 @@ namespace Editor{
             float debug_pad = 15.0f;
 
             ImVec2 viewport_size;
+            float mouse_pos_uniform[2];
             ImFont* font;
 
             E64::SDLWindow* sdl_window;

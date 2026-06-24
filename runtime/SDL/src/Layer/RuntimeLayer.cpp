@@ -1,4 +1,4 @@
-#include "RuntimeLayer.h"
+#include "Layer/RuntimeLayer.h"
 
 using namespace E64;
 
@@ -11,7 +11,7 @@ Runtime::RuntimeLayer::~RuntimeLayer(){
 }
 
 void Runtime::RuntimeLayer::OnUpdate(float dt){
-    /*Scene* scene = E64::Engine::ctx->active_scene.get();
+    Scene* scene = E64::Engine::ctx->active_scene.get();
     for(ECS::Entity e : scene->getEntites()){
         if(ECS::ComponentManager::hasComponent<ECS::PointLightComponent>(e) && ECS::ComponentManager::hasComponent<ECS::TransformComponent>(e)){
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(e);
@@ -21,5 +21,10 @@ void Runtime::RuntimeLayer::OnUpdate(float dt){
             transform->position.z = 2.0f * std::sin(angle);
             angle += 0.002f;
         }
-    }*/
+    }
+    E64::Input* input = E64::Engine::ctx->input;
+
+    if (input->isKeyPressed(E64::Scancode::W)) {
+        
+    }   
 }
