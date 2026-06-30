@@ -4,13 +4,13 @@
 
 #include <cstddef>
 
-E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode){
+E64::SDLPipeline::SDLPipeline(const char* shaderPath, int vert_uniforms, int frag_uniforms, SDL_GPUFillMode fill_mode){
     SDLWindow* sdl_window = dynamic_cast<E64::SDLWindow*>(E64::Engine::ctx->window);
     this->device = sdl_window->getDevice();
     SDL_Window* window = sdl_window->getWindow();
     
-    vert_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
-    frag_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
+    vert_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device, vert_uniforms);
+    frag_shader = new SDLShader(shaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device, frag_uniforms);
 
     pipelineInfo = {};
     pipelineInfo.vertex_shader = vert_shader->getShader();
@@ -84,6 +84,19 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode)
     fmt = SDL_GetGPUSwapchainTextureFormat(device, window);
     colorTargetDesc = {};
     colorTargetDesc.format = fmt;
+    colorTargetDesc.blend_state.enable_blend = true;
+    colorTargetDesc.blend_state.src_color_blendfactor =
+        SDL_GPU_BLENDFACTOR_SRC_ALPHA;
+    colorTargetDesc.blend_state.dst_color_blendfactor =
+        SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
+    colorTargetDesc.blend_state.color_blend_op =
+        SDL_GPU_BLENDOP_ADD;
+    colorTargetDesc.blend_state.src_alpha_blendfactor =
+        SDL_GPU_BLENDFACTOR_ONE;
+    colorTargetDesc.blend_state.dst_alpha_blendfactor =
+        SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
+    colorTargetDesc.blend_state.alpha_blend_op =
+        SDL_GPU_BLENDOP_ADD;
     pipelineInfo.target_info.num_color_targets = 1;
     pipelineInfo.target_info.color_target_descriptions = &colorTargetDesc;
 
@@ -92,13 +105,13 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath, SDL_GPUFillMode fill_mode)
     this->pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
 }
 
-E64::SDLPipeline::SDLPipeline(const char* vertexShaderPath, const char* fragmentShaderPath, SDL_GPUFillMode fill_mode) {
+E64::SDLPipeline::SDLPipeline(const char* vertexShaderPath, const char* fragmentShaderPath, int vert_uniforms, int frag_uniforms, SDL_GPUFillMode fill_mode) {
     SDLWindow* sdl_window = dynamic_cast<E64::SDLWindow*>(E64::Engine::ctx->window);
     this->device = sdl_window->getDevice();
     SDL_Window* window = sdl_window->getWindow();
 
-    vert_shader = new SDLShader(vertexShaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device);
-    frag_shader = new SDLShader(fragmentShaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device);
+    vert_shader = new SDLShader(vertexShaderPath, SDL_GPU_SHADERSTAGE_VERTEX, device, vert_uniforms);
+    frag_shader = new SDLShader(fragmentShaderPath, SDL_GPU_SHADERSTAGE_FRAGMENT, device, frag_uniforms);
 
     pipelineInfo = {};
     pipelineInfo.vertex_shader = vert_shader->getShader();

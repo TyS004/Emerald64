@@ -26,5 +26,5 @@ void Runtime::RuntimeLayer::OnUpdate(float dt){
 
     if (input->isKeyPressed(E64::Scancode::W)) {
         
-    }   
+    }
 }

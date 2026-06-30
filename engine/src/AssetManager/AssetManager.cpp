@@ -58,6 +58,7 @@ E64::AssetHandle E64::AssetManager::loadTextureAsset(std::string path){
         std::filesystem::path absolute_path = project_dir.string() + path;
         texture.img_data = stbi_load(absolute_path.string().c_str(), &texture.width, &texture.height, &texture.channels, STBI_rgb_alpha);
         if (texture.img_data == nullptr) {
+            E64::Log::error("Texture Failed to Load");
             return texture_handle_repository.at("default");
         }
     }

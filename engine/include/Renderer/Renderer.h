@@ -29,7 +29,7 @@ namespace E64{
 
             virtual void startFrame(){};
 
-            virtual void bindPipeline(int pipeline_idx){};
+            virtual void bindPipeline(){};
             virtual void bindVertexBuffers(ECS::MeshComponent* comp){};
             virtual void bindIndexBuffers(ECS::MeshComponent* comp){};
             virtual void bindFragmentSamplers(ECS::MeshComponent* comp){};
@@ -49,7 +49,7 @@ namespace E64{
             virtual void setStencilReference(int ref) {};
 
             virtual void draw(ECS::MeshComponent* comp) {};
-            virtual void drawUI(){};
+            virtual void draw(E64::Texture* texture) {};
             virtual void submit(){};
 
             virtual GPUBufferHandle createVertexBuffer(std::vector<Vertex> vertices){ return 0; };

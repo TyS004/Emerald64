@@ -1,3 +1,8 @@
+cbuffer mouse_pos : register(b0, space3)
+{
+    float2 mouse_pos;
+}
+
 struct PSInput
 {
     float4 position : SV_Position;
@@ -8,7 +13,9 @@ struct PSInput
     float4 norm : TEXCOORD4;
 };
 
+static float2 mouse_pos_now;
+
 float4 main(PSInput input) : SV_Target
 {
-    return float4(0.0f, 1.0f, 0.0f, 1.0f);
+    return float4(0.0, 1.0, 1.0, 1.0);
 }

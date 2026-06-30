@@ -3,10 +3,11 @@
 
 #include <string>
 
-E64::SDLShader::SDLShader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device){
+E64::SDLShader::SDLShader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device, int uniforms){
     this->device = device;
     this->stage = stage;
     this->path = path;
+    this->uniforms = uniforms;
     this->shader = loadShader();
 }
 
@@ -45,6 +46,7 @@ SDL_GPUShader* E64::SDLShader::loadShader(){
     info.stage = stage;
     info.num_storage_buffers = 0;
     info.num_storage_textures = 0;
+    info.num_uniform_buffers = uniforms;
 
     #ifdef E64_APPLE
         info.format = SDL_GPU_SHADERFORMAT_MSL;
@@ -53,7 +55,6 @@ SDL_GPUShader* E64::SDLShader::loadShader(){
     #endif
 
     if(stage == SDL_GPU_SHADERSTAGE_VERTEX){
-        info.num_uniform_buffers = 4;
         info.num_samplers = 0;
         #ifdef E64_APPLE
                 info.entrypoint = "vertex_main";
@@ -62,7 +63,6 @@ SDL_GPUShader* E64::SDLShader::loadShader(){
         #endif 
     }
     else{
-        info.num_uniform_buffers = 3;
         info.num_samplers = 1;
         #ifdef E64_APPLE
                 info.entrypoint = "fragment_main";

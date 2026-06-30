@@ -10,8 +10,8 @@ namespace E64 {
     class SDLPipeline{
         public:
             SDLPipeline() {}
-            SDLPipeline(const char* shader_path, SDL_GPUFillMode mode = SDL_GPU_FILLMODE_FILL);
-            SDLPipeline(const char* vertexShaderPath, const char* fragementShaderPath, SDL_GPUFillMode mode = SDL_GPU_FILLMODE_FILL);
+            SDLPipeline(const char* shaderPath, int vert_uniforms, int frag_uniforms, SDL_GPUFillMode mode = SDL_GPU_FILLMODE_FILL);
+            SDLPipeline(const char* vertexShaderPath, const char* fragementShaderPath, int vert_uniforms, int frag_uniforms, SDL_GPUFillMode mode = SDL_GPU_FILLMODE_FILL);
 
             ~SDLPipeline();
 

@@ -56,6 +56,8 @@ namespace Editor{
             E64::SDLWindow* sdl_window;
             EditorInput* input;
             EditorCamera* camera;
+
+            E64::ECS::MeshComponent camera_mesh;
     };
 }
 

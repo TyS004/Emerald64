@@ -3,27 +3,36 @@
         {
             "Mesh": {
                 "mesh_path": [
-                    "meshes/yoshi/mesh/yoshi_from_mario_party_on_the_nintendo_64.e64mesh"
+                    "default"
                 ],
                 "texture_path": [
-                    "meshes/yoshi/texture/Material.200_Yoshi_grp.png_baseColor.png"
+                    "meshes\\yoshi\\texture\\Material.200_Yoshi_grp.png_baseColor.png"
                 ]
+            },
+            "PointLight": {
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.9960784316062927
+                ],
+                "intensity": 5.0
             },
             "Transform": {
                 "position": [
-                    -16.649999618530273,
-                    -22.850000381469727,
-                    -4.0
+                    22.899999618530273,
+                    9.0,
+                    -9.0
                 ],
                 "rotation": [
                     0.0,
-                    -3.140000104904175,
+                    0.0,
                     0.0
                 ],
                 "scale": [
-                    7.0,
-                    7.0,
-                    7.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             },
             "id": 0
@@ -31,27 +40,27 @@
         {
             "Mesh": {
                 "mesh_path": [
-                    "meshes/sphere.e64mesh"
+                    "default"
                 ],
                 "texture_path": [
-                    "textures/grass_tex.png"
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -6.5,
-                    -17.149999618530273,
-                    -4.949999809265137
+                    -7.0,
+                    -1.0,
+                    -5.0
                 ],
                 "rotation": [
                     0.0,
-                    -2.8399999141693115,
-                    -5.090000152587891
+                    0.0,
+                    0.0
                 ],
                 "scale": [
-                    10.0,
-                    10.0,
-                    10.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             },
             "id": 1
@@ -65,20 +74,11 @@
                     "default"
                 ]
             },
-            "PointLight": {
-                "color": [
-                    0.891273558139801,
-                    0.04123711585998535,
-                    1.0,
-                    1.0
-                ],
-                "intensity": 7.0
-            },
             "Transform": {
                 "position": [
-                    -30.399999618530273,
-                    -6.25,
-                    2.0
+                    -9.0,
+                    3.0,
+                    -5.0
                 ],
                 "rotation": [
                     0.0,
@@ -96,30 +96,21 @@
         {
             "Mesh": {
                 "mesh_path": [
-                    "default"
+                    "meshes\\yoshi\\mesh\\yoshi_from_mario_party_on_the_nintendo_64.e64mesh"
                 ],
                 "texture_path": [
-                    "default"
+                    "meshes\\yoshi\\texture\\Material.200_Yoshi_grp.png_baseColor.png"
                 ]
-            },
-            "PointLight": {
-                "color": [
-                    1.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "intensity": 7.0
             },
             "Transform": {
                 "position": [
-                    11.699999809265137,
-                    -4.650000095367432,
-                    -6.099999904632568
+                    -0.15000000596046448,
+                    1.100000023841858,
+                    0.75
                 ],
                 "rotation": [
-                    0.0,
-                    0.0,
+                    0.10000000149011612,
+                    -3.309999942779541,
                     0.0
                 ],
                 "scale": [
@@ -139,20 +130,11 @@
                     "default"
                 ]
             },
-            "PointLight": {
-                "color": [
-                    0.0,
-                    1.0,
-                    0.10309267044067383,
-                    1.0
-                ],
-                "intensity": 6.0
-            },
             "Transform": {
                 "position": [
-                    -18.049999237060547,
-                    -3.6500000953674316,
-                    -27.25
+                    -2.0,
+                    8.0,
+                    -1.0
                 ],
                 "rotation": [
                     0.0,
@@ -173,14 +155,14 @@
                     "default"
                 ],
                 "texture_path": [
-                    "textures/grass_tex.png"
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -3.0,
-                    -23.200000762939453,
-                    6.0
+                    -4.0,
+                    3.0,
+                    5.0
                 ],
                 "rotation": [
                     0.0,
@@ -188,9 +170,9 @@
                     0.0
                 ],
                 "scale": [
-                    100.0,
                     1.0,
-                    100.0
+                    1.0,
+                    1.0
                 ]
             },
             "id": 5
@@ -207,8 +189,8 @@
             "Transform": {
                 "position": [
                     7.0,
-                    -4.0,
-                    4.0
+                    -3.0,
+                    -1.0
                 ],
                 "rotation": [
                     0.0,
@@ -234,9 +216,9 @@
             },
             "Transform": {
                 "position": [
-                    0.0,
-                    -8.0,
-                    7.0
+                    -5.0,
+                    -2.0,
+                    -6.0
                 ],
                 "rotation": [
                     0.0,
@@ -262,9 +244,9 @@
             },
             "Transform": {
                 "position": [
-                    2.0,
-                    -5.0,
-                    -6.0
+                    6.0,
+                    -3.0,
+                    -4.0
                 ],
                 "rotation": [
                     0.0,
@@ -290,9 +272,9 @@
             },
             "Transform": {
                 "position": [
-                    -9.0,
-                    1.0,
-                    7.0
+                    3.0,
+                    4.0,
+                    -5.0
                 ],
                 "rotation": [
                     0.0,
@@ -318,8 +300,8 @@
             },
             "Transform": {
                 "position": [
-                    3.0,
-                    10.0,
+                    5.0,
+                    1.0,
                     -10.0
                 ],
                 "rotation": [
@@ -346,9 +328,9 @@
             },
             "Transform": {
                 "position": [
-                    2.0,
-                    -2.0,
-                    8.0
+                    6.0,
+                    10.0,
+                    0.0
                 ],
                 "rotation": [
                     0.0,
@@ -374,9 +356,9 @@
             },
             "Transform": {
                 "position": [
-                    0.0,
-                    3.0,
-                    -9.0
+                    5.0,
+                    -2.0,
+                    7.0
                 ],
                 "rotation": [
                     0.0,
@@ -402,9 +384,9 @@
             },
             "Transform": {
                 "position": [
-                    3.0,
-                    0.0,
-                    -4.0
+                    -5.0,
+                    -8.0,
+                    -2.0
                 ],
                 "rotation": [
                     0.0,
@@ -430,9 +412,9 @@
             },
             "Transform": {
                 "position": [
-                    5.0,
-                    9.0,
-                    9.0
+                    10.0,
+                    -7.0,
+                    10.0
                 ],
                 "rotation": [
                     0.0,
@@ -458,9 +440,9 @@
             },
             "Transform": {
                 "position": [
-                    6.0,
-                    -2.0,
-                    -6.0
+                    5.0,
+                    8.0,
+                    -9.0
                 ],
                 "rotation": [
                     0.0,
@@ -486,9 +468,9 @@
             },
             "Transform": {
                 "position": [
-                    2.0,
                     -3.0,
-                    -2.0
+                    6.0,
+                    -9.0
                 ],
                 "rotation": [
                     0.0,
@@ -514,9 +496,9 @@
             },
             "Transform": {
                 "position": [
-                    6.0,
-                    9.0,
-                    -3.0
+                    -8.0,
+                    -6.0,
+                    6.0
                 ],
                 "rotation": [
                     0.0,
@@ -542,9 +524,9 @@
             },
             "Transform": {
                 "position": [
-                    -9.0,
-                    10.0,
-                    -9.0
+                    1.0,
+                    9.0,
+                    4.0
                 ],
                 "rotation": [
                     0.0,
@@ -570,9 +552,9 @@
             },
             "Transform": {
                 "position": [
-                    8.0,
-                    -3.0,
-                    -6.0
+                    -8.0,
+                    -2.0,
+                    -8.0
                 ],
                 "rotation": [
                     0.0,
@@ -598,9 +580,9 @@
             },
             "Transform": {
                 "position": [
-                    6.0,
                     -8.0,
-                    0.0
+                    -7.0,
+                    2.0
                 ],
                 "rotation": [
                     0.0,
@@ -626,9 +608,9 @@
             },
             "Transform": {
                 "position": [
-                    5.0,
-                    2.0,
-                    -6.0
+                    4.0,
+                    1.0,
+                    4.0
                 ],
                 "rotation": [
                     0.0,
@@ -654,9 +636,9 @@
             },
             "Transform": {
                 "position": [
+                    10.0,
                     0.0,
-                    3.0,
-                    0.0
+                    1.0
                 ],
                 "rotation": [
                     0.0,
@@ -682,9 +664,9 @@
             },
             "Transform": {
                 "position": [
-                    9.0,
                     -7.0,
-                    10.0
+                    1.0,
+                    3.0
                 ],
                 "rotation": [
                     0.0,
@@ -710,9 +692,9 @@
             },
             "Transform": {
                 "position": [
-                    7.0,
-                    -6.0,
-                    1.0
+                    -3.0,
+                    -7.0,
+                    -5.0
                 ],
                 "rotation": [
                     0.0,
@@ -729,6 +711,7 @@
         },
         {
             "Camera": {
+                "active_camera": true,
                 "aspect_ratio": 1.3333333730697632,
                 "far_plane": 100.0,
                 "fov": 0.7853981852531433,
@@ -736,9 +719,9 @@
             },
             "Transform": {
                 "position": [
+                    -1.149999976158142,
                     0.0,
-                    10.0,
-                    -50.0
+                    -18.25
                 ],
                 "rotation": [
                     90.0,

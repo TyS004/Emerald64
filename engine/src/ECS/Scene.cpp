@@ -133,3 +133,11 @@ void E64::Scene::printScene(){
 void E64::Scene::setCameraData(E64::ECS::CameraData camera_data){
     this->active_camera_data = camera_data;
 }
+
+E64::ECS::Entity E64::Scene::getCamera() {
+    return this->camera;
+}
+
+void E64::Scene::setCamera(ECS::Entity camera) {
+    this->camera = camera;
+}

@@ -23,4 +23,10 @@ void E64::PhysicsLayer::OnUpdate(float dt){
         }
     }
     velocity += acceleration;
+
+    E64::Input* input = E64::Engine::ctx->input;
+    if(input->isKeyPressed(E64::Scancode::W)) 
+    {
+        
+    }
 }

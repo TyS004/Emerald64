@@ -6,6 +6,12 @@
 #include "SDLPipeline.h"
 
 namespace E64 {
+    enum PipelineType {
+        BASE,
+        STENCIL_WRITE,
+        STENCIL_OUTLINE
+    };
+
     class SDLRenderer : public IRenderer{
         public:
             SDLRenderer();
@@ -16,10 +22,11 @@ namespace E64 {
 
             void startFrame();
 
-            void bindPipeline(int pipeline_idx);
-            void bindVertexBuffers(E64::ECS::MeshComponent* comp);
-            void bindIndexBuffers(E64::ECS::MeshComponent* comp);
-            void bindFragmentSamplers(E64::ECS::MeshComponent* comp);
+            void bindPipeline();
+            void bindPipeline(PipelineType type);
+            void bindVertexBuffers(Mesh* mesh);
+            void bindIndexBuffers(Mesh* mesh);
+            void bindFragmentSamplers(Texture* texture);
 
             void pushVertexUniform(const void* data, size_t size, uint32_t slot);
             void pushFragmentUniform(const void* data, size_t size, uint32_t slot);
@@ -28,7 +35,6 @@ namespace E64 {
             void endRenderPass();
             
             void draw(E64::ECS::MeshComponent* comp);
-            void drawUI();
             void submit();
 
             E64::GPUBufferHandle createVertexBuffer(std::vector<E64::Vertex> vertices);
@@ -39,6 +45,7 @@ namespace E64 {
             bool isPendingResize();
 
             SDL_GPUCommandBuffer* getCommandBuffer();
+            SDL_GPURenderPass* getRenderPass();
             SDL_GPUTexture* getSceneTexture();
 
             int getDrawCalls();
@@ -51,8 +58,6 @@ namespace E64 {
 
             SDL_GPUColorTargetInfo* getColorTargetInfo();
 
-            std::vector<std::unique_ptr<SDLPipeline>>* getPipelines();
-
             void setStencilReference(int ref);
 
         private:
@@ -63,7 +68,7 @@ namespace E64 {
 
             RenderTarget target;
 
-            std::vector<std::unique_ptr<SDLPipeline>> pipelines;
+            std::unordered_map<PipelineType, std::unique_ptr<SDLPipeline>> pipelines;
 
             SDL_GPURenderPass* render_pass;
 

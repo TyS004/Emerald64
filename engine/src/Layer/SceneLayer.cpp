@@ -66,7 +66,7 @@ void E64::SceneLayer::OnRender(){
     else if (E64::Engine::ctx->mode == DESKTOP_RUNTIME) {
         renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
     }
-    renderer->bindPipeline(0);
+    renderer->bindPipeline();
 
     std::vector<ECS::PointLightUniform> light_uniforms{};
     for(ECS::Entity entity : scene->getEntites()){
@@ -88,6 +88,7 @@ void E64::SceneLayer::OnRender(){
     renderer->pushFragmentUniform(light_uniforms.data(), sizeof(ECS::PointLightUniform) * num_pointlights, 0);
     renderer->pushFragmentUniform(&num_pointlights, sizeof(uint32_t), 1);
 
+
     for(ECS::Entity entity : scene->getEntites()){
         if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(entity) &&
             ECS::ComponentManager::hasComponent<ECS::TransformComponent>(entity) &&
@@ -96,19 +97,31 @@ void E64::SceneLayer::OnRender(){
             ECS::CameraComponent* camera = ECS::ComponentManager::getComponent<ECS::CameraComponent>(entity);
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(entity);
 
-            glm::mat4 view = glm::lookAt(
-                transform->position,        // Camera Pos
-                glm::vec3(0, 0, 0),         // Looking at Origin
-                glm::vec3(0, 1, 0)          // Up Vector 
-            );
-        
-            glm::mat4 proj = glm::perspective(
-                camera->fov,                // FOV
-                camera->aspect_ratio,       // Aspect Ratio
-                camera->near_plane,         // Near plane
-                camera->far_plane           // Far Plane
-            );
-            scene->setCameraData({proj, view});
+            if (camera->active_camera) {
+                glm::vec3 direction;
+                direction.x = cos(glm::radians(transform->euler.x)) * cos(glm::radians(transform->euler.y));
+                direction.y = sin(glm::radians(transform->euler.y));
+                direction.z = sin(glm::radians(transform->euler.x)) * cos(glm::radians(transform->euler.y));
+                glm::vec3 camera_front = glm::normalize(direction);
+
+                glm::vec3 camera_right = glm::normalize(glm::cross(camera_front, glm::vec3(0, 1, 0)));
+                glm::vec3 camera_up = glm::normalize(glm::cross(camera_right, camera_front));
+
+                glm::mat4 view = glm::lookAt(
+                    transform->position,                 
+                    transform->position + camera_front,  // Looking at 
+                    camera_up         
+                );
+
+                glm::mat4 proj = glm::perspective(
+                    camera->fov,                // FOV
+                    camera->aspect_ratio,       // Aspect Ratio
+                    camera->near_plane,         // Near plane
+                    camera->far_plane           // Far Plane
+                );
+                scene->setCamera(entity);
+                scene->setCameraData({ proj, view });
+            }
         }
 
         if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(entity) &&

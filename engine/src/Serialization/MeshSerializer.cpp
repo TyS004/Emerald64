@@ -92,16 +92,16 @@ E64::Mesh E64::MeshSerializer::deserialize(std::string path){
             }
         #endif
     }
-    E64::Log::info("Vertex Count: " + std::to_string(mesh.vertices.size()));
-    E64::Log::info("Index Count: " + std::to_string(mesh.indices.size()));
+    //E64::Log::info("Vertex Count: " + std::to_string(mesh.vertices.size()));
+    //E64::Log::info("Index Count: " + std::to_string(mesh.indices.size()));
 
-    E64::Log::info(std::to_string(mesh.vertices[0].pos.x));
-    E64::Log::info(std::to_string(mesh.vertices[0].pos.y));
-    E64::Log::info(std::to_string(mesh.vertices[0].pos.z));
+    //E64::Log::info(std::to_string(mesh.vertices[0].pos.x));
+    //E64::Log::info(std::to_string(mesh.vertices[0].pos.y));
+    //E64::Log::info(std::to_string(mesh.vertices[0].pos.z));
 
-    E64::Log::info(std::to_string(mesh.indices[0]));
-    E64::Log::info(std::to_string(mesh.indices[1]));
-    E64::Log::info(std::to_string(mesh.indices[2]));
+   // E64::Log::info(std::to_string(mesh.indices[0]));
+    //E64::Log::info(std::to_string(mesh.indices[1]));
+    //E64::Log::info(std::to_string(mesh.indices[2]));
 
     file.close();
     return mesh;

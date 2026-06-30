@@ -6,7 +6,7 @@
 namespace E64 {
     class SDLShader{
         public:
-            SDLShader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device);
+            SDLShader(const char* path, SDL_GPUShaderStage stage, SDL_GPUDevice* device, int uniforms);
             ~SDLShader();
 
             SDL_GPUShader* getShader();
@@ -17,6 +17,8 @@ namespace E64 {
             SDL_GPUShaderStage stage;
             SDL_GPUShader* shader;
             SDL_GPUDevice* device;
+
+            int uniforms;
     };
 }
 

@@ -22,11 +22,6 @@ cbuffer NumPLightsBuffer : register(b1, space3)
     uint num_p_lights;
 };
 
-cbuffer MousePosBuffer : register(b2, space3)
-{
-    float2 mouse_pos;
-}
-
 struct PSInput
 {
     float4 position   : SV_Position;
@@ -44,7 +39,7 @@ float4 main(PSInput input) : SV_Target
 {
     float4 texture_rgba = tex.Sample(smp, input.uv);
     float falloff = 0.5f;
-    float4 lit_rgba = {0.0, 0.0, 0.0, 0.0};
+    float3 lit_rgba = { 0.0, 0.0, 0.0};
     
     if (num_p_lights == 0)
     {
@@ -53,22 +48,12 @@ float4 main(PSInput input) : SV_Target
     
     for (int i = 0; i < num_p_lights; ++i)
     {
-        float4 dist_vec = float4(p_lights[i].position, 1.0f) - input.model_pos;
+        float3 dist_vec = p_lights[i].position.xyz - input.model_pos.xyz;
         float dist = max(length(dist_vec), falloff);
         float attenuation = 1.0f / (dist * dist);
-        float4 light_dot = max(dot(normalize(dist_vec), normalize(input.norm)), falloff);
-        lit_rgba += texture_rgba * light_dot * (p_lights[i].intensity * 100) * p_lights[i].color * attenuation;
+        float3 light_dot = max(dot(normalize(dist_vec), normalize(input.norm.xyz)), falloff);
+        lit_rgba += texture_rgba.rgb * light_dot * (p_lights[i].intensity * 100) * p_lights[i].color.rgb * attenuation;
     }
     
-    //float2 mouse_pos_corrected = float2(mouse_pos.x, 1.0 - mouse_pos.y);
-    //float2 diff = input.screen_pos.xy - mouse_pos.xy;
-    //float dist = length(diff);
-    //if (dist < 0.1f)
-    //{
-    //    return float4(1.0, 0.0, 0.0, 1.0);
-    //}
-    
-    //return float4(mouse_pos.x, mouse_pos.y, 0.0, 1.0);
-    //return float4(input.screen_pos.x, input.screen_pos.y, 0.0, 1.0);
-    return lit_rgba;
+    return float4(lit_rgba, texture_rgba.a);
 }

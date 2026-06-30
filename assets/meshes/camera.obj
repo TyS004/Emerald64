@@ -1,0 +1,20 @@
+# 2D Rectangle (Plane)
+# Vertices (4 corners)
+v -0.5  0.5  0.0
+v -0.5 -0.5  0.0
+v  0.5 -0.5  0.0
+v  0.5  0.5  0.0
+
+# Texture Coordinates (UVs)
+vt 0.0 1.0
+vt 0.0 0.0
+vt 1.0 0.0
+vt 1.0 1.0
+
+# Normals (facing the camera)
+vn 0.0 0.0 1.0
+
+# Faces (Triangle 1 and Triangle 2)
+# Format: v/vt/vn
+f 1/1/1 2/2/1 3/3/1
+f 3/3/1 4/4/1 1/1/1

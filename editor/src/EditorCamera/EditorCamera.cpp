@@ -3,7 +3,7 @@
 Editor::EditorCamera::EditorCamera(){
     input = nullptr;
 
-    cam_sens = 0.25f;
+    cam_sens = 0.25;
     cam_vel = 15.0f;
 
     this->transform = new E64::ECS::TransformComponent{};
@@ -12,7 +12,7 @@ Editor::EditorCamera::EditorCamera(){
     
     this->view = glm::lookAt(
         this->transform->position,  // Camera Pos
-        glm::vec3(0, 0, 0),         // Looking at Origin
+        glm::vec3(0, 0, 0),         // Looking at Origind
         glm::vec3(0, 1, 0)          // Up Vector 
     );
 
@@ -50,7 +50,9 @@ void Editor::EditorCamera::OnUpdate(float dt){
 
         xrel = input->getXRel();
         yrel = input->getYRel();
-        if(((prev_xrel != xrel) || (prev_yrel != yrel)))
+        float distx = abs(xrel - prev_xrel);
+        float disty = abs(yrel - prev_yrel);
+        if((distx < 0.01f || disty < 0.001f))
         {
             transform->euler.x += (xrel * cam_sens);
             transform->euler.y -= (yrel * cam_sens);

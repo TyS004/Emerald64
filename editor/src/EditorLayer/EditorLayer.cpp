@@ -69,6 +69,10 @@ void Editor::EditorLayer::OnAttach(){
     E64::Scene* scene = Engine::ctx->active_scene.get();
     ECS::CameraData camera_comp = { camera->getProj(), camera->getView() };
     scene->setCameraData(camera_comp);
+    
+    E64::AssetManager* asset_manager = E64::Engine::ctx->asset_manager.get();
+    camera_mesh.tex_handle = asset_manager->loadTextureAsset("textures/camera.png");
+    camera_mesh.mesh_handle = asset_manager->loadMeshAsset("meshes/camera.e64mesh");
 }
 
 void Editor::EditorLayer::OnUpdate(float dt){
@@ -79,18 +83,46 @@ void Editor::EditorLayer::OnUpdate(float dt){
 }
 
 void Editor::EditorLayer::OnRender(){
+    E64::Scene* scene = E64::Engine::ctx->active_scene.get();
+    E64::AssetManager* asset_manager = E64::Engine::ctx->asset_manager.get();
+
+    SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+    renderer->setColorLoadOP(E64::RenderLoadOP::LOAD);
+    renderer->setDepthLoadOP(E64::RenderLoadOP::LOAD);
+    renderer->setStencilLoadOP(E64::RenderLoadOP::LOAD);
+
+    renderer->beginRenderPass(RenderTarget::TEXTURE);
+
+    for (ECS::Entity e : scene->getEntites()) 
+    {
+        if (ECS::ComponentManager::hasComponent<ECS::CameraComponent>(e) &&
+            ECS::ComponentManager::hasComponent<ECS::TransformComponent>(e)) 
+        {
+            ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(e);
+            ECS::TransformComponent* camera_transform = camera->getTransform();
+
+            glm::vec3 to_camera = transform->position - camera_transform->position;
+
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
+                * glm::scale(glm::mat4(1.0f), transform->scale);
+            glm::mat4 view = scene->getCameraData().view;
+            glm::mat4 proj = scene->getCameraData().proj;
+
+            renderer->bindPipeline(BASE);
+            renderer->pushVertexUniform(&model, sizeof(glm::mat4), 0);
+            renderer->pushVertexUniform(&view,  sizeof(glm::mat4), 1);
+            renderer->pushVertexUniform(&proj,  sizeof(glm::mat4), 2);
+
+            renderer->draw(&camera_mesh);
+        }
+    }
+
     if (ECS::ComponentManager::hasComponent<ECS::TransformComponent>(selected) && 
-        ECS::ComponentManager::hasComponent<ECS::MeshComponent>(selected)) {
+        ECS::ComponentManager::hasComponent<ECS::MeshComponent>(selected)) 
+    {
         Scene* scene = E64::Engine::ctx->active_scene.get();
         ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(selected);
         ECS::MeshComponent* mesh_comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(selected);
-
-        SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
-        renderer->setColorLoadOP(E64::RenderLoadOP::LOAD);
-        renderer->setDepthLoadOP(E64::RenderLoadOP::LOAD);
-        renderer->setStencilLoadOP(E64::RenderLoadOP::LOAD);
-
-        renderer->beginRenderPass(RenderTarget::TEXTURE);
 
         glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
             * glm::eulerAngleXYZ(transform->euler.x, transform->euler.y, transform->euler.z)
@@ -102,7 +134,7 @@ void Editor::EditorLayer::OnRender(){
         renderer->pushVertexUniform(&view,  sizeof(glm::mat4), 1);
         renderer->pushVertexUniform(&proj,  sizeof(glm::mat4), 2);
 
-        renderer->bindPipeline(1);
+        renderer->bindPipeline(STENCIL_WRITE);
         renderer->setStencilReference(1);
         renderer->draw(mesh_comp);
 
@@ -111,12 +143,13 @@ void Editor::EditorLayer::OnRender(){
             * glm::scale(glm::mat4(1.0f), transform->scale * 1.05f);
         renderer->pushVertexUniform(&model, sizeof(glm::mat4), 0);
 
-        renderer->bindPipeline(2);
+        renderer->bindPipeline(STENCIL_OUTLINE);
         renderer->setStencilReference(1);
+        renderer->pushFragmentUniform(mouse_pos_uniform, sizeof(float) * 2, 0);
         renderer->draw(mesh_comp);
-
-        renderer->endRenderPass();
     }
+
+    renderer->endRenderPass();
 }
 
 void Editor::EditorLayer::OnImGuiRender(){
@@ -138,7 +171,7 @@ void Editor::EditorLayer::OnImGuiRender(){
     SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
     ImGui_ImplSDLGPU3_PrepareDrawData(ImGui::GetDrawData(), renderer->getCommandBuffer());
     renderer->beginRenderPass(SWAPCHAIN);
-    renderer->drawUI();
+    ImGui_ImplSDLGPU3_RenderDrawData(ImGui::GetDrawData(), renderer->getCommandBuffer(), renderer->getRenderPass());
     renderer->endRenderPass();
 }
 
@@ -240,7 +273,6 @@ void Editor::EditorLayer::buildViewport(){
         mouse_pos_uniform[1] = viewport_mouse_pos.y;
         E64::Log::info(std::to_string(viewport_mouse_pos.x) + ", " + std::to_string(viewport_mouse_pos.y));
     }
-    renderer->pushFragmentUniform(mouse_pos_uniform, sizeof(float) * 2, 2);
 
     ImGui::End();
 }
@@ -394,6 +426,8 @@ void Editor::EditorLayer::buildCameraHeader(){
         ImGui::Text("Aspect Ratio: %f", camera->aspect_ratio);
         ImGui::Text("Near Plane: %f", camera->near_plane);
         ImGui::Text("Far Plane: %f", camera->far_plane);
+
+        ImGui::Checkbox("Active Camera", &camera->active_camera);
     }
 }
 
@@ -411,7 +445,7 @@ void Editor::EditorLayer::buildPointLightHeader(){
 }
 
 void Editor::EditorLayer::buildFileManager(){
-    ImGui::Begin("Files");
+    ImGui::Begin("AssetManager");
 
     int i = 0;
     for(auto& [path, handle] : E64::Engine::ctx->asset_manager->getHandleRepository()){

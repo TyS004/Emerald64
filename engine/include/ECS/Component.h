@@ -69,12 +69,19 @@ namespace E64{
             float near_plane;
             float far_plane;
 
+            bool active_camera = false;
+
+            glm::mat4 view;
+            glm::mat4 proj;
+
             void serialize(json& j) const
             {
                 j["fov"] = fov;
                 j["aspect_ratio"] = aspect_ratio;
                 j["near_plane"] = near_plane;
                 j["far_plane"] = far_plane;
+
+                j["active_camera"] = active_camera;
             }
 
             void deserialize(const json& j)
@@ -83,6 +90,8 @@ namespace E64{
                 aspect_ratio = j["aspect_ratio"];
                 near_plane = j["near_plane"];
                 far_plane = j["far_plane"];
+
+                active_camera = j["active_camera"];
             }
         };
 

@@ -55,15 +55,15 @@ E64::SDLRenderer::SDLRenderer(){
 
     std::string object_shader_path = E64::Engine::ctx->root_dir.string() + "shaders/object";
     std::string outline_shader_path = E64::Engine::ctx->root_dir.string() + "shaders/outline";
-    pipelines.push_back(std::make_unique<SDLPipeline>(object_shader_path.c_str()));
-    pipelines.push_back(std::make_unique<SDLPipeline>(object_shader_path.c_str()));
-    pipelines.push_back(std::make_unique<SDLPipeline>(object_shader_path.c_str(), outline_shader_path.c_str()));
+    pipelines[BASE] = std::make_unique<SDLPipeline>(object_shader_path.c_str(), 4, 2);
+    pipelines[STENCIL_WRITE] = std::make_unique<SDLPipeline>(object_shader_path.c_str(), 4, 2);
+    pipelines[STENCIL_OUTLINE] = std::make_unique<SDLPipeline>(object_shader_path.c_str(), outline_shader_path.c_str(), 4, 1);
 
-    SDLPipeline* pipeline_stencil_write = pipelines.at(1).get();
+    SDLPipeline* pipeline_stencil_write = pipelines[STENCIL_WRITE].get();
     pipeline_stencil_write->getDepthStencilState()->enable_stencil_test = true;
     pipeline_stencil_write->buildPipeline();
 
-    SDLPipeline* pipeline = pipelines.at(2).get();
+    SDLPipeline* pipeline = pipelines[STENCIL_OUTLINE].get();
     SDL_GPUGraphicsPipelineCreateInfo* pipelineInfo = pipeline->getPipelineInfo();
     SDL_GPUDepthStencilState* depth_stencil_state = pipeline->getDepthStencilState();
     SDL_GPUStencilOpState outline_state{};
@@ -172,23 +172,40 @@ void E64::SDLRenderer::endRenderPass(){
     SDL_EndGPURenderPass(render_pass);
 }
 
-void E64::SDLRenderer::bindPipeline(int pipeline_idx){
-    SDLPipeline* pipeline = pipelines[pipeline_idx].get();
+void E64::SDLRenderer::draw(E64::ECS::MeshComponent* comp) {
+    E64::AssetManager* asset_manager = E64::Engine::ctx->asset_manager.get();
+
+    Mesh* mesh = asset_manager->getMeshAsset(comp->mesh_handle);
+    Texture* texture = asset_manager->getTextureAsset(comp->tex_handle);
+    if (!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
+    if (!texture) { E64::Log::error("TEXTURE IS NULLPTR"); return; }
+
+    bindVertexBuffers(mesh);
+    bindIndexBuffers(mesh);
+    bindFragmentSamplers(texture);
+
+    draw_calls++;
+    SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
+}
+
+void E64::SDLRenderer::bindPipeline() {
+    SDLPipeline* pipeline = pipelines[BASE].get();
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
-void E64::SDLRenderer::bindVertexBuffers(E64::ECS::MeshComponent* comp){
-    E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMeshAsset(comp->mesh_handle);
+void E64::SDLRenderer::bindPipeline(PipelineType type){
+    SDLPipeline* pipeline = pipelines[type].get();
+    SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
+}
 
+void E64::SDLRenderer::bindVertexBuffers(Mesh* mesh){
     SDL_GPUBufferBinding buffer_binding = {};
     buffer_binding.buffer = SDLGPURegistry::vbo_registry.at(mesh->vbo);
     buffer_binding.offset = 0;
     SDL_BindGPUVertexBuffers(render_pass, 0, &buffer_binding, 1);
 }
 
-void E64::SDLRenderer::bindIndexBuffers(E64::ECS::MeshComponent* comp){
-    E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMeshAsset(comp->mesh_handle);
-
+void E64::SDLRenderer::bindIndexBuffers(Mesh* mesh){
     SDL_GPUBuffer* index_buffer = SDLGPURegistry::ibo_registry.at(mesh->ibo);
     SDL_GPUBufferBinding binding;
     binding.buffer = index_buffer;
@@ -197,27 +214,12 @@ void E64::SDLRenderer::bindIndexBuffers(E64::ECS::MeshComponent* comp){
     SDL_BindGPUIndexBuffer(render_pass, &binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 }
 
-void E64::SDLRenderer::bindFragmentSamplers(E64::ECS::MeshComponent* comp){
-    E64::AssetManager* assetmanager = E64::Engine::ctx->asset_manager.get();
-    E64::Texture* texture = assetmanager->getTextureAsset(comp->tex_handle);
-
+void E64::SDLRenderer::bindFragmentSamplers(Texture* texture){
     SDL_GPUTextureSamplerBinding binding;
     binding.texture = SDLGPURegistry::texture_registry[texture->texture];
     binding.sampler = SDLGPURegistry::sampler_registry[texture->sampler];
 
     SDL_BindGPUFragmentSamplers(render_pass, 0, &binding, 1);
-}
-
-void E64::SDLRenderer::draw(E64::ECS::MeshComponent* comp){
-    E64::Mesh* mesh = E64::Engine::ctx->asset_manager->getMeshAsset(comp->mesh_handle);
-    if(!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
-
-    bindVertexBuffers(comp);
-    bindIndexBuffers(comp);
-    bindFragmentSamplers(comp);
-    
-    draw_calls++;
-    SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
 }
 
 E64::GPUBufferHandle E64::SDLRenderer::createVertexBuffer(std::vector<E64::Vertex> vertices){
@@ -394,20 +396,16 @@ void E64::SDLRenderer::submit(){
     current_render_pass = 0;
 }
 
-void E64::SDLRenderer::drawUI(){
-    ImGui_ImplSDLGPU3_RenderDrawData(ImGui::GetDrawData(), cmd_buf, render_pass);
-}
-
 SDL_GPUCommandBuffer* E64::SDLRenderer::getCommandBuffer(){
     return cmd_buf;
 }
 
-SDL_GPUTexture* E64::SDLRenderer::getSceneTexture(){
-    return scene_texture;
+SDL_GPURenderPass* E64::SDLRenderer::getRenderPass() {
+    return render_pass;
 }
 
-std::vector<std::unique_ptr<E64::SDLPipeline>>* E64::SDLRenderer::getPipelines() {
-    return &pipelines;
+SDL_GPUTexture* E64::SDLRenderer::getSceneTexture(){
+    return scene_texture;
 }
 
 void E64::SDLRenderer::setColorLoadOP(E64::RenderLoadOP OP){

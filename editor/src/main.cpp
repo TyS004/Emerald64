@@ -25,8 +25,8 @@ int main(){
     Editor::EditorInput* input = new Editor::EditorInput();
     E64::Engine::ctx->input    = input;
 
-    Editor::EditorLayer editor_layer  = Editor::EditorLayer();
     E64::SceneLayer     scene_layer   = E64::SceneLayer();
+    Editor::EditorLayer editor_layer = Editor::EditorLayer();
 
     E64::Layer::Attach(&scene_layer);
     E64::Layer::Attach(&editor_layer);
