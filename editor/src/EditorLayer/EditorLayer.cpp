@@ -71,8 +71,7 @@ void Editor::EditorLayer::OnAttach(){
     scene->setCameraData(camera_comp);
     
     E64::AssetManager* asset_manager = E64::Engine::ctx->asset_manager.get();
-    camera_mesh.tex_handle = asset_manager->loadTextureAsset("textures/camera.png");
-    camera_mesh.mesh_handle = asset_manager->loadMeshAsset("meshes/camera.e64mesh");
+    camera_texture = asset_manager->getTextureAsset(asset_manager->loadTextureAsset("textures/camera.png"));
 }
 
 void Editor::EditorLayer::OnUpdate(float dt){
@@ -113,7 +112,7 @@ void Editor::EditorLayer::OnRender(){
             renderer->pushVertexUniform(&view,  sizeof(glm::mat4), 1);
             renderer->pushVertexUniform(&proj,  sizeof(glm::mat4), 2);
 
-            renderer->draw(&camera_mesh);
+            renderer->drawTexture(camera_texture);
         }
     }
 
@@ -169,6 +168,7 @@ void Editor::EditorLayer::OnImGuiRender(){
     ImGui::Render();
 
     SDLRenderer* renderer = static_cast<SDLRenderer*>(E64::Engine::ctx->renderer);
+
     ImGui_ImplSDLGPU3_PrepareDrawData(ImGui::GetDrawData(), renderer->getCommandBuffer());
     renderer->beginRenderPass(SWAPCHAIN);
     ImGui_ImplSDLGPU3_RenderDrawData(ImGui::GetDrawData(), renderer->getCommandBuffer(), renderer->getRenderPass());
@@ -325,6 +325,7 @@ void Editor::EditorLayer::buildInspector(){
     if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(selected))       buildMeshHeader();
     if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(selected))     buildCameraHeader();
     if(ECS::ComponentManager::hasComponent<ECS::PointLightComponent>(selected)) buildPointLightHeader();
+    if(ECS::ComponentManager::hasComponent<ECS::RigidbodyComponent>(selected))  buildRigidbodyHeader();
 
     std::vector<std::string> comp_names {};
     for(auto& [name, fns] : ECS::ComponentRegistryBase::handlers){
@@ -333,7 +334,7 @@ void Editor::EditorLayer::buildInspector(){
 
     static int selected_idx = 0;
     std::string selected_comp_name;
-    if (ImGui::BeginCombo("My Dropdown", comp_names[selected_idx].c_str())) 
+    if (ImGui::BeginCombo("Components", comp_names[selected_idx].c_str())) 
     {
         for (int n = 0; n < comp_names.size(); n++) 
         {
@@ -364,6 +365,9 @@ void Editor::EditorLayer::buildInspector(){
         }
         else if(comp_names[selected_idx] == "PointLight"){
             ECS::ComponentManager::addComponent<ECS::PointLightComponent>(selected);
+        }
+        else if (comp_names[selected_idx] == "Rigidbody") {
+            ECS::ComponentManager::addComponent<ECS::RigidbodyComponent>(selected);
         }
     }
 
@@ -428,6 +432,13 @@ void Editor::EditorLayer::buildCameraHeader(){
         ImGui::Text("Far Plane: %f", camera->far_plane);
 
         ImGui::Checkbox("Active Camera", &camera->active_camera);
+    }
+}
+
+void Editor::EditorLayer::buildRigidbodyHeader() {
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if (ImGui::CollapsingHeader("Rigidbody")) {
+        
     }
 }
 

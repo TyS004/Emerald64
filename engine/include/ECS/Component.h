@@ -15,6 +15,8 @@ using json = nlohmann::json;
 
 namespace E64{
     namespace ECS{
+        using ComponentMask = uint32_t;
+
         struct TransformComponent{
             glm::vec3 position =  {0, 0, 0};
             glm::vec3 euler    =  {0, 0, 0};
@@ -124,17 +126,23 @@ namespace E64{
             float pad2[3] = { 0.0f, 0.0f, 0.0f };
         };
 
+        struct RigidbodyComponent {
+
+            void serialize(json& j) const
+            {
+                j[""] = "";
+            }
+
+            void deserialize(const json& j)
+            {
+                
+            }
+        };
+
         struct CameraData{
             glm::mat4 proj;
             glm::mat4 view;
         };
-
-        using ComponentMask = uint32_t;
-        template<typename T> struct ComponentBit;
-        template<> struct ComponentBit<TransformComponent>  { static constexpr ComponentMask mask = 1 << 0; }; // 0001
-        template<> struct ComponentBit<MeshComponent>       { static constexpr ComponentMask mask = 1 << 1; }; // 0010
-        template<> struct ComponentBit<CameraComponent>     { static constexpr ComponentMask mask = 1 << 2; }; // 0100
-        template<> struct ComponentBit<PointLightComponent> { static constexpr ComponentMask mask = 1 << 3; }; // 1000
     }
 }
 

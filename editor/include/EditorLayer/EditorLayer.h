@@ -39,6 +39,7 @@ namespace Editor{
                 void buildMeshHeader();
                 void buildCameraHeader();
                 void buildPointLightHeader();
+                void buildRigidbodyHeader();
 
             void buildFileManager();
 
@@ -57,7 +58,7 @@ namespace Editor{
             EditorInput* input;
             EditorCamera* camera;
 
-            E64::ECS::MeshComponent camera_mesh;
+            E64::Texture* camera_texture;
     };
 }
 

@@ -24,6 +24,7 @@ E64::SceneLayer::SceneLayer(){
     ECS::ComponentRegistry<ECS::MeshComponent>::registerComponent("Mesh");
     ECS::ComponentRegistry<ECS::CameraComponent>::registerComponent("Camera");
     ECS::ComponentRegistry<ECS::PointLightComponent>::registerComponent("PointLight");
+    ECS::ComponentRegistry<ECS::RigidbodyComponent>::registerComponent("Rigidbody");
 
     E64::Engine::ctx->asset_manager = std::make_unique<E64::AssetManager>();
     E64::Engine::ctx->active_scene = std::make_unique<E64::Scene>();
@@ -60,12 +61,8 @@ void E64::SceneLayer::OnRender(){
     renderer->setColorLoadOP(E64::RenderLoadOP::CLEAR);
     renderer->setStencilLoadOP(E64::RenderLoadOP::CLEAR);
     renderer->setDepthLoadOP(E64::RenderLoadOP::CLEAR);
-    if (E64::Engine::ctx->mode == EDITOR) {
-        renderer->beginRenderPass(RenderTarget::TEXTURE);
-    }
-    else if (E64::Engine::ctx->mode == DESKTOP_RUNTIME) {
-        renderer->beginRenderPass(RenderTarget::SWAPCHAIN);
-    }
+
+    renderer->beginRenderPass(RenderTarget::TEXTURE);
     renderer->bindPipeline();
 
     std::vector<ECS::PointLightUniform> light_uniforms{};
@@ -156,4 +153,10 @@ void E64::SceneLayer::OnRender(){
         }
     }
     renderer->endRenderPass();
+
+    if (E64::Engine::ctx->mode == DESKTOP_RUNTIME) {
+        renderer->beginRenderPass(SWAPCHAIN);
+        renderer->drawFSQuad();
+        renderer->endRenderPass();
+    }
 }

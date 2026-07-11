@@ -1,7 +1,3 @@
-// SDL_GPU D3D12 register convention:
-// pixel textures/buffers -> space2, pixel uniform buffers -> space3
-
-// Sampled texture + its sampler (t0/s0 correspond to each other)
 Texture2D tex          : register(t0, space2);
 SamplerState smp       : register(s0, space2);
 
@@ -36,10 +32,10 @@ static float4 selected_rgba = { 0.0, 0.0, 0.0, 1.0 };
 static bool selected = false;
 
 float4 main(PSInput input) : SV_Target
-{
+{   
     float4 texture_rgba = tex.Sample(smp, input.uv);
     float falloff = 0.5f;
-    float3 lit_rgba = { 0.0, 0.0, 0.0};
+    float3 lit_rgb = { 0.0, 0.0, 0.0};
     
     if (num_p_lights == 0)
     {
@@ -52,8 +48,9 @@ float4 main(PSInput input) : SV_Target
         float dist = max(length(dist_vec), falloff);
         float attenuation = 1.0f / (dist * dist);
         float3 light_dot = max(dot(normalize(dist_vec), normalize(input.norm.xyz)), falloff);
-        lit_rgba += texture_rgba.rgb * light_dot * (p_lights[i].intensity * 100) * p_lights[i].color.rgb * attenuation;
+        lit_rgb += texture_rgba.rgb * light_dot * (p_lights[i].intensity * 100) * p_lights[i].color.rgb * attenuation;
     }
-    
-    return float4(lit_rgba, texture_rgba.a);
+    lit_rgb = saturate(lit_rgb);
+
+    return float4(lit_rgb, texture_rgba.a);
 }

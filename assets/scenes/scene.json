@@ -6,23 +6,14 @@
                     "default"
                 ],
                 "texture_path": [
-                    "meshes\\yoshi\\texture\\Material.200_Yoshi_grp.png_baseColor.png"
+                    "default"
                 ]
-            },
-            "PointLight": {
-                "color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    0.9960784316062927
-                ],
-                "intensity": 5.0
             },
             "Transform": {
                 "position": [
-                    22.899999618530273,
-                    9.0,
-                    -9.0
+                    10.0,
+                    -2.0,
+                    -7.0
                 ],
                 "rotation": [
                     0.0,
@@ -48,9 +39,9 @@
             },
             "Transform": {
                 "position": [
-                    -7.0,
-                    -1.0,
-                    -5.0
+                    -6.0,
+                    3.0,
+                    -8.0
                 ],
                 "rotation": [
                     0.0,
@@ -77,8 +68,8 @@
             "Transform": {
                 "position": [
                     -9.0,
-                    3.0,
-                    -5.0
+                    10.0,
+                    1.0
                 ],
                 "rotation": [
                     0.0,
@@ -96,21 +87,21 @@
         {
             "Mesh": {
                 "mesh_path": [
-                    "meshes\\yoshi\\mesh\\yoshi_from_mario_party_on_the_nintendo_64.e64mesh"
+                    "default"
                 ],
                 "texture_path": [
-                    "meshes\\yoshi\\texture\\Material.200_Yoshi_grp.png_baseColor.png"
+                    "default"
                 ]
             },
             "Transform": {
                 "position": [
-                    -0.15000000596046448,
-                    1.100000023841858,
-                    0.75
+                    8.0,
+                    0.0,
+                    -10.0
                 ],
                 "rotation": [
-                    0.10000000149011612,
-                    -3.309999942779541,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "scale": [
@@ -132,9 +123,9 @@
             },
             "Transform": {
                 "position": [
-                    -2.0,
-                    8.0,
-                    -1.0
+                    4.0,
+                    10.0,
+                    -4.0
                 ],
                 "rotation": [
                     0.0,
@@ -160,8 +151,8 @@
             },
             "Transform": {
                 "position": [
-                    -4.0,
-                    3.0,
+                    10.0,
+                    6.0,
                     5.0
                 ],
                 "rotation": [
@@ -188,9 +179,9 @@
             },
             "Transform": {
                 "position": [
-                    7.0,
-                    -3.0,
-                    -1.0
+                    -1.0,
+                    -10.0,
+                    6.0
                 ],
                 "rotation": [
                     0.0,
@@ -216,9 +207,9 @@
             },
             "Transform": {
                 "position": [
-                    -5.0,
                     -2.0,
-                    -6.0
+                    5.0,
+                    6.0
                 ],
                 "rotation": [
                     0.0,
@@ -244,9 +235,9 @@
             },
             "Transform": {
                 "position": [
-                    6.0,
-                    -3.0,
-                    -4.0
+                    1.0,
+                    9.0,
+                    1.0
                 ],
                 "rotation": [
                     0.0,
@@ -272,19 +263,19 @@
             },
             "Transform": {
                 "position": [
-                    3.0,
-                    4.0,
-                    -5.0
+                    2.0,
+                    -6.0,
+                    6.0
                 ],
                 "rotation": [
                     0.0,
                     0.0,
-                    0.0
+                    0.15000000596046448
                 ],
                 "scale": [
+                    39.849998474121094,
                     1.0,
-                    1.0,
-                    1.0
+                    33.45000076293945
                 ]
             },
             "id": 9
@@ -300,9 +291,9 @@
             },
             "Transform": {
                 "position": [
-                    5.0,
-                    1.0,
-                    -10.0
+                    -1.0,
+                    -10.0,
+                    9.0
                 ],
                 "rotation": [
                     0.0,
@@ -328,9 +319,9 @@
             },
             "Transform": {
                 "position": [
-                    6.0,
-                    10.0,
-                    0.0
+                    5.0,
+                    -8.0,
+                    9.0
                 ],
                 "rotation": [
                     0.0,
@@ -356,9 +347,9 @@
             },
             "Transform": {
                 "position": [
-                    5.0,
-                    -2.0,
-                    7.0
+                    -10.0,
+                    10.0,
+                    8.0
                 ],
                 "rotation": [
                     0.0,
@@ -384,9 +375,9 @@
             },
             "Transform": {
                 "position": [
-                    -5.0,
-                    -8.0,
-                    -2.0
+                    -4.0,
+                    -10.0,
+                    0.0
                 ],
                 "rotation": [
                     0.0,
@@ -410,11 +401,20 @@
                     "default"
                 ]
             },
+            "PointLight": {
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "intensity": 1.0
+            },
             "Transform": {
                 "position": [
-                    10.0,
-                    -7.0,
-                    10.0
+                    3.0,
+                    5.0,
+                    5.0
                 ],
                 "rotation": [
                     0.0,
@@ -440,9 +440,9 @@
             },
             "Transform": {
                 "position": [
-                    5.0,
-                    8.0,
-                    -9.0
+                    10.0,
+                    9.0,
+                    2.0
                 ],
                 "rotation": [
                     0.0,
@@ -468,9 +468,9 @@
             },
             "Transform": {
                 "position": [
-                    -3.0,
-                    6.0,
-                    -9.0
+                    -2.0,
+                    -7.0,
+                    2.0
                 ],
                 "rotation": [
                     0.0,
@@ -496,9 +496,9 @@
             },
             "Transform": {
                 "position": [
-                    -8.0,
-                    -6.0,
-                    6.0
+                    4.0,
+                    6.0,
+                    7.0
                 ],
                 "rotation": [
                     0.0,
@@ -524,9 +524,9 @@
             },
             "Transform": {
                 "position": [
-                    1.0,
-                    9.0,
-                    4.0
+                    3.0,
+                    -2.0,
+                    1.0
                 ],
                 "rotation": [
                     0.0,
@@ -552,9 +552,9 @@
             },
             "Transform": {
                 "position": [
-                    -8.0,
-                    -2.0,
-                    -8.0
+                    -1.0,
+                    0.0,
+                    -4.0
                 ],
                 "rotation": [
                     0.0,
@@ -580,9 +580,9 @@
             },
             "Transform": {
                 "position": [
-                    -8.0,
-                    -7.0,
-                    2.0
+                    0.0,
+                    3.0,
+                    8.0
                 ],
                 "rotation": [
                     0.0,
@@ -608,9 +608,9 @@
             },
             "Transform": {
                 "position": [
-                    4.0,
-                    1.0,
-                    4.0
+                    -10.0,
+                    -6.0,
+                    3.0
                 ],
                 "rotation": [
                     0.0,
@@ -636,9 +636,9 @@
             },
             "Transform": {
                 "position": [
-                    10.0,
-                    0.0,
-                    1.0
+                    -8.0,
+                    7.0,
+                    -3.0
                 ],
                 "rotation": [
                     0.0,
@@ -664,9 +664,9 @@
             },
             "Transform": {
                 "position": [
-                    -7.0,
-                    1.0,
-                    3.0
+                    10.0,
+                    8.0,
+                    7.0
                 ],
                 "rotation": [
                     0.0,
@@ -692,9 +692,9 @@
             },
             "Transform": {
                 "position": [
-                    -3.0,
-                    -7.0,
-                    -5.0
+                    -1.0,
+                    6.0,
+                    7.0
                 ],
                 "rotation": [
                     0.0,
@@ -719,9 +719,9 @@
             },
             "Transform": {
                 "position": [
-                    -1.149999976158142,
                     0.0,
-                    -18.25
+                    0.0,
+                    -30.0
                 ],
                 "rotation": [
                     90.0,

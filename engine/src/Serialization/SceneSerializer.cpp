@@ -52,11 +52,11 @@ E64::Scene* E64::SceneSerializer::deserialize(std::string path){
         ECS::Entity e = entity_json["id"];
         scene->pushEntity(e);
         ECS::ComponentManager::deserialize(entity_json, e);
-
-        ECS::MeshComponent* comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(e);
-        if(comp) {
+        
+        if (ECS::ComponentManager::hasComponent<ECS::MeshComponent>(e)) {
+            ECS::MeshComponent*  comp = ECS::ComponentManager::getComponent<ECS::MeshComponent>(e);
             comp->mesh_handle = E64::Engine::ctx->asset_manager->loadMeshAsset(comp->mesh_path);
-            comp->tex_handle  = E64::Engine::ctx->asset_manager->loadTextureAsset(comp->texture_path);
+            comp->tex_handle = E64::Engine::ctx->asset_manager->loadTextureAsset(comp->texture_path);
         }
     }
 

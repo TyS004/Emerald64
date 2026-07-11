@@ -46,18 +46,31 @@ E64::SDLRenderer::SDLRenderer(){
     scene_texture = SDL_CreateGPUTexture(device, &scene_texture_info);
     if (!scene_texture) { E64::Log::error("Failed to Create Scene Texture!"); exit(1); }
 
+    swap_texture_info = {};
+    swap_texture_info.type = SDL_GPU_TEXTURETYPE_2D;
+    swap_texture_info.format = SDL_GetGPUSwapchainTextureFormat(device, window);
+    swap_texture_info.usage = SDL_GPU_TEXTUREUSAGE_COLOR_TARGET | SDL_GPU_TEXTUREUSAGE_SAMPLER;
+    swap_texture_info.width = width;
+    swap_texture_info.height = height;
+    swap_texture_info.layer_count_or_depth = 1;
+    swap_texture_info.num_levels = 1;
+    swap_texture = SDL_CreateGPUTexture(device, &swap_texture_info);
+    if (!swap_texture) { E64::Log::error("Failed to Create Swap Texture!"); exit(1); }
+
     color_target_info = {};
     color_target_info.clear_color = {75/255.0f, 75/255.0f, 75/255.0f, 255/255.0f};
     color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
     color_target_info.store_op = SDL_GPU_STOREOP_STORE;
-
+    
     draw_calls = 0;
 
-    std::string object_shader_path = E64::Engine::ctx->root_dir.string() + "shaders/object";
-    std::string outline_shader_path = E64::Engine::ctx->root_dir.string() + "shaders/outline";
-    pipelines[BASE] = std::make_unique<SDLPipeline>(object_shader_path.c_str(), 4, 2);
-    pipelines[STENCIL_WRITE] = std::make_unique<SDLPipeline>(object_shader_path.c_str(), 4, 2);
+    std::string object_shader_path          = E64::Engine::ctx->root_dir.string() + "shaders/object";
+    std::string outline_shader_path         = E64::Engine::ctx->root_dir.string() + "shaders/outline";
+    std::string post_processing_shader_path = E64::Engine::ctx->root_dir.string() + "shaders/post";
+    pipelines[BASE]            = std::make_unique<SDLPipeline>(object_shader_path.c_str(), 4, 2);
+    pipelines[STENCIL_WRITE]   = std::make_unique<SDLPipeline>(object_shader_path.c_str(), 4, 2);
     pipelines[STENCIL_OUTLINE] = std::make_unique<SDLPipeline>(object_shader_path.c_str(), outline_shader_path.c_str(), 4, 1);
+    pipelines[POST_PROCESSING] = std::make_unique<SDLPipeline>(post_processing_shader_path.c_str(), 0, 0);
 
     SDLPipeline* pipeline_stencil_write = pipelines[STENCIL_WRITE].get();
     pipeline_stencil_write->getDepthStencilState()->enable_stencil_test = true;
@@ -83,20 +96,35 @@ E64::SDLRenderer::SDLRenderer(){
     pipeline->buildPipeline();
 
     stbi_set_flip_vertically_on_load(true);
+
+
+    std::vector<E64::Vertex> quad;
+    quad.resize(4);
+    quad[0].pos = { -1.0, -1.0, 0.0 };
+    quad[0].uv = { 0.0f, 1.0f };
+
+    quad[1].pos = { 1.0f, -1.0f, 0.0f };
+    quad[1].uv = { 1.0f, 1.0f };
+
+    quad[2].pos = { 1.0f,  1.0f, 0.0f };
+    quad[2].uv = { 1.0f, 0.0f };
+
+    quad[3].pos = { -1.0f,  1.0f, 0.0f };
+    quad[3].uv = { 0.0f, 0.0f };
+
+    std::vector<E64::Index> indices =
+    {
+        0, 1, 2,
+        0, 2, 3
+    };
+
+    quad_vbo = createVertexBuffer(quad);
+    quad_ibo = createIndexBuffer(indices);
+    quad_sampler = createSampler();
 }
 
 E64::SDLRenderer::~SDLRenderer(){
 
-}
-
-void E64::SDLRenderer::startFrame(){
-    cmd_buf = SDL_AcquireGPUCommandBuffer(device);
-    SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buf, window, &swapchain, &width, &height);
-    if (!swapchain) {
-        SDL_CancelGPUCommandBuffer(cmd_buf);
-        cmd_buf = nullptr;
-        E64::Log::error("SwapChain Could not Be Aquired!");
-    }
 }
 
 void E64::SDLRenderer::OnImGuiResize(float width, float height){
@@ -150,6 +178,16 @@ void E64::SDLRenderer::ResizeViewport(){
     scene_texture = SDL_CreateGPUTexture(device, &scene_texture_info);
 }
 
+void E64::SDLRenderer::startFrame() {
+    cmd_buf = SDL_AcquireGPUCommandBuffer(device);
+    SDL_WaitAndAcquireGPUSwapchainTexture(cmd_buf, window, &swapchain, &width, &height);
+    if (!swapchain) {
+        SDL_CancelGPUCommandBuffer(cmd_buf);
+        cmd_buf = nullptr;
+        E64::Log::error("SwapChain Could not Be Aquired!");
+    }
+}
+
 void E64::SDLRenderer::beginRenderPass(E64::RenderTarget target){
     draw_calls = 0;
     current_render_pass++;
@@ -162,7 +200,9 @@ void E64::SDLRenderer::beginRenderPass(E64::RenderTarget target){
             render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, &depth_target_info);
             break;
         case E64::TEXTURE:
-            color_target_info.texture = scene_texture;
+            if (current_render_pass == 2 && E64::Engine::ctx->mode == DESKTOP_RUNTIME) color_target_info.texture = swap_texture;
+            else color_target_info.texture = scene_texture;
+
             render_pass = SDL_BeginGPURenderPass(cmd_buf, &color_target_info, 1, &depth_target_info);
             break;
     }
@@ -180,12 +220,29 @@ void E64::SDLRenderer::draw(E64::ECS::MeshComponent* comp) {
     if (!mesh) { E64::Log::error("MESH IS NULLPTR"); return; }
     if (!texture) { E64::Log::error("TEXTURE IS NULLPTR"); return; }
 
-    bindVertexBuffers(mesh);
-    bindIndexBuffers(mesh);
-    bindFragmentSamplers(texture);
+    bindVertexBuffers(mesh->vbo);
+    bindIndexBuffers(mesh->ibo);
+    bindTextureAndSamplers(texture->texture, texture->sampler);
 
     draw_calls++;
     SDL_DrawGPUIndexedPrimitives(render_pass, mesh->indices.size(), 1, 0, 0, 0);
+}
+
+void E64::SDLRenderer::drawTexture(Texture* texture) {
+    bindVertexBuffers(quad_vbo);
+    bindIndexBuffers(quad_ibo);
+    bindTextureAndSamplers(texture->texture, texture->sampler);
+
+    SDL_DrawGPUIndexedPrimitives(render_pass, 6, 1, 0, 0, 0);
+}
+
+void E64::SDLRenderer::drawFSQuad() {
+    bindPipeline(POST_PROCESSING);
+    bindVertexBuffers(quad_vbo);
+    bindIndexBuffers(quad_ibo);
+    bindTextureAndSamplers(scene_texture, quad_sampler);
+
+    SDL_DrawGPUIndexedPrimitives(render_pass, 6, 1, 0, 0, 0);
 }
 
 void E64::SDLRenderer::bindPipeline() {
@@ -198,15 +255,15 @@ void E64::SDLRenderer::bindPipeline(PipelineType type){
     SDL_BindGPUGraphicsPipeline(render_pass, pipeline->getPipeline());
 }
 
-void E64::SDLRenderer::bindVertexBuffers(Mesh* mesh){
+void E64::SDLRenderer::bindVertexBuffers(GPUBufferHandle handle) {
     SDL_GPUBufferBinding buffer_binding = {};
-    buffer_binding.buffer = SDLGPURegistry::vbo_registry.at(mesh->vbo);
+    buffer_binding.buffer = SDLGPURegistry::vbo_registry.at(handle);
     buffer_binding.offset = 0;
     SDL_BindGPUVertexBuffers(render_pass, 0, &buffer_binding, 1);
 }
 
-void E64::SDLRenderer::bindIndexBuffers(Mesh* mesh){
-    SDL_GPUBuffer* index_buffer = SDLGPURegistry::ibo_registry.at(mesh->ibo);
+void E64::SDLRenderer::bindIndexBuffers(GPUBufferHandle handle) {
+    SDL_GPUBuffer* index_buffer = SDLGPURegistry::ibo_registry.at(handle);
     SDL_GPUBufferBinding binding;
     binding.buffer = index_buffer;
     binding.offset = 0;
@@ -214,10 +271,18 @@ void E64::SDLRenderer::bindIndexBuffers(Mesh* mesh){
     SDL_BindGPUIndexBuffer(render_pass, &binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 }
 
-void E64::SDLRenderer::bindFragmentSamplers(Texture* texture){
+void E64::SDLRenderer::bindTextureAndSamplers(GPUTextureHandle texture, GPUSamplerHandle sampler) {
     SDL_GPUTextureSamplerBinding binding;
-    binding.texture = SDLGPURegistry::texture_registry[texture->texture];
-    binding.sampler = SDLGPURegistry::sampler_registry[texture->sampler];
+    binding.texture = SDLGPURegistry::texture_registry[texture];
+    binding.sampler = SDLGPURegistry::sampler_registry[sampler];
+
+    SDL_BindGPUFragmentSamplers(render_pass, 0, &binding, 1);
+}
+
+void E64::SDLRenderer::bindTextureAndSamplers(SDL_GPUTexture* texture, GPUSamplerHandle sampler) {
+    SDL_GPUTextureSamplerBinding binding;
+    binding.texture = texture;
+    binding.sampler = SDLGPURegistry::sampler_registry[sampler];
 
     SDL_BindGPUFragmentSamplers(render_pass, 0, &binding, 1);
 }
@@ -360,6 +425,46 @@ E64::GPUTextureHandle E64::SDLRenderer::createTexture(unsigned char* img_data, i
     return handle;
 
     if (!texture)         { E64::Log::error(SDL_GetError()); }
+    if (!transfer_buffer) { E64::Log::error(SDL_GetError()); }
+}
+
+E64::GPUTextureHandle E64::SDLRenderer::createTexture(SDL_GPUTexture* texture) {
+    SDL_GPUTransferBufferCreateInfo transferInfo{};
+    transferInfo.size = width * height * 4;
+    transferInfo.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
+    SDL_GPUTransferBuffer* transfer_buffer = SDL_CreateGPUTransferBuffer(device, &transferInfo);
+
+    SDL_GPUTextureTransferInfo textureTransferInfo{};
+    textureTransferInfo.offset = 0;
+    textureTransferInfo.pixels_per_row = width;
+    textureTransferInfo.rows_per_layer = height;
+    textureTransferInfo.transfer_buffer = transfer_buffer;
+
+    SDL_GPUCommandBuffer* cmd_buffer = SDL_AcquireGPUCommandBuffer(device);
+    SDL_GPUCopyPass* copy_pass = SDL_BeginGPUCopyPass(cmd_buffer);
+
+    SDL_GPUTextureRegion region{};
+    region.texture = texture;
+    region.w = width;
+    region.h = height;
+    region.d = 1;
+    region.x = 0;
+    region.y = 0;
+    region.z = 0;
+
+    SDL_UploadToGPUTexture(copy_pass, &textureTransferInfo, &region, true);
+    SDL_EndGPUCopyPass(copy_pass);
+    if (!SDL_SubmitGPUCommandBuffer(cmd_buffer)) {
+        E64::Log::error("Error Submitting Cmd Buffer When Uploading Texture");
+    }
+
+    E64::GPUTextureHandle handle = SDLGPURegistry::texture_handle;
+    SDLGPURegistry::texture_registry[SDLGPURegistry::texture_handle++] = texture;
+    E64::Log::debug("Sent Texture Info to GPU");
+
+    return handle;
+
+    if (!texture) { E64::Log::error(SDL_GetError()); }
     if (!transfer_buffer) { E64::Log::error(SDL_GetError()); }
 }
 

@@ -24,15 +24,9 @@ void E64::Engine::run(){
         }
 
         renderer->startFrame();
-        for(Layer* layer : E64::Layer::layers){
-            layer->OnUpdate(dt);
-        }
-        for (Layer* layer : E64::Layer::layers) {
-            layer->OnRender();
-        }
-        for(Layer* layer : E64::Layer::layers){
-            layer->OnImGuiRender();
-        }
+        for(Layer* layer : E64::Layer::layers)  layer->OnUpdate(dt);
+        for(Layer* layer : E64::Layer::layers)  layer->OnRender();
+        for(Layer* layer : E64::Layer::layers)  layer->OnImGuiRender();
         renderer->submit();
 
         auto end = std::chrono::high_resolution_clock::now();

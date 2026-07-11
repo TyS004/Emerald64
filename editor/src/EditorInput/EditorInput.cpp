@@ -20,6 +20,7 @@ void Editor::EditorInput::processEvent(SDL_Event& e) {
 
 void Editor::EditorInput::OnKeyPressed(E64::Scancode key) {
     E64::Window* window = E64::Engine::ctx->window;
+    E64::SceneSerializer serializer;
     if (key == E64::Scancode::Escape) E64::Engine::exit();
 
     switch (key) {
@@ -34,11 +35,13 @@ void Editor::EditorInput::OnKeyPressed(E64::Scancode key) {
             debug_mode = !debug_mode;
             break;
         case E64::Scancode::F10:
-        #ifdef E64_APPLE
-                    std::system("./E64Runtime");
-        #else
-                    std::system("E64Runtime");
-        #endif
+            //serializer.serialize(E64::Engine::ctx->root_dir.string() + "scenes/scene.json");
+            window->setMouseLock(true);
+            #ifdef E64_APPLE
+                        std::system("./E64Runtime");
+            #else
+                        std::system("E64Runtime");
+            #endif
             break;
         default:
             break;
@@ -46,7 +49,7 @@ void Editor::EditorInput::OnKeyPressed(E64::Scancode key) {
 }
 
 void Editor::EditorInput::OnKeyDown(E64::Scancode key) {
-
+    
 }
 
 void Editor::EditorInput::OnMouseMove(float xrel, float yrel) {

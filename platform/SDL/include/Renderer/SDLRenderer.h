@@ -9,7 +9,8 @@ namespace E64 {
     enum PipelineType {
         BASE,
         STENCIL_WRITE,
-        STENCIL_OUTLINE
+        STENCIL_OUTLINE,
+        POST_PROCESSING
     };
 
     class SDLRenderer : public IRenderer{
@@ -24,9 +25,10 @@ namespace E64 {
 
             void bindPipeline();
             void bindPipeline(PipelineType type);
-            void bindVertexBuffers(Mesh* mesh);
-            void bindIndexBuffers(Mesh* mesh);
-            void bindFragmentSamplers(Texture* texture);
+            void bindVertexBuffers(GPUBufferHandle handle);
+            void bindIndexBuffers(GPUBufferHandle handle);
+            void bindTextureAndSamplers(GPUTextureHandle texture, GPUSamplerHandle sampler);
+            void bindTextureAndSamplers(SDL_GPUTexture* texture, GPUSamplerHandle sampler);
 
             void pushVertexUniform(const void* data, size_t size, uint32_t slot);
             void pushFragmentUniform(const void* data, size_t size, uint32_t slot);
@@ -35,11 +37,16 @@ namespace E64 {
             void endRenderPass();
             
             void draw(E64::ECS::MeshComponent* comp);
+            void drawTexture(Texture* texture);
+            void drawFSQuad();
+
             void submit();
 
             E64::GPUBufferHandle createVertexBuffer(std::vector<E64::Vertex> vertices);
+            E64::GPUBufferHandle createVertexBuffer(std::vector<uint32_t> vertices);
             E64::GPUBufferHandle createIndexBuffer(std::vector<E64::Index> indices);
             E64::GPUTextureHandle createTexture(unsigned char* img_data, int  width, int height);
+            E64::GPUTextureHandle createTexture(SDL_GPUTexture* texture);
             E64::GPUTextureHandle createSampler();
 
             bool isPendingResize();
@@ -76,6 +83,7 @@ namespace E64 {
 
             SDL_GPUTexture* depth_texture;
             SDL_GPUTexture* scene_texture;
+            SDL_GPUTexture* swap_texture;
 
             SDL_GPUSampler* scene_sampler;
 
@@ -83,12 +91,18 @@ namespace E64 {
             SDL_GPUDepthStencilTargetInfo  depth_target_info;
             SDL_GPUTextureCreateInfo       depth_texture_info;
             SDL_GPUTextureCreateInfo       scene_texture_info;
+            SDL_GPUTextureCreateInfo       swap_texture_info;
 
             SDL_GPUTexture* swapchain;
             uint32_t width, height;
 
             int draw_calls;
             bool pending_resize;
+
+            GPUBufferHandle quad_vbo;
+            GPUBufferHandle quad_ibo;
+            GPUTextureHandle quad_texture;
+            GPUSamplerHandle quad_sampler;
     };
 }
 

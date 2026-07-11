@@ -90,10 +90,6 @@ std::string E64::Scene::getName(){
     return name;
 }
 
-E64::ECS::CameraData E64::Scene::getCameraData(){
-    return active_camera_data;
-}
-
 void E64::Scene::pushEntity(){
     ECS::Entity e = ECS::EntityManager::createEntity();
     entites.push_back(e);
@@ -113,15 +109,15 @@ std::vector<E64::ECS::Entity> E64::Scene::getEntites(){
 void E64::Scene::printScene(){
     for(E64::ECS::Entity e : entites){
         std::string msg = "{ ";
-        if(E64::ECS::EntityManager::entity_index[e] & E64::ECS::ComponentBit<ECS::TransformComponent>::mask)
+        if(ECS::ComponentManager::hasComponent<ECS::TransformComponent>(e))
         {
             msg += "Transform ";
         }
-        if(E64::ECS::EntityManager::entity_index[e] & E64::ECS::ComponentBit<ECS::MeshComponent>::mask)
+        if(ECS::ComponentManager::hasComponent<ECS::MeshComponent>(e))
         {
             msg += "Mesh ";
         }
-        if(E64::ECS::EntityManager::entity_index[e] & E64::ECS::ComponentBit<ECS::CameraComponent>::mask)
+        if(ECS::ComponentManager::hasComponent<ECS::CameraComponent>(e))
         {
             msg += "Camera ";
         }
@@ -134,10 +130,14 @@ void E64::Scene::setCameraData(E64::ECS::CameraData camera_data){
     this->active_camera_data = camera_data;
 }
 
-E64::ECS::Entity E64::Scene::getCamera() {
-    return this->camera;
+E64::ECS::CameraData E64::Scene::getCameraData() {
+    return active_camera_data;
 }
 
 void E64::Scene::setCamera(ECS::Entity camera) {
     this->camera = camera;
+}
+
+E64::ECS::Entity E64::Scene::getCamera() {
+    return this->camera;
 }

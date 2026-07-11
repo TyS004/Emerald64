@@ -13,7 +13,7 @@ namespace E64{
             public:
                 template <typename T>   
                 static T* getComponent(Entity e){
-                    if(!(EntityManager::entity_index[e] & ComponentBit<T>::mask)) { 
+                    if(!hasComponent<T>(e)) { 
                         E64::Log::error("Component Not Found : ComponentManager::getComponent");
                         return nullptr; 
                     }
@@ -22,13 +22,8 @@ namespace E64{
                 }
                 
                 template <typename T>
-                static std::vector<T>* getComponentRegistry(){
-                    return &ComponentRegistry<T>::registry;
-                }
-                
-                template <typename T>
                 static bool hasComponent(Entity e){
-                    return EntityManager::entity_index[e] & ComponentBit<T>::mask;
+                    return EntityManager::entity_index[e] & ComponentRegistry<T>::mask;
                 }
                 
                 template <typename T>
@@ -38,7 +33,7 @@ namespace E64{
                         return; 
                     }
 
-                    EntityManager::entity_index[e] |= ComponentBit<T>::mask;
+                    EntityManager::entity_index[e] |= ComponentRegistry<T>::mask;
                     ComponentRegistry<T>::registry.push_back(comp);
 
                     ComponentRegistry<T>::entity_to_idx[e] = ComponentRegistry<T>::registry.size() - 1;
@@ -53,7 +48,7 @@ namespace E64{
                         return; 
                     }
 
-                    EntityManager::entity_index[e] |= ComponentBit<T>::mask;
+                    EntityManager::entity_index[e] |= ComponentRegistry<T>::mask;
                     ComponentRegistry<T>::registry.push_back(comp);
 
                     ComponentRegistry<T>::entity_to_idx[e] = ComponentRegistry<T>::registry.size() - 1;
@@ -77,12 +72,17 @@ namespace E64{
                     ComponentRegistry<T>::idx_to_entity[del_i] = last_entity;
                     ComponentRegistry<T>::idx_to_entity.erase(registry->size());
 
-                    EntityManager::entity_index[e] &= ~ComponentBit<T>::mask;
+                    EntityManager::entity_index[e] &= ~ComponentRegistry<T>::mask;
+                }
+
+                template <typename T>
+                static std::vector<T>* getComponentRegistry() {
+                    return &ComponentRegistry<T>::registry;
                 }
                 
                 static void flushComponents(){
-                    for(auto& [name, clear_fn] : ComponentRegistryBase::clear_fns){
-                        clear_fn();
+                    for(auto& [name, flush_fn] : ComponentRegistryBase::flush_fns){
+                        flush_fn();
                     }
                 }
 

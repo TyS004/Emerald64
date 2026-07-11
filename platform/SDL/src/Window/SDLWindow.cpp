@@ -49,6 +49,10 @@ void E64::SDLWindow::create(const char* name, int width, int height){
         SDL_GPU_PRESENTMODE_IMMEDIATE
     );
     SDL_SetHint(SDL_HINT_WINDOWS_RAW_KEYBOARD, "1");
+
+    if (E64::Engine::ctx->mode == DESKTOP_RUNTIME) {
+        setMouseLock(true);
+    }
 }
 
 SDL_Window* E64::SDLWindow::getWindow(){

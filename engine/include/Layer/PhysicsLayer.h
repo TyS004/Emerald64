@@ -14,11 +14,15 @@ namespace E64{
             void OnRender() {};
             void OnImGuiRender() {};
 
+            void CameraUpdate();
+
             static bool running;
             
         private:
             float velocity;
             float acceleration;
+
+            E64::Scene* scene;
     };
 }
 

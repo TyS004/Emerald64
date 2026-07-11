@@ -103,6 +103,10 @@ E64::SDLPipeline::SDLPipeline(const char* shaderPath, int vert_uniforms, int fra
     pipelineInfo.primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST;
 
     this->pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineInfo);
+    if (!pipeline) {
+        E64::Log::error(std::string("Failed to Create Pipeline" + std::string(shaderPath)).c_str());
+        exit(1);
+    }
 }
 
 E64::SDLPipeline::SDLPipeline(const char* vertexShaderPath, const char* fragmentShaderPath, int vert_uniforms, int frag_uniforms, SDL_GPUFillMode fill_mode) {
