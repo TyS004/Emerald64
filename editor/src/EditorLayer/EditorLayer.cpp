@@ -91,7 +91,6 @@ void Editor::EditorLayer::OnRender(){
     renderer->setStencilLoadOP(E64::RenderLoadOP::LOAD);
 
     renderer->beginRenderPass(RenderTarget::TEXTURE);
-
     for (ECS::Entity e : scene->getEntites()) 
     {
         if (ECS::ComponentManager::hasComponent<ECS::CameraComponent>(e) &&
@@ -100,9 +99,11 @@ void Editor::EditorLayer::OnRender(){
             ECS::TransformComponent* transform = ECS::ComponentManager::getComponent<ECS::TransformComponent>(e);
             ECS::TransformComponent* camera_transform = camera->getTransform();
 
-            glm::vec3 to_camera = transform->position - camera_transform->position;
+            glm::mat4 billboardRotation = glm::inverse(glm::mat4(glm::mat3(scene->getCameraData().view)));
 
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), transform->position)
+            glm::mat4 model = 
+                  glm::translate(glm::mat4(1.0f), transform->position)
+                * billboardRotation
                 * glm::scale(glm::mat4(1.0f), transform->scale);
             glm::mat4 view = scene->getCameraData().view;
             glm::mat4 proj = scene->getCameraData().proj;
@@ -135,6 +136,7 @@ void Editor::EditorLayer::OnRender(){
 
         renderer->bindPipeline(STENCIL_WRITE);
         renderer->setStencilReference(1);
+
         renderer->draw(mesh_comp);
 
         model = glm::translate(glm::mat4(1.0f), transform->position)
@@ -145,9 +147,9 @@ void Editor::EditorLayer::OnRender(){
         renderer->bindPipeline(STENCIL_OUTLINE);
         renderer->setStencilReference(1);
         renderer->pushFragmentUniform(mouse_pos_uniform, sizeof(float) * 2, 0);
+
         renderer->draw(mesh_comp);
     }
-
     renderer->endRenderPass();
 }
 
