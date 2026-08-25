@@ -44,5 +44,5 @@ fragment float4 fragment_main(
         p_light_final += base_color * dot_product * p_lights[i].color * (p_lights[i].intensity * 100) * attenuation;
     }
 
-    return p_light_final;
+    return float4(p_light_final.xyz, 1.0f);
 }

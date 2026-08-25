@@ -33,7 +33,7 @@ namespace E64{
             }
 
             static void serialize(json& json, ECS::Entity e){
-                if(ComponentManager::hasComponent<T>(e))
+                if(EntityManager::entity_index[e] & mask)
                 {
                     std::cout << "SERIALIZING: " << mask << std::endl;
                     T* comp = &registry[entity_to_idx[e]];
@@ -49,7 +49,11 @@ namespace E64{
                 T comp;
                 comp.deserialize(comp_json);
 
-                ComponentManager::addComponent<T>(e, comp);
+                EntityManager::entity_index[e] |= ComponentRegistry<T>::mask;
+                registry.push_back(comp);
+
+                entity_to_idx[e] = ComponentRegistry<T>::registry.size() - 1;
+                idx_to_entity[ComponentRegistry<T>::registry.size() - 1] = e;
             }
 
             static void flush(){
